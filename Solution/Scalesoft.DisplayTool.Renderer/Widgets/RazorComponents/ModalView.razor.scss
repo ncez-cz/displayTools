@@ -1,0 +1,28 @@
+@import "../../HtmlResources/src/theme-variables";
+
+.modal {
+    cursor: default;
+}
+
+.modal-dialog {
+    max-width: 95%;
+}
+
+.modal-body {
+    color: black;
+}
+
+.card-footer {
+    background-color: var(--#{$prefix}card-cap-bg);
+}
+
+.modal-header button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-header, .modal-footer {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}

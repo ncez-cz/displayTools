@@ -1,0 +1,31 @@
+{
+  "providerId": "Microsoft.Tools.ServiceModel.Svcutil",
+  "version": "2.1.0",
+  "ExtendedData": {
+    "inputs": [
+      "https://gazelle.ehdsi.eu/CDAGenerator-ejb/ModelBasedValidationWSService/ModelBasedValidationWS?wsdl"
+    ],
+    "namespaceMappings": [
+      "*, Scalesoft.DisplayTool.Renderer.ModelBasedValidationWSService"
+    ],
+    "outputFile": "Gazelle.Client.cs",
+    "references": [
+      "Microsoft.AspNetCore.Authorization, {Microsoft.AspNetCore.Authorization, 8.0.10}",
+      "Microsoft.AspNetCore.Components, {Microsoft.AspNetCore.Components, 8.0.10}",
+      "Microsoft.AspNetCore.Components.Forms, {Microsoft.AspNetCore.Components.Forms, 8.0.10}",
+      "Microsoft.AspNetCore.Components.Web, {Microsoft.AspNetCore.Components.Web, 8.0.10}",
+      "Microsoft.AspNetCore.Metadata, {Microsoft.AspNetCore.Metadata, 8.0.10}",
+      "Microsoft.Extensions.DependencyInjection, {Microsoft.Extensions.DependencyInjection, 8.0.1}",
+      "Microsoft.Extensions.DependencyInjection.Abstractions, {Microsoft.Extensions.DependencyInjection.Abstractions, 8.0.2}",
+      "Microsoft.Extensions.FileProviders.Abstractions, {Microsoft.Extensions.FileProviders.Abstractions, 8.0.0}",
+      "Microsoft.Extensions.FileProviders.Embedded, {Microsoft.Extensions.FileProviders.Embedded, 8.0.0}",
+      "Microsoft.Extensions.Logging.Abstractions, {Microsoft.Extensions.Logging.Abstractions, 8.0.2}",
+      "Microsoft.Extensions.Options, {Microsoft.Extensions.Options, 8.0.2}",
+      "Microsoft.Extensions.Primitives, {Microsoft.Extensions.Primitives, 8.0.0}",
+      "Microsoft.JSInterop, {Microsoft.JSInterop, 8.0.10}",
+      "System.IO.Pipelines, {System.IO.Pipelines, 8.0.0}"
+    ],
+    "targetFramework": "net8.0",
+    "typeReuseMode": "All"
+  }
+}

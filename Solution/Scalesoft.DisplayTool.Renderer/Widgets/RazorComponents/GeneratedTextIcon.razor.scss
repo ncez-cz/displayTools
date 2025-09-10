@@ -1,0 +1,78 @@
+@import "../../HtmlResources/src/theme-variables";
+
+.section-info .text-icon {
+    --icon-color: var(--#{$prefix}primary-600);
+    --icon-bg: white;
+    --icon-border: var(--#{$prefix}primary-400);
+}
+
+.section-secondary .text-icon {
+    --icon-color: var(--#{$prefix}secondary-900);
+    --icon-bg: white;
+    --icon-border: var(--#{$prefix}secondary-700);
+}
+
+.section-info .text-icon {
+    --icon-color: var(--#{$prefix}info-600);
+    --icon-bg: white;
+    --icon-border: var(--#{$prefix}info-400);
+}
+
+.section-success .text-icon {
+    --icon-color: var(--#{$prefix}success-600);
+    --icon-bg: white;
+    --icon-border: var(--#{$prefix}success-400);
+}
+
+.section-warning .text-icon {
+    --icon-color: black;
+    --icon-bg: white;
+    --icon-border: black;
+}
+
+.section-error .text-icon {
+    --icon-color: black;
+    --icon-bg: white;
+    --icon-border: black;
+}
+
+.section-gray .text-icon {
+    --icon-color: var(--#{$prefix}gray-700);
+    --icon-bg: white;
+    --icon-border: var(--#{$prefix}gray-700);
+}
+
+.section .section .text-icon {
+    display: none !important;
+}
+
+.text-icon {
+    --icon-color: var(--#{$prefix}primary-600);
+    --icon-bg: white;
+    --icon-border: var(--#{$prefix}primary-400);
+    --icon-dimensions: 1.75em;
+
+    padding: $spacing01;
+    font-family: monospace;
+    color: var(--icon-color);
+    border: 1px solid var(--icon-border);
+    background-color: var(--icon-bg);
+    border-radius: $spacing01;
+    width: var(--icon-dimensions);
+    height: var(--icon-dimensions);
+    font-size: .9em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400;
+
+    &.primary {
+        --icon-color: var(--#{$prefix}primary-800);
+        --icon-bg: var(--#{$prefix}primary-100);
+    }
+
+    &.gray {
+        --icon-color: var(--#{$prefix}gray-800);
+        --icon-bg: var(--#{$prefix}gray-100);
+    }
+}

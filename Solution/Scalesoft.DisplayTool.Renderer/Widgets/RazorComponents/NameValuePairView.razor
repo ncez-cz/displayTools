@@ -1,0 +1,8 @@
+﻿<dl id="@Model.Id" data-id="@Model.VisualId" class="@Model.CustomClass d-flex flex-wrap column-gap-1">
+    <dt class="m-0">@((MarkupString)Model.NameContent)@(string.IsNullOrEmpty(Model.ValueContent) ? string.Empty : ":")</dt>
+    <dd class="m-0">@((MarkupString)Model.ValueContent)</dd>
+</dl>
+
+@code {
+    [Parameter] public required NameValuePair.ViewModel Model { get; set; }
+}

@@ -1,0 +1,46 @@
+﻿body:has( #detail-toggle:not(:checked)) {
+    .optional-detail {
+        display: none !important;
+    }
+
+    /* 
+       Hide the collapsible toggler if the associated collapsible row 
+       contains only "optional-detail" elements (i.e., all children are hideable).
+       If there is at least one non-optional child, the toggler remains visible.
+    */
+    tbody:has(.collapsible-row-wrapper):not(:has(.collapsible-row-wrapper > td > :not(.optional-detail))) > tr > td:first-child .collapse-toggler-wrapper {
+        display: none !important;
+    }
+
+    /* 
+        Hide the entire <td> inside a collapsible row if all of its direct children 
+        are optional (i.e., every element inside <td> has the .optional-detail class). 
+        If at least one child is not optional, the cell stays visible.
+    */
+    .collapsible-row-wrapper:not(:has(td > :not(.optional-detail))) > td {
+        display: none !important;
+    }
+
+    /* 
+        Hide the card footer if all of its direct children 
+        are optional (i.e., every element .card-footer has the .optional-detail class). 
+        If at least one child is not optional, the cell stays visible.
+    */
+    .card-footer:not(:has(> :not(.optional-detail))) {
+        display: none !important;
+    }
+
+}
+
+/* 
+    Hide table row (not collapsible) if there is no content -> all <td> has sub-child with .empty-content
+    class excluding <td> with .narrative-cell
+*/
+tbody > tr:not(.collapsible-row-wrapper):not(:has(td:not(.narrative-cell, .collapsible-row-wrapper) > .collapse-content-inline > .collapse-toggler-cell-content:not(.empty-content))) {
+    display: none !important;
+}
+
+
+
+
+    

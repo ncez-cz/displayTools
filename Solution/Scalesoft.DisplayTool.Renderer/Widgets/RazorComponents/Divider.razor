@@ -1,0 +1,36 @@
+﻿<div class="divider">
+    @if (DividerLabel != null)
+    {
+        <h3 class="divider-label">
+            @if (ShowLabelIcon == true)
+            {
+                <GeneratedTextIcon IconLabel="@DividerLabel" LabelAbbreviation="@DividerLabelAbbreviation"/>
+            }
+            <div>
+                @((MarkupString)DividerLabel)
+                @if (!string.IsNullOrEmpty(Subtitle))
+                {
+                    <div class="divider-label-subtitle">
+                        @((MarkupString)Subtitle)
+                    </div>
+                }
+            </div>
+        </h3>
+        <div class="divider-collapse-wrapper">
+            @if (NarrativeTextModal != null)
+            {
+                @((MarkupString)NarrativeTextModal)
+            }
+            @((MarkupString)CollapseIcon)
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public bool? ShowLabelIcon { get; set; }
+    [Parameter] public string? DividerLabel { get; set; }
+    [Parameter] public string? DividerLabelAbbreviation { get; set; }
+    [Parameter] public string? Subtitle { get; set; }
+    [Parameter] public required string CollapseIcon { get; set; }
+    [Parameter] public string? NarrativeTextModal { get; set; }
+}

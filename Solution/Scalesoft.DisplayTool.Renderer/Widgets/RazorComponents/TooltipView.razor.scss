@@ -1,0 +1,60 @@
+﻿@import "../../HtmlResources/src/theme-variables";
+
+.tooltip-wrapper {
+    cursor: pointer;
+    width: fit-content;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    vertical-align: bottom;
+
+    &:hover .tooltip {
+        display: block;
+    }
+}
+
+.tooltip-top {
+    transform: translate(-50%, -100%);
+    top: -0.5rem;
+
+    .arrow {
+        transform: translateX(-50%) rotate(45deg);
+    }
+}
+
+.tooltip-bottom {
+    transform: translate(-50%, 100%);
+    bottom: -0.5rem;
+
+    .arrow {
+        top: 0;
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+}
+
+.tooltip {
+    display: none;
+    width: max-content;
+    max-width: 25rem;
+    position: absolute;
+    padding: $spacing01 $spacing02;
+    border-radius: $spacing01;
+    z-index: $zindex-tooltip;
+    background-color: var(--#{$prefix}primary-100);
+    color: var(--#{$prefix}primary-800);;
+    left: 50%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+
+    .additional-text {
+        font-size: 0.7em;
+    }
+}
+
+.arrow {
+    position: absolute;
+    background-color: var(--#{$prefix}primary-100);
+    width: 8px;
+    height: 8px;
+    left: 50%;
+    transform: rotate(45deg);
+}

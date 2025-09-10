@@ -1,0 +1,63 @@
+@using Scalesoft.DisplayTool.Renderer.Extensions
+
+@code {
+
+    private string GetSeverityClass()
+    {
+        if (Model.Severity != null)
+        {
+            return $"severity-{Model.Severity?.ToEnumString()}";
+        }
+
+        return string.Empty;
+    }
+
+}
+
+<div id="@Model.Id" data-id="@Model.VisualId"
+     class="collapse card overflow-auto @(GetSeverityClass()) @Model.CustomClass ">
+    @if (Model.IsCollapsed)
+    {
+        <input type="checkbox" class="collapse-checkbox" id="@Model.InputId"/>
+    }
+    else
+    {
+        <input type="checkbox" class="collapse-checkbox" id="@Model.InputId" checked/>
+    }
+    <label class="collapse-header collapse-label card-header d-flex align-items-center justify-content-between py-0"
+           for="@Model.InputId">
+        <span class="d-flex flex-column toggle-label-content">
+            <span class="card-main-title">
+                @((MarkupString)Model.ToggleLabel)
+            </span>
+            @if (!string.IsNullOrEmpty(Model.Subtitle))
+            {
+                <span class="card-subtitle small">
+                    @((MarkupString)Model.Subtitle)
+                </span>
+            }
+        </span>
+        <span class="collapser-icons">
+            @((MarkupString)(Model.IconPrefix ?? string.Empty))
+            @((MarkupString)Model.Icon)
+        </span>
+    </label>
+    <div class="collapsible-content-wrapper">
+        <div class="collapsible-content">
+            <div class="card-body">
+                @((MarkupString)Model.Title)
+                @((MarkupString)Model.Content)
+            </div>
+            @if (!Model.HideFooter)
+            {
+                <div class="card-footer">
+                    @((MarkupString)(Model.Footer ?? string.Empty))
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required Collapser.ViewModel Model { get; set; }
+}

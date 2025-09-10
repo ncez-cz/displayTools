@@ -1,0 +1,93 @@
+@use "../../HtmlResources/src/theme-variables" as *;
+
+.section-default .divider {
+    --color: var(--#{$prefix}primary-800);
+    --background-color: var(--#{$prefix}primary-200);
+}
+
+.section .section-default .divider {
+    --color: var(--#{$prefix}gray-700);
+    --background-color: var(--#{$prefix}gray-400);
+}
+
+.section-primary .divider {
+    --color: var(--#{$prefix}primary-800);
+    --background-color: var(--#{$prefix}primary-200);
+}
+
+.section-info .divider {
+    --color: var(--#{$prefix}info-800);
+    --background-color: var(--#{$prefix}info-200);
+}
+
+.section-secondary .divider {
+    --color: var(--#{$prefix}secondary-900);
+    --background-color: var(--#{$prefix}secondary-300);
+}
+
+.section-success .divider {
+    --color: var(--#{$prefix}success-800);
+    --background-color: var(--#{$prefix}success-300);
+}
+
+.section-warning .divider {
+    --color: black;
+    --background-color: var(--#{$prefix}warning-500);
+}
+
+.section-error .divider {
+    --color: black;
+    --background-color: var(--#{$prefix}danger-500);
+}
+
+.section-gray .divider {
+    --color: var(--#{$prefix}gray-700);
+    --background-color: var(--#{$prefix}gray-400);
+}
+
+.section .section .divider {
+    .divider-label {
+        display: flex;
+        align-items: center;
+        gap: $spacing02;
+        font-size: var(--#{$prefix}h6-font-size);
+        font-weight: 500;
+
+        .divider-label-subtitle {
+            font-size: var(--#{$prefix}-font-size);
+            font-weight: 300;
+        }
+    }
+}
+
+.divider {
+    --#{$prefix}divider-color: var(--color);
+    color: var(--color);
+    background-color: var(--background-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $spacing03;
+    padding-left: $spacing01;
+    padding-right: $spacing03;
+
+    .divider-label {
+        display: flex;
+        align-items: center;
+        gap: $spacing02;
+        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
+        font-weight: 400;
+
+        .divider-label-subtitle {
+            font-size: var(--#{$prefix}h6-font-size);
+            font-weight: 300;
+        }
+    }
+
+    .divider-collapse-wrapper {
+        display: flex;
+        align-items: center;
+        gap: $spacing02;
+    }
+}

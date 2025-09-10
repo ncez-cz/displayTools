@@ -1,0 +1,7 @@
+﻿<thead id="@Model.Id" data-id="@Model.VisualId" class="@Model.CustomClass">
+@((MarkupString)Model.Content)
+</thead>
+
+@code {
+    [Parameter] public required TableHead.ViewModel Model { get; set; }
+}

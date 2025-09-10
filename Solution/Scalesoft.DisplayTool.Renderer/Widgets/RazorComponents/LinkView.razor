@@ -1,0 +1,5 @@
+﻿<a id="@Model.Id" data-id="@Model.VisualId" class="@Model.CustomClass" href="@Model.Href" download="@Model.Download">@((MarkupString)Model.Text)</a>
+
+@code {
+    [Parameter] public required Link.ViewModel Model { get; set; }
+}

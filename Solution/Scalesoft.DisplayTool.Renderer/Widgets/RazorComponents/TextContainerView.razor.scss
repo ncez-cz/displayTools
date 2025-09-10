@@ -1,0 +1,9 @@
+﻿@import "../../HtmlResources/src/theme-variables";
+
+@layer bootstrap {
+    @import "bootstrap/scss/reboot";
+}
+
+.pre {
+    @extend pre;
+}

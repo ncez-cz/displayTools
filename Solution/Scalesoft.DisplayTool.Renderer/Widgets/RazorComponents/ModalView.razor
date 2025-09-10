@@ -1,0 +1,42 @@
+@{
+    var openButtonViewModel = new Button.ViewModel
+    {
+        Text = null,
+        Style = ButtonStyle.Outline,
+        Variant = ButtonVariant.Modal,
+        CustomClass = Model.OpenButtonClass,
+        Icon = Model.OpenButtonIcon,
+        InputId = Model.InputId
+    };
+}
+
+<ButtonView Model="openButtonViewModel"/>
+
+<div class="modal fade" id="modal-@Model.InputId" tabindex="-1" data-bs-focus="false">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content card">
+            <div class="modal-header card-header">
+                @if (Model.Title != null)
+                {
+                    @((MarkupString)Model.Title)
+                }
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    @((MarkupString)Model.CornerCloseCross)
+                </button>
+            </div>
+            <div class="modal-body">
+                @((MarkupString)Model.Content)
+            </div>
+            @if (!string.IsNullOrEmpty(Model.CloseButton))
+            {
+                <div class="modal-footer card-footer">
+                    @((MarkupString)Model.CloseButton)
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required Modal.ViewModel Model { get; set; }
+}

@@ -1,0 +1,7 @@
+﻿<caption id="@Model.Id" data-id="@Model.VisualId" class="fw-bold table-caption @Model.CustomClass">
+    @((MarkupString)Model.Content)
+</caption>
+
+@code {
+    [Parameter] public required TableCaption.ViewModel Model { get; set; }
+}

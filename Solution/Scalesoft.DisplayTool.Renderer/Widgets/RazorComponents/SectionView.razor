@@ -1,0 +1,39 @@
+@using Scalesoft.DisplayTool.Renderer.Extensions
+
+@code {
+
+    private string GetSeverityClass()
+    {
+        if (Model.Severity != null)
+        {
+            return $"section-{Model.Severity?.ToEnumString()}";
+        }
+
+        return "section-default";
+    }
+
+}
+
+<div id="@Model.Id" data-id="@Model.VisualId"
+     class="section @(GetSeverityClass()) @Model.CustomClass" onclick="@Model.OnClick">
+    <input class="collapse-checkbox" type="checkbox" id="@Model.InputId" checked>
+    <label class="collapse-label" for="@Model.InputId">
+        <Divider
+            DividerLabel="@Model.Title"
+            DividerLabelAbbreviation="@Model.TitleAbbreviation"
+            ShowLabelIcon="@true"
+            Subtitle="@Model.Subtitle"
+            CollapseIcon="@Model.DividerIcon"
+            NarrativeTextModal="@Model.NarrativeTextModal"/>
+    </label>
+
+    <div class="collapsible-content-wrapper">
+        <div class="collapsible-content">
+            @((MarkupString)Model.Content)
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required Section.ViewModel Model { get; set; }
+}

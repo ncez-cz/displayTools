@@ -1,0 +1,43 @@
+@import "../../HtmlResources/src/theme-variables";
+
+.card-footer {
+    background-color: var(--#{$prefix}gray-100);
+}
+
+.card {
+    border-color: var(--#{$prefix}severity-card-border-color);
+    margin-top: $spacing02;
+}
+
+.card-header {
+    color: var(--#{$prefix}severity-card-header-color);
+    background-color: var(--#{$prefix}severity-card-header-bg);
+    border-bottom: none;
+}
+
+.card-footer {
+    background-color: var(--#{$prefix}severity-card-footer-bg);
+    border-top: none;
+}
+
+.card-footer > .card:first-child, .badge + .card, .badge + * > .card, .card:first-child {
+    margin-top: 0;
+}
+
+.flex-row > .card {
+    margin-top: 0 !important;
+}
+
+div:has(~ .card):not(.resource-container) > .card, div:has(> .card):not(.resource-container) ~ div > .card, .card ~ div > .card {
+    margin-top: $spacing02;
+}
+
+.card-footer:has(.narrative-print-collapser-hidden:only-child) {
+    display: none;
+}
+
+@media print {
+    .card-footer:has(.narrative-print-collapser-hidden:only-child) {
+        display: flex;
+    }
+}

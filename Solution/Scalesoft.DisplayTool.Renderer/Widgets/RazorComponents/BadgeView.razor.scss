@@ -1,0 +1,22 @@
+﻿@import "../../HtmlResources/src/theme-variables";
+
+.badge {
+    background-color: var(--#{$prefix}severity-badge-bg);
+    color: var(--#{$prefix}severity-badge-color);
+    border: 1px solid var(--#{$prefix}severity-badge-border-color);
+    margin-left: calc(var(--#{$prefix}badge-padding-x) * -1);
+    margin-bottom: 0.1rem;
+}
+
+.badge:has(+ .card), .badge:has(+ * .card) {
+    margin-bottom: $spacing01;
+}
+
+.badge:has(+ ul), .badge:has(+ ol) {
+    margin-left: var(--#{$prefix}badge-padding-x);
+}
+
+.available-time-badge {
+    margin-left: 0;
+    min-width: 5rem;
+}

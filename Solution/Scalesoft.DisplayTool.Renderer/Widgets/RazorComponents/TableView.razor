@@ -1,0 +1,10 @@
+﻿<table id="@Model.Id" data-id="@Model.VisualId" class="table table-bordered @(Model.Striped ? "striped" : string.Empty) @Model.CustomClass">
+    @foreach (var row in Model.Rows)
+    {
+        @((MarkupString)row)
+    }
+</table>
+
+@code {
+    [Parameter] public required Table.ViewModel Model { get; set; }
+}

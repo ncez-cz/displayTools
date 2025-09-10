@@ -1,0 +1,99 @@
+@use "../../HtmlResources/src/theme-variables" as *;
+
+
+@media screen and (min-width: 1600px) {
+    .section .section-default {
+        --background-color: var(--#{$prefix}gray-200);
+
+        &:has(> input:checked) {
+            border: none;
+        }
+    }
+
+    .section .section-primary:has(> input:checked) {
+        border: 1px solid var(--#{$prefix}primary-200);
+        border-top: 0;
+    }
+
+    .section-secondary {
+        --background-color: var(--#{$prefix}secondary-100);
+    }
+
+    .section-info {
+        --background-color: var(--#{$prefix}info-100);
+    }
+
+    .section-success {
+        --background-color: var(--#{$prefix}success-200);
+    }
+
+    .section-warning {
+        --background-color: var(--#{$prefix}warning-100);
+    }
+
+    .section-error {
+        --background-color: var(--#{$prefix}danger-200);
+    }
+
+    .section-gray {
+        --background-color: var(--#{$prefix}gray-200);
+    }
+
+    .section {
+        background-color: var(--background-color) 100%;
+        transition: background-color 0.5s ease-in-out;
+
+        &:has(> input:checked) {
+            background-color: var(--background-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .section:has(> input:checked) {
+            margin-bottom: 0.5rem;
+        }
+    }
+
+}
+
+.section {
+    margin-top: $spacing02;
+    margin-bottom: $spacing02;
+}
+
+.section .section {
+    margin-top: 0;
+    margin-left: -$spacing01;
+    margin-right: -$spacing01;
+}
+
+.section .section .section {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.section .section:not(:has(+ .section)) {
+    margin-bottom: 0;
+}
+
+.collapse-label {
+    width: 100%;
+}
+
+.collapse-checkbox :checked + .collapse-label {
+    opacity: 75%;
+}
+
+.collapsible-content, .section .section .collapsible-content {
+    padding-left: $spacing01;
+    padding-right: $spacing01;
+}
+
+.collapsible-content:has(.badge:not(.collapser .badge):not(.card .badge):not(table .badge)) {
+    padding-left: calc(0.65em + $spacing01); // --dt-badge-padding-x is 0.65em and for some reason doesn't resolve in the browser
+    padding-right: calc(0.65em + $spacing01); // --dt-badge-padding-x is 0.65em and for some reason doesn't resolve in the browser
+
+    .section:is(.section .section) {
+        margin-left: calc(-0.65em - $spacing01); // --dt-badge-padding-x is 0.65em and for some reason doesn't resolve in the browser
+        margin-right: calc(-0.65em - $spacing01); // --dt-badge-padding-x is 0.65em and for some reason doesn't resolve in the browser
+    }
+}

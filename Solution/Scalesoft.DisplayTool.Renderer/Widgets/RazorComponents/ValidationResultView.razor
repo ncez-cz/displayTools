@@ -1,0 +1,45 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets
+
+@if (Model.ValidationResult.AdditionalCdaValidation != null)
+{
+    <h2>Well-formednesss: </h2><p>@Model.ValidationResult.AdditionalCdaValidation.DocumentWellFormed</p>
+    <h2>Schema validace: </h2><p>@Model.ValidationResult.AdditionalCdaValidation.DocumentXsdValid.Result</p>
+
+    if (Model.ValidationResult.AdditionalCdaValidation.DocumentXsdValid.XSDMessage?.Length > 0)
+    {
+        foreach (var xsdMessage in Model.ValidationResult.AdditionalCdaValidation.DocumentXsdValid.XSDMessage)
+        {
+            <p>
+                <b>Úroveň: </b>@xsdMessage.Severity
+            </p>
+            <p>
+                <b>Pozice: </b> řádek @xsdMessage.lineNumber, sloupec @xsdMessage.columnNumber
+            </p>
+            <p>
+                <b>Popis: </b>@xsdMessage.Message
+            </p>
+        }
+    }
+}
+
+
+@if (Model.ValidationResult.Validations != null)
+{
+    <h2>Validace: </h2>
+    foreach (var result in Model.ValidationResult.Validations)
+    {
+        <p>
+            <b>Typ: </b>@result.Type
+        </p>
+        <p>
+            <b>Pozice: </b>@result.Location
+        </p>
+        <p>
+            <b>Popis: </b>@result.Message
+        </p>
+    }
+}
+
+@code {
+    [Parameter] public required ValidationResult.ViewModel Model { get; set; }
+}

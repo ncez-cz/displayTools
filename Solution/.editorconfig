@@ -1,0 +1,6 @@
+[*.cs]
+csharp_style_namespace_declarations = file_scoped:error
+resharper_redundant_explicit_params_array_creation_highlighting = warning
+
+[*.scss]
+indent_size = 4

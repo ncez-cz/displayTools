@@ -1,0 +1,5 @@
+<img src="@Model.Source" alt="@Model.AltText" width="@Model.Width" height="@Model.Height" class="@Model.CustomClass" style="@Model.CustomStyle" @attributes="Model.OtherAttributes"/>
+
+@code {
+    [Parameter] public required Image.ViewModel Model { get; set; }
+}

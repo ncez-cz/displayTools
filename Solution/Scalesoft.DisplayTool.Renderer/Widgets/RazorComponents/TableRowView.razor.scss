@@ -1,0 +1,28 @@
+﻿@import "../../HtmlResources/src/theme-variables";
+
+
+.collapsible-row-wrapper {
+    display: none;
+}
+
+thead > tr > .collapse-toggler-empty-column {
+    --#{$prefix}thead-bg-color: var(--#{$prefix}primary-100);
+    --#{$prefix}thead-color: var(--#{$prefix}primary-800);
+    background-color: var(--#{$prefix}thead-bg-color);
+    color: var(--#{$prefix}thead-color);
+    border-bottom: 2px solid var(--#{$prefix}thead-color);
+    box-shadow: none;
+}
+
+.table:has(> tbody > .collapse-toggler-row) {
+    > thead > tr > .collapse-toggler-empty-column,
+    > tbody > tr > .collapse-toggler-empty-column {
+        display: table-cell;
+    }
+}
+
+@media print {
+    .collapsible-row-wrapper {
+        display: table-row;
+    }
+}

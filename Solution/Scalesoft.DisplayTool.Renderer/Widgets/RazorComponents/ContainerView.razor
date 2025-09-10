@@ -1,0 +1,26 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils
+
+@switch (Model.Type)
+{
+    case ContainerType.Paragraph:
+        <p id="@Model.Id" data-id="@Model.VisualId" class=@Model.CustomClass>
+            @((MarkupString)Model.Content)
+        </p>
+        break;
+    case ContainerType.Span:
+        <span id="@Model.Id" data-id="@Model.VisualId" class=@Model.CustomClass>
+            @((MarkupString)Model.Content)
+        </span>
+        break;
+    case ContainerType.Div:
+        <div id="@Model.Id" data-id="@Model.VisualId" class=@Model.CustomClass>
+            @((MarkupString)Model.Content)
+        </div>
+        break;
+    default:
+        throw new ArgumentOutOfRangeException();
+}
+
+@code {
+    [Parameter] public required Container.ViewModel Model { get; set; }
+}

@@ -1,0 +1,58 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets
+@using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils
+
+@{
+    var direction = Model.Direction switch
+    {
+        FlexDirection.Row => "row",
+        FlexDirection.Column => "column",
+        _ => throw new ArgumentOutOfRangeException(nameof(Model.Direction), Model.Direction, null),
+    };
+}
+
+@if (Model.ContainerType == ContainerType.Div)
+{
+    <div id="@Model.Id" data-id="@Model.VisualId" class="d-flex flex-wrap flex-@direction @(Model.CustomClass ?? "gap-2")">
+        @if (Model.WrapChildren == true)
+        {
+            @foreach (var child in Model.Children)
+            {
+                <div class="@Model.ChildContainerClasses">
+                    @((MarkupString)child)
+                </div>
+            }
+        }
+        else
+        {
+            @foreach (var child in Model.Children)
+            {
+                @((MarkupString)child)
+            }
+        }
+    </div>
+}
+else if (Model.ContainerType == ContainerType.Span)
+{
+    <span id="@Model.Id" data-id="@Model.VisualId" class="d-flex flex-wrap flex-@direction @(Model.CustomClass ?? "gap-2")">
+        @if (Model.WrapChildren == true)
+        {
+            @foreach (var child in Model.Children)
+            {
+                <span class="@Model.ChildContainerClasses">
+                    @((MarkupString)child)
+                </span>
+            }
+        }
+        else
+        {
+            @foreach (var child in Model.Children)
+            {
+                @((MarkupString)child)
+            }
+        }
+    </span>
+}
+
+@code {
+    [Parameter] public required FlexList.ViewModel Model { get; set; }
+}

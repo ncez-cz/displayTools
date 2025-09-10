@@ -1,0 +1,24 @@
+﻿@if (string.IsNullOrWhiteSpace(Model.CollapsibleRowContent))
+{
+    <tr id="@Model.Id" data-id="@Model.VisualId" class="visible-row @Model.CustomClass">
+        @((MarkupString)Model.Content)
+    </tr>
+}
+else
+{
+    <tr id="@Model.Id" data-id="@Model.VisualId" class="collapse-toggler-row visible-row @Model.CustomClass">
+        @((MarkupString)Model.Content)
+    </tr>
+    <tr class="collapsible-row-wrapper">
+        <td colspan="100%">
+            @if (Model.CollapsibleRowContent != null)
+            {
+                @((MarkupString)Model.CollapsibleRowContent)
+            }
+        </td>
+    </tr>
+}
+
+@code {
+    [Parameter] public required TableRow.ViewModel Model { get; set; }
+}

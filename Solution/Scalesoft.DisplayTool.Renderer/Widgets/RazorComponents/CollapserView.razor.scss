@@ -1,0 +1,69 @@
+@import "../../HtmlResources/src/theme-variables";
+
+.collapse {
+    .collapse-header {
+        display: flex;
+        gap: $spacing02;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+div:has(~ .collapse):not(.resource-container) > .collapse, div:has(> .collapse):not(.resource-container) ~ div > .collapse, .collapse ~ div > .collapse {
+    margin-top: $spacing02;
+}
+
+.collapse:not(:first-of-type):not(:first-child) {
+    margin-top: $spacing02;
+}
+
+.card-footer > .collapse:first-child, .badge + .card, .badge + * > .card, .flex-row > .card {
+    margin-top: 0;
+}
+
+.collapser-icons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: $spacing02;
+}
+
+.card {
+    border-color: var(--#{$prefix}severity-card-border-color);
+}
+
+.card-header {
+    --#{$prefix}card-cap-padding-x: #{$spacing03};
+    color: var(--#{$prefix}severity-card-header-color);
+    background-color: var(--#{$prefix}severity-card-header-bg);
+    border-bottom: none;
+    height: calc(var(--#{$prefix}card-cap-padding-y) + var(--#{$prefix}h6-font-size) + 0.4rem);
+}
+
+.card-body {
+    --#{$prefix}card-spacer-y: 0.5rem;
+}
+
+.card-footer {
+    background-color: var(--#{$prefix}severity-card-footer-bg);
+    border-top: none;
+}
+
+.card-subtitle {
+    color: var(--#{$prefix}gray-600);
+    margin-top: -0.2rem;
+}
+
+.card-main-title {
+    font-size: var(--#{$prefix}h6-font-size)
+}
+
+.narrative-print-collapser-hidden, .card-footer:has(.narrative-print-collapser-hidden:only-child) {
+    display: none;
+}
+
+@media print {
+    .narrative-print-collapser-hidden, .card-footer:has(.narrative-print-collapser-hidden:only-child) {
+        display: flex;
+    }
+}

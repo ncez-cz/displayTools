@@ -1,0 +1,93 @@
+﻿@import "../../HtmlResources/src/theme-variables";
+
+th {
+    --#{$prefix}th-bg-color: var(--#{$prefix}primary-100);
+    --#{$prefix}th-color: var(--#{$prefix}primary-800);
+    background-color: var(--#{$prefix}th-bg-color);
+    color: var(--#{$prefix}th-color);
+    border-bottom: 2px solid var(--#{$prefix}primary-200);
+    box-shadow: none;
+}
+
+.collapse-content-inline {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.collapse-toggler-wrapper {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.collapse-toggler-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+.collapse-toggler-cell-content {
+    flex: 1;
+}
+
+
+tbody:has(.collapsible-row-wrapper){
+    /* 
+        Show the collapse toggler if the associated collapsible row 
+        contains at least one "optional-detail" element with content 
+        that is not a hidden narrative. (i.e. hides collapse toggler if 
+        collapsible row contains only narrative text and javascript is enabled)
+    */
+    &:has(.collapsible-row-wrapper > td > .optional-detail >  :not(.narrative-print-collapser.narrative-print-collapser-hidden)) > tr > td:first-child > .collapse-content-inline > .collapse-toggler-wrapper,
+    
+    /* 
+        Show the collapse toggler if the associated collapsible row 
+        contains at least one direct child that is not an "optional-detail" element. 
+        (i.e. ensures the toggler is visible whenever there is non-optional content)
+    */
+    &:has(.collapsible-row-wrapper > td > :not( .optional-detail )) > tr > td:first-child > .collapse-content-inline > .collapse-toggler-wrapper
+    {
+        display: inline-flex;
+    }
+    
+    .sub-component-row > td:first-child .collapse-toggler-wrapper {
+        display: none !important;
+    }
+}
+
+td {
+    word-break: break-word;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    max-width: 300px; /* force wrapping */
+    position: relative;
+}
+
+.collapse-toggler-checkbox {
+    display: none;
+}
+
+.narrative-cell {
+    border-left: none;
+    vertical-align: top;
+}
+
+td:has(+ .narrative-cell), th:has(+ .narrative-cell) {
+    border-right: none;
+}
+
+.narrative-cell .collapse-content-inline {
+    display: grid;
+    justify-content: flex-end;
+}
+
+th, td {
+    padding: $spacing01;
+}

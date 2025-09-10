@@ -1,0 +1,24 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils
+
+@if (Model.Type == ItemListType.Ordered)
+{
+    <ol id="@Model.Id" data-id="@Model.VisualId" class="@Model.CustomClass">
+        @foreach (var row in Model.Rows)
+        {
+            <li>@((MarkupString)row)</li>
+        }
+    </ol>
+}
+else
+{
+    <ul id="@Model.Id" data-id="@Model.VisualId" class="unordered-list @Model.CustomClass">
+        @foreach (var row in Model.Rows)
+        {
+            <li>@((MarkupString)row)</li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter] public required ItemList.ViewModel Model { get; set; }
+}

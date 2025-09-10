@@ -1,0 +1,121 @@
+﻿@use "sass:math";
+@import "theme-variables";
+
+body {
+
+    // Font default
+    --#{$prefix}font-size: 0.45em;
+    @include media-breakpoint-up(sm) {
+        --#{$prefix}font-size: 0.55rem;
+    }
+    @include media-breakpoint-up(md) {
+        --#{$prefix}font-size: 0.65rem;
+    }
+    @include media-breakpoint-up(lg) {
+        --#{$prefix}font-size: 0.75rem;
+    }
+
+    // Font h1
+    --#{$prefix}h1-font-size: 1.25rem;
+    @include media-breakpoint-up(sm) {
+        --#{$prefix}h1-font-size: 1.35rem;
+    }
+    @include media-breakpoint-up(md) {
+        --#{$prefix}h1-font-size: 1.45rem;
+    }
+    @include media-breakpoint-up(lg) {
+        --#{$prefix}h1-font-size: 1.55rem;
+    }
+
+    // Font h2
+    --#{$prefix}h2-font-size: 0.95rem;
+    @include media-breakpoint-up(sm) {
+        --#{$prefix}h2-font-size: 1.05rem;
+    }
+    @include media-breakpoint-up(md) {
+        --#{$prefix}h2-font-size: 1.15rem;
+    }
+    @include media-breakpoint-up(lg) {
+        --#{$prefix}h2-font-size: 1.25rem;
+    }
+
+    // Font h3
+    --#{$prefix}h3-font-size: 0.85rem;
+    @include media-breakpoint-up(sm) {
+        --#{$prefix}h3-font-size: 0.95rem;
+    }
+    @include media-breakpoint-up(md) {
+        --#{$prefix}h3-font-size: 1.05rem;
+    }
+    @include media-breakpoint-up(lg) {
+        --#{$prefix}h3-font-size: 1.15rem;
+    }
+
+    // Font h4
+    --#{$prefix}h4-font-size: 0.75rem;
+    @include media-breakpoint-up(sm) {
+        --#{$prefix}h4-font-size: 0.85rem;
+    }
+    @include media-breakpoint-up(md) {
+        --#{$prefix}h4-font-size: 0.95rem;
+    }
+    @include media-breakpoint-up(lg) {
+        --#{$prefix}h4-font-size: 1.05rem;
+    }
+
+    // Font h5
+    --#{$prefix}h5-font-size: 0.65rem;
+    @include media-breakpoint-up(sm) {
+        --#{$prefix}h5-font-size: 0.75rem;
+    }
+    @include media-breakpoint-up(md) {
+        --#{$prefix}h5-font-size: 0.85rem;
+    }
+    @include media-breakpoint-up(lg) {
+        --#{$prefix}h5-font-size: 0.95rem;
+    }
+
+    // Font h6
+    --#{$prefix}h6-font-size: 0.55rem;
+    @include media-breakpoint-up(sm) {
+        --#{$prefix}h6-font-size: 0.65rem;
+    }
+    @include media-breakpoint-up(md) {
+        --#{$prefix}h6-font-size: 0.75rem;
+    }
+    @include media-breakpoint-up(lg) {
+        --#{$prefix}h6-font-size: 0.85rem;
+    }
+
+    // Font small
+    --#{$prefix}small-font-size: 0.45rem;
+    @include media-breakpoint-up(sm) {
+        --#{$prefix}small-font-size: 0.5rem;
+    }
+    @include media-breakpoint-up(md) {
+        --#{$prefix}small-font-size: 0.55rem;
+    }
+    @include media-breakpoint-up(lg) {
+        --#{$prefix}small-font-size: 0.6rem;
+    }
+
+    // Font badge
+    .badge {
+        --#{$prefix}badge-font-size: calc(var(--#{$prefix}font-size) * 0.9) !important;
+    }
+
+    // Font tooltip icon
+    --#{$prefix}tooltip-icon-font-size: 0.7rem;
+    @include media-breakpoint-up(sm) {
+        --#{$prefix}tooltip-icon-font-size: 0.75rem;
+    }
+    @include media-breakpoint-up(md) {
+        --#{$prefix}tooltip-icon-font-size: 0.8rem;
+    }
+    @include media-breakpoint-up(lg) {
+        --#{$prefix}tooltip-icon-font-size: 0.85rem;
+    }
+
+    --#{$prefix}border-radius-sm: 0.25rem;
+    --#{$prefix}border-radius: 0.25rem;
+}

@@ -1,0 +1,7 @@
+﻿<tfoot id="@Model.Id" data-id="@Model.VisualId" class="@Model.CustomClass">
+    @((MarkupString)Model.Content)
+</tfoot>
+
+@code {
+    [Parameter] public required TableFooter.ViewModel Model { get; set; }
+}

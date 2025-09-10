@@ -1,0 +1,21 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils
+
+@{
+    var sizeClass = Model.Size switch
+    {
+        HeadingSize.DefaultTextSize => string.Empty,
+        HeadingSize.H6 => "h6",
+        HeadingSize.H5 => "h5",
+        HeadingSize.H4 => "h4",
+        HeadingSize.H3 => "h3",
+        HeadingSize.H2 => "h2",
+        HeadingSize.H1 => "h1",
+        _ => throw new ArgumentOutOfRangeException()
+    };
+}
+
+<p id="@Model.Id" data-id="@Model.VisualId" class="@sizeClass @Model.CustomClass">@((MarkupString)Model.Content)</p>
+
+@code {
+    [Parameter] public required Heading.ViewModel Model { get; set; }
+}

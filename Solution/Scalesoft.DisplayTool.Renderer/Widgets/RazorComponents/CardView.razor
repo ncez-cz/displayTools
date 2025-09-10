@@ -1,0 +1,38 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets
+@using Scalesoft.DisplayTool.Renderer.Extensions
+
+@code {
+
+    private string GetSeverityClass()
+    {
+        if (Model.Severity != null)
+        {
+            return $"severity-{Model.Severity?.ToEnumString()}";
+        }
+
+        return string.Empty;
+    }
+
+}
+
+<div class="card @Model.CustomClass @(GetSeverityClass())" id="@Model.Id" data-id="@Model.VisualId">
+    @if (!Model.HideTitle)
+    {
+        <div class="card-header">
+            @((MarkupString)(Model.Title ?? string.Empty))
+        </div>
+    }
+    <div class="card-body">
+        @((MarkupString)(Model.Body ?? string.Empty))
+    </div>
+    @if (!Model.HideFooter)
+    {
+        <div class="card-footer">
+            @((MarkupString)(Model.Footer ?? string.Empty))
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public required Card.ViewModel Model { get; set; }
+}

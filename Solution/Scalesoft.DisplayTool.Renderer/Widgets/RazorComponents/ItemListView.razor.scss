@@ -1,0 +1,9 @@
+﻿@use "../../HtmlResources/src/theme-variables" as *;
+
+.unordered-list {
+    margin-bottom: 0;
+}
+
+ul, ol {
+    padding-left: $spacing06;
+}

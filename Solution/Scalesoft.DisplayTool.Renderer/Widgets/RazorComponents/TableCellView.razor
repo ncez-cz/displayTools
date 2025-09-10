@@ -1,0 +1,49 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils
+
+@switch (Model.Type)
+{
+    case TableCellType.Header:
+        <th id="@Model.Id" data-id="@Model.VisualId" @attributes="Attributes" class="@Model.ContainerClass @Model.CustomClass">
+            @((MarkupString)Model.Content)
+        </th>
+        break;
+    case TableCellType.Data:
+        <td id="@Model.Id" data-id="@Model.VisualId" @attributes="Attributes" class="@Model.ContainerClass">
+            <span class="collapse-content-inline">
+                <span class="collapse-toggler-wrapper">
+                    <input type="checkbox" class="collapse-toggler-checkbox" id="@Model.InputId">
+                    <label class="collapse-toggler-label" for="@Model.InputId">
+                        @((MarkupString)Model.CollapserIcon)
+                    </label>
+                </span>
+                <span class="collapse-toggler-cell-content @(string.IsNullOrEmpty(Model.Content) ? "empty-content" : "") @Model.CustomClass">
+                    @((MarkupString)Model.Content)
+                </span>
+            </span>
+        </td>
+        break;
+    default:
+        throw new ArgumentOutOfRangeException();
+}
+
+@code {
+    [Parameter] public required TableCell.ViewModel Model { get; set; }
+
+    private Dictionary<string, object?> Attributes { get; set; } = new();
+
+    protected override void OnParametersSet()
+    {
+        if (Model.Colspan != null)
+        {
+            Attributes.Add("colspan", Model.Colspan.Value);
+        }
+
+        if (Model.Rowspan != null)
+        {
+            Attributes.Add("rowspan", Model.Rowspan.Value);
+        }
+
+        base.OnParametersSet();
+    }
+
+}

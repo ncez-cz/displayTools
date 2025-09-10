@@ -1,0 +1,92 @@
+@switch (Model.Variant)
+{
+    case ButtonVariant.CollapseSection:
+        <div class="d-none" data-collapse-label="Sbalit všechny sekce" data-expand-label="Rozbalit všechny sekce"></div>
+        <input type="checkbox" class="collapse-checkbox" id="@Model.InputId" checked/>
+        <label id="button-@Model.InputId" class="@GetButtonClasses() collapse-label collapse-all-btn"
+               title="@Model.Tooltip" @attributes="AdditionalAttributes" for="@Model.InputId" hidden>
+            @((MarkupString)Model.Icon)
+            <span>
+            @if (Model.Text != null)
+                {
+                    @((MarkupString)Model.Text)
+                }
+            </span>
+        </label>
+        break;
+    case ButtonVariant.ToggleDetails:
+        <div class="toggle-details-container">
+            <input type="checkbox" id="detail-toggle" checked class="d-none"/>
+            <label for="detail-toggle" class="checked-label @GetButtonClasses() btn">Zjednodušený režim</label>
+            <label for="detail-toggle" class="unchecked-label @GetButtonClasses() btn">Detailní režim</label>
+        </div>
+        break;
+    case ButtonVariant.Default:
+    default:
+        <button id="button-@Model.InputId" class="@GetButtonClasses()"
+                title="@Model.Tooltip" @attributes="AdditionalAttributes">
+            @((MarkupString)Model.Icon)
+            @if (Model.Text != null)
+            {
+                <span>@((MarkupString)Model.Text)</span>
+            }
+        </button>
+        break;
+}
+
+
+@code {
+    [Parameter] public Button.ViewModel Model { get; set; } = default!;
+
+    private Dictionary<string, object> AdditionalAttributes { get; set; } = new();
+
+    protected override void OnParametersSet()
+    {
+        AdditionalAttributes.Clear();
+        AdditionalAttributes = Model.AdditionalAttributes;
+
+        if (Model.Variant == ButtonVariant.Modal)
+        {
+            AdditionalAttributes["data-bs-toggle"] = "modal";
+            // This targets the modal div, which has the ID "modal-@Model.InputId"
+            AdditionalAttributes["data-bs-target"] = $"#modal-{Model.InputId}";
+        }
+
+        if (!string.IsNullOrEmpty(Model.OnClick))
+        {
+            AdditionalAttributes["onclick"] = Model.OnClick;
+        }
+
+        if (Model.IsDisabled)
+        {
+            AdditionalAttributes["disabled"] = "disabled";
+        }
+    }
+
+    private string GetButtonClasses()
+    {
+        const string baseClass = "btn";
+        var styleClass = Model.Style switch
+        {
+            ButtonStyle.Primary => "btn-primary",
+            ButtonStyle.Secondary => "btn-secondary",
+            ButtonStyle.Success => "btn-success",
+            ButtonStyle.Danger => "btn-danger",
+            ButtonStyle.Warning => "btn-warning",
+            ButtonStyle.Info => "btn-info",
+            ButtonStyle.Outline => "btn-outline",
+            _ => "btn-primary"
+        };
+
+        var variantClass = Model.Variant switch
+        {
+            ButtonVariant.Modal => "btn-modal",
+            ButtonVariant.CollapseSection => "btn-collapse-section",
+            ButtonVariant.ToggleDetails => "btn-toggle-details",
+            _ => ""
+        };
+
+        return $"{baseClass} {styleClass} {variantClass} {Model.CustomClass}".Trim();
+    }
+
+}

@@ -1,0 +1,31 @@
+﻿@using System.Net
+@using System.Text.RegularExpressions
+<span class="text-icon">@GetAbbreviation()</span>
+
+@code {
+    [Parameter] public string? LabelAbbreviation { get; init; }
+
+    [Parameter] public required string IconLabel { get; init; }
+
+    private string GetAbbreviation()
+    {
+        if (!string.IsNullOrEmpty(LabelAbbreviation))
+        {
+            return LabelAbbreviation;
+        }
+
+        const int maxGeneratedAbbreviationLength = 2;
+        // minConsiderableTextLength value is 3 to prevent words like of, on, in to be used in generation
+        const int minConsiderableTextLength = 3;
+
+        var decodedIconLabel = WebUtility.HtmlDecode(IconLabel);
+        // assuming razor components will not generate invalid outputs and only known tags will be used
+        decodedIconLabel = Regex.Replace(decodedIconLabel, @"<\/?(span|div|p|h1|h2|h3|h4|h5|h6|input|label|button|hr|br|ol|ul|li|a|dl|dd|dt|table|tbody|caption|th|td|tr|tfoot|thead)[^>]*\/?>", string.Empty); 
+        var regex = new Regex($"^\\w{{{minConsiderableTextLength}}}");
+        var textStart = decodedIconLabel
+            .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+            .Where(x => regex.IsMatch(x))
+            .Take(maxGeneratedAbbreviationLength);
+        return string.Concat(textStart.Select(x => char.ToUpper(x[0])));
+    }
+}

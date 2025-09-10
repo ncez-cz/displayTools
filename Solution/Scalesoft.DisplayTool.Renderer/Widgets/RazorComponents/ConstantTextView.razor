@@ -1,0 +1,12 @@
+@if (string.IsNullOrEmpty(Model.Id) && string.IsNullOrEmpty(Model.VisualId) && string.IsNullOrEmpty(Model.CustomClass))
+{
+    @Model.Text
+}
+else
+{
+    <span id="@Model.Id" data-id="@Model.VisualId" class="@Model.CustomClass">@Model.Text</span>
+}
+
+@code {
+    [Parameter] public required ConstantText.ViewModel Model { get; set; }
+}

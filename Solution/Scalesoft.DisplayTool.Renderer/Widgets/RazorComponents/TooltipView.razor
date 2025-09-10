@@ -1,0 +1,27 @@
+﻿<div id="@Model.Id" data-id="@Model.VisualId" class="@(!string.IsNullOrEmpty(Model.ImportantTooltipText) || !string.IsNullOrEmpty(Model.AdditionalTooltipText) ? "tooltip-wrapper" : "") @Model.CustomClass">
+    @((MarkupString)Model.RelatedWidgets)
+    @if (!string.IsNullOrEmpty(Model.ImportantTooltipText) || !string.IsNullOrEmpty(Model.AdditionalTooltipText))
+    {
+        @((MarkupString)Model.Icon)
+        <div class="tooltip tooltip-bottom">
+            @if (!string.IsNullOrEmpty(Model.ImportantTooltipText))
+            {
+                <span>
+                    @((MarkupString)Model.ImportantTooltipText)
+                </span>
+            }
+            @if (!string.IsNullOrEmpty(Model.AdditionalTooltipText))
+            {
+                <br/>
+                <span class="additional-text">
+                    @((MarkupString)Model.AdditionalTooltipText)
+                </span>
+            }
+            <div class="arrow"></div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public required Tooltip.ViewModel Model { get; set; }
+}

@@ -1,0 +1,58 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils
+
+@{
+    var classes = string.Empty;
+
+    if (Model.Style.HasFlag(TextStyle.Bold))
+    {
+        classes += "fw-bold";
+    }
+
+    if (Model.Style.HasFlag(TextStyle.Italic))
+    {
+        classes += " fst-italic";
+    }
+    
+    if (Model.Style.HasFlag(TextStyle.Underlined))
+    {
+        classes += " text-decoration-underline";
+    }
+
+    if (Model.Style.HasFlag(TextStyle.Strike))
+    {
+        classes += " text-decoration-line-through";
+    }
+
+    if (Model.Style.HasFlag(TextStyle.Preformatted))
+    {
+        classes += " pre";
+    }
+    
+    if (Model.Style.HasFlag(TextStyle.Small))
+    {
+        classes += " small";
+    }
+    
+    if (Model.Style.HasFlag(TextStyle.Muted))
+    {
+        classes += " text-muted";
+    }
+    
+    if (Model.Style.HasFlag(TextStyle.Capitalize))
+    {
+        classes += " capitalize";
+    }
+    
+    if (Model.Style.HasFlag(TextStyle.Uppercase))
+    {
+        classes += " uppercase";
+    }
+}
+
+<span id="@Model.Id" data-id="@Model.VisualId" class="@classes @Model.CustomClass">
+    @((MarkupString)Model.Content)
+</span>
+
+@code {
+    [Parameter] public required TextContainer.ViewModel Model { get; set; }
+}

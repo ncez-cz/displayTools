@@ -1,0 +1,784 @@
+﻿@use "sass:math";
+@import "theme-variables";
+@import "sizing-variables";
+@import "hideable-content";
+
+@layer documentation-mode, bootstrap;
+
+@layer bootstrap {
+    @import "bootstrap/scss/utilities";
+    @import "bootstrap/scss/root";
+    @import "bootstrap/scss/grid";
+
+    @import "bootstrap/scss/utilities/api";
+    @import "bootstrap/scss/reboot";
+    @import "bootstrap/scss/type";
+
+    @import "bootstrap/scss/tables";
+    @import "bootstrap/scss/badge";
+    @import "bootstrap/scss/alert";
+    @import "bootstrap/scss/card";
+    @import "bootstrap/scss/modal";
+}
+
+body {
+    font-size: var(--#{$prefix}font-size);
+}
+
+h1, .h1 {
+    font-size: var(--#{$prefix}h1-font-size);
+}
+
+h2, .h2 {
+    font-size: var(--#{$prefix}h2-font-size);
+}
+
+h3, .h3 {
+    font-size: var(--#{$prefix}h3-font-size);
+}
+
+h4, .h4 {
+    font-size: var(--#{$prefix}h4-font-size);
+}
+
+h5, .h5 {
+    font-size: var(--#{$prefix}h5-font-size);
+}
+
+h6, .h6 {
+    font-size: var(--#{$prefix}h6-font-size);
+}
+
+.small {
+    font-size: var(--#{$prefix}small-font-size)
+}
+
+// CDA widgets use table body as a component, so it is treated as one row and styled accordingly. Other document types started to use it too.
+.table.striped {
+    > tbody {
+        > tr {
+            &:not(:last-of-type):not(.collapse-toggler-row) {
+                border-bottom-width: 0;
+            }
+
+            &:not(:first-of-type) {
+                border-top-width: 0;
+            }
+
+            > * {
+                --#{$prefix}table-color-type: initial;
+                --#{$prefix}table-bg-type: initial;
+            }
+        }
+
+        &:nth-of-type(odd) tr > * {
+            --#{$prefix}table-color-type: var(--#{$prefix}table-striped-color);
+            --#{$prefix}table-bg-type: var(--#{$prefix}table-striped-bg);
+        }
+    }
+}
+
+.collapse-label {
+    cursor: pointer;
+
+    .divider-label-subtitle {
+        display: block;
+    }
+}
+
+.collapse-toggler-checkbox:checked + .collapse-toggler-label > .collapse-triangle-icon {
+    color: transparent;
+}
+
+#ic-triangle-outline {
+    color: var(--#{$prefix}primary-300);
+}
+
+.collapsible-content-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s ease-out;
+
+    .collapsible-content {
+        overflow: hidden;
+        padding-top: 0;
+        transition: padding-top 0.2s ease-out 0.2s;
+    }
+}
+
+.collapse-checkbox {
+    display: none;
+
+    &:checked + .collapse-label {
+        .collapse-icon {
+            transform: rotate(180deg);
+        }
+
+        .divider-label-subtitle {
+            display: none;
+        }
+
+        + .collapsible-content-wrapper {
+            grid-template-rows: 1fr;
+
+            .collapsible-content:not(.card > .collapsible-content-wrapper > .collapsible-content) {
+                padding-top: $spacing02;
+            }
+        }
+    }
+}
+
+.patient-cards-layout {
+    --gap: #{$spacing02};
+    gap: var(--gap);
+
+    > * {
+        flex: 0 0 100%;
+        height: 100%;
+    }
+}
+
+@layer documentation-mode {
+    .render-mode-documentation {
+        $documentation-text-color: white;
+        $documentation-bg-color: var(--#{$prefix}blue-500);
+        $documentation-darker-bg-color: var(--#{$prefix}blue-600);
+        word-break: break-all;
+
+        --#{$prefix}body-bg: #{$documentation-bg-color} !important;
+        --#{$prefix}body-color: #{$documentation-text-color} !important;
+        --#{$prefix}heading-color: #{$documentation-text-color} !important;
+        --#{$prefix}emphasis-color: #{$documentation-text-color} !important;
+
+        .text-muted {
+            opacity: 70%;
+            color: $documentation-text-color !important;
+        }
+
+        .text-icon {
+            display: none !important;
+        }
+
+        .icon {
+            color: $documentation-text-color !important;
+        }
+
+        .collapse-all-btn {
+            border: 1px solid $documentation-text-color !important;
+        }
+
+        .collapse-row-icon {
+            opacity: 100% !important;
+        }
+
+        .divider {
+            --#{$prefix}divider-color: #{$documentation-text-color} !important;
+
+            hr {
+                opacity: 70% !important;
+                --#{$prefix}hr-bg-color: #{$documentation-text-color} !important;
+            }
+        }
+
+        .collapse-toggler-empty-column {
+            --#{$prefix}thead-bg-color: #{$documentation-darker-bg-color} !important;
+            --#{$prefix}thead-color: #{$documentation-text-color} !important;
+        }
+
+        th {
+            word-break: initial;
+            --#{$prefix}th-bg-color: #{$documentation-darker-bg-color} !important;
+            --#{$prefix}th-color: #{$documentation-text-color} !important;
+        }
+
+        .table > :not(caption) > * > * {
+            --#{$prefix}table-color: #{$documentation-text-color};
+        }
+
+        .card {
+            --#{$prefix}card-cap-bg: #{$documentation-darker-bg-color} !important;
+            --#{$prefix}card-cap-color: #{$documentation-text-color} !important;
+        }
+
+        .badge {
+            --#{$prefix}badge-bg: #{$documentation-darker-bg-color} !important;
+            --#{$prefix}badge-color: #{$documentation-text-color} !important;
+        }
+    }
+}
+
+@media print {
+    @page {
+        size: A4 landscape;
+    }
+
+    :root {
+        font-size: 10px;
+    }
+
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    .collapsible-content-wrapper {
+        grid-template-rows: 1fr;
+    }
+
+    .card {
+        border-radius: 0 !important;
+    }
+
+    .badge,
+    .text-icon {
+        background-color: unset !important;
+    }
+
+    .divider hr {
+        border-top: $spacing02 solid var(--#{$prefix}primary-600) !important;
+
+        &:nth-of-type(2) {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+    }
+
+    .card-header {
+        padding-inline: $spacing02 !important;
+        font-weight: bold;
+        background-color: unset !important;
+        border: none !important;
+    }
+
+    .collapse-icon,
+    .collapse-toggler-column,
+    .collapse-toggler-empty-column,
+    .collapse-label .divider-label-subtitle,
+    .divider .collapse-icon + hr,
+    .narrative-modal-button,
+    .narrative-cell,
+    .collapse-all-btn {
+        display: none !important;
+    }
+
+    .section {
+        page-break-after: always;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+
+        .collapsible-content-wrapper {
+            display: block !important;
+        }
+    }
+
+    td:has(> .card) {
+        padding: 0 !important;
+
+        > .card {
+            border: none !important;
+        }
+    }
+
+    .patient-cards-layout {
+        --row-items-count: 4 !important;
+
+        .card {
+            break-inside: avoid;
+
+            .collapsible-content-wrapper {
+                padding-inline: $spacing02 !important;
+            }
+        }
+    }
+
+    .card-body,
+    .section .collapsible-content-wrapper {
+        padding: 0 !important;
+
+        > p {
+            padding-inline: $spacing02;
+        }
+    }
+
+    .table,
+    p {
+        margin-bottom: 0 !important;
+    }
+
+    .card > .collapsible-content-wrapper > .collapsible-content > .card-body > .table-bordered {
+        width: calc(100% + (2 * var(--#{$prefix}card-border-width))) !important;
+        margin-inline: calc(-1 * var(--#{$prefix}card-border-width)) !important;
+    }
+}
+
+// Copied from https://hl7.org/fhir/R4/fhir-runtime.css
+
+.bold {
+    font-weight: bold
+}
+
+.italics {
+    font-style: italic
+}
+
+.underline {
+    text-decoration: underline
+}
+
+.strikethrough {
+    text-decoration: line-through
+}
+
+.left {
+    text-align: left
+}
+
+.right {
+    text-align: right
+}
+
+.center {
+    text-align: center
+}
+
+.justify {
+    text-align: justify
+}
+
+.border-left {
+    border-left: 1px solid grey
+}
+
+.border-right {
+    border-right: 1px solid grey
+}
+
+.border-top {
+    border-top: 1px solid grey
+}
+
+.border-bottom {
+    border-bottom: 1px solid grey
+}
+
+.arabic {
+    list-style-type: decimal
+}
+
+.little-roman {
+    list-style-type: lower-roman
+}
+
+.big-roman {
+    list-style-type: upper-roman
+}
+
+.little-alpha {
+    list-style-type: lower-alpha
+}
+
+.big-alpha {
+    list-style-type: upper-alpha
+}
+
+.disc {
+    list-style-type: disc
+}
+
+.circle {
+    list-style-type: circle
+}
+
+.square {
+    list-style-type: square
+}
+
+.nolist, .unlist {
+    list-style-type: none
+}
+
+.bordered-card {
+    flex: 1 1 15rem;
+    border: 1px solid #c5dbf2;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.opentype-item-w {
+    max-width: 34rem;
+}
+
+.activeTarget, .activeTarget > *, .activeTarget > * > * {
+    animation-name: highlight-target;
+    animation-duration: 2s;
+    animation-delay: 1s;
+}
+
+@keyframes highlight-target {
+    from {
+        background: #ffffaa;
+    }
+    to {
+        background: transparent;
+    }
+}
+
+.patient-info-width {
+    width: 30vw;
+}
+
+.provenance-container {
+    width: min-content;
+}
+
+.time-card {
+    max-width: 30rem;
+}
+
+.media-image-container > img {
+    max-width: 50rem;
+}
+
+.person-image {
+    //max-width: 50%;
+    height: auto;
+}
+
+.deleted-list-item > .card-header {
+    background-color: $danger-100;
+    color: var(--#{$prefix}-card-color);
+}
+
+.collapse-toggler-row:has(> td:first-child .collapse-toggler-wrapper > .collapse-toggler-checkbox:checked) + .collapsible-row-wrapper:not(:has(> td > .narrative-print-collapser-hidden:only-child)) {
+    display: table-row;
+}
+
+.header-code {
+    max-height: calc((var(--#{$prefix}h1-font-size) * 4) - var(--#{$prefix}h6-font-size) * 2.1);
+    width: auto;
+    height: auto;
+}
+
+.header-code-label {
+    margin-top: $spacing01;
+    display: block;
+    max-width: calc(var(--#{$prefix}h1-font-size) * 4);
+}
+
+.header-image {
+    height: calc(var(--#{$prefix}h1-font-size) * 4);
+
+    > img {
+        height: 100%;
+    }
+}
+
+.header-code-container {
+    max-height: 10rem;
+    text-align: center;
+    margin-right: $spacing01;
+}
+
+.icon {
+    height: var(--#{$prefix}tooltip-icon-font-size);
+    flex-shrink: 0;
+}
+
+.alert-icon {
+    margin-right: $spacing02;
+    flex-shrink: 0;
+}
+
+.collapse-row-icon {
+    cursor: pointer;
+    height: 1.3rem;
+    opacity: 50%;
+}
+
+.collapse-icon {
+    transition: transform 0.5s ease-out;
+}
+
+.tooltip-icon {
+    cursor: pointer;
+    height: 0.75rem;
+    color: var(--#{$prefix}info-500);
+    margin-inline: $spacing01;
+}
+
+.check-icon {
+    color: var(--#{$prefix}success-500);
+}
+
+.cross-icon {
+    color: var(--#{$prefix}danger-600);
+}
+
+.gear-icon {
+    color: var(--#{$prefix}gray-500);
+}
+
+.circle-user-icon {
+    color: var(--#{$prefix}info-400);
+}
+
+.blue-cross-icon {
+    color: var(--dt-primary-400);
+}
+
+.file-icon {
+    color: var(--#{$prefix}button-bg);
+    height: var(--#{$prefix}tooltip-icon-font-size);
+}
+
+.caret-down {
+    width: calc(var(--#{$prefix}tooltip-icon-font-size) * 1.3);
+    height: calc(var(--#{$prefix}tooltip-icon-font-size) * 1.3);
+}
+
+.corner-close-cross {
+    color: var(--#{$prefix}primary);
+}
+
+.icon-reservoir {
+    width: 0;
+    height: 0;
+    position: absolute;
+    left: -1000px;
+}
+
+.red-danger-icon {
+    color: var(--#{$prefix}danger-600)
+}
+
+.green-success-icon {
+    color: var(--#{$prefix}success-400)
+}
+
+.orange-warning-icon {
+    color: var(--#{$prefix}warning-600)
+}
+
+.yellow-warning-icon {
+    color: var(--#{$prefix}warning-400)
+}
+
+.blue-info-icon {
+    color: var(--#{$prefix}info-400)
+}
+
+.enum-tooltip-icon {
+    height: calc(var(--#{$prefix}tooltip-icon-font-size) * 0.8);
+    width: calc(var(--#{$prefix}tooltip-icon-font-size) * 0.8);
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.abnormal {
+    background-color: #{$red-100};
+}
+
+.critical {
+    background-color: #{$red-300};
+}
+
+.collapse-triangle-icon {
+    color: var(--#{$prefix}primary-300);
+    cursor: pointer;
+}
+
+.lab-abnormal-value {
+    border-radius: var(--#{$prefix}border-radius-pill);
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+}
+
+.text-alert-600 {
+    color: #{$red-600};
+}
+
+.text-warning-400 {
+    color: #{$yellow-400};
+}
+
+.text-warning-600 {
+    color: #{$yellow-600};
+}
+
+.text-success-400 {
+    color: #{$green-400};
+}
+
+.text-info-400 {
+    color: #{$blue-400};
+}
+
+.sub-component-row {
+    td:first-child {
+        box-shadow: inset 0.35rem 0 0 0 #{$table-border-color};
+        padding-left: 0.4rem;
+    }
+}
+
+body {
+    --#{$prefix}severity-card-header-bg: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-card-header-color: var(--#{$prefix}primary-600);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}primary-100) 40%, transparent);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}primary-600);
+    --#{$prefix}severity-badge-border-color: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-color: var(--#{$prefix}primary-700);
+}
+
+.severity-primary {
+    --#{$prefix}severity-card-header-bg: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-card-header-color: var(--#{$prefix}primary-600);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}primary-100) 40%, transparent);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}primary-600);
+    --#{$prefix}severity-badge-border-color: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-color: var(--#{$prefix}primary-700);
+}
+
+.severity-secondary {
+    --#{$prefix}severity-card-header-bg: var(--#{$prefix}secondary-200);
+    --#{$prefix}severity-card-header-color: var(--#{$prefix}secondary-900);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}secondary-200);
+    --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}secondary-100) 40%, transparent);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}secondary-100);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}secondary-900);
+    --#{$prefix}severity-badge-border-color: var(--#{$prefix}secondary-100);
+    --#{$prefix}severity-color: var(--#{$prefix}secondary-700);
+}
+
+.severity-info {
+    --#{$prefix}severity-card-header-bg: var(--#{$prefix}info-100);
+    --#{$prefix}severity-card-header-color: var(--#{$prefix}info-900);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}info-100);
+    --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}info-100) 20%, transparent);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}info-100);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}info-900);
+    --#{$prefix}severity-badge-border-color: var(--#{$prefix}info-100);
+    --#{$prefix}severity-color: var(--#{$prefix}info-700);
+}
+
+.severity-success {
+    --#{$prefix}severity-card-header-bg: var(--#{$prefix}success-200);
+    --#{$prefix}severity-card-header-color: var(--#{$prefix}success-900);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}success-200);
+    --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}success-100) 40%, transparent);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}success-100);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}success-900);
+    --#{$prefix}severity-badge-border-color: var(--#{$prefix}success-100);
+    --#{$prefix}severity-color: var(--#{$prefix}success-700);
+}
+
+.severity-warning {
+    --#{$prefix}severity-card-header-bg: var(--#{$prefix}warning-200);
+    --#{$prefix}severity-card-header-color: var(--#{$prefix}warning-900);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}warning-200);
+    --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}warning-100) 30%, transparent);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}warning-100);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}warning-900);
+    --#{$prefix}severity-badge-border-color: var(--#{$prefix}warning-100);
+    --#{$prefix}severity-color: var(--#{$prefix}warning-700);
+}
+
+.severity-error {
+    --#{$prefix}severity-card-header-bg: var(--#{$prefix}danger-300);
+    --#{$prefix}severity-card-header-color: var(--#{$prefix}danger-900);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}danger-300);
+    --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}danger-100) 40%, transparent);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}danger-100);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}danger-900);
+    --#{$prefix}severity-badge-border-color: var(--#{$prefix}danger-100);
+    --#{$prefix}severity-color: var(--#{$prefix}danger-700);
+}
+
+.severity-gray {
+    --#{$prefix}severity-card-header-bg: var(--#{$prefix}gray-200);
+    --#{$prefix}severity-card-header-color: var(--#{$prefix}gray-900);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}gray-200);
+    --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}gray-100) 100%, transparent);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}gray-200);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}gray-900);
+    --#{$prefix}severity-badge-border-color: var(--#{$prefix}gray-200);
+    --#{$prefix}severity-color: var(--#{$prefix}gray-700);
+}
+
+.severity-color {
+    color: var(--#{$prefix}severity-color);
+}
+
+.col-1-5 {
+    flex: 0 0 auto;
+    width: 12.5%;
+}
+
+.col-10-5 {
+    flex: 0 0 auto;
+    width: 87.5%;
+}
+
+.person-photo {
+    max-height: 10rem;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.medication-request-item {
+    flex: 9 1 calc(33% - 2 * $spacing05);
+    @include media-breakpoint-up(lg) {
+        flex: 0 1 calc(33% - 2 * $spacing05);
+    }
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+tbody:empty {
+    // WORKAROUND for Firefox - fix borders. Firefox stops rendering borders if a table has an empty tbody - see https://bugzilla.mozilla.org/show_bug.cgi?id=217769
+    display: none;
+}
+
+.document-header {
+    margin-bottom: -0.2rem;
+}
+
+.dosage-container {
+    max-width: calc(50% - $spacing02);
+}
+
+input:checked + .collapse-header:has(.card-subtitle) {
+    .card-main-title {
+        display: none;
+    }
+
+    .card-subtitle {
+        color: var(--#{$prefix}severity-card-header-color);
+        margin-top: 0;
+        font-size: var(--#{$prefix}h6-font-size);
+    }
+}
+
+.resource-container:not(:first-child) {
+    margin-top: $spacing02;
+}
+
+.collapsible-content:has(.badge:not(.collapser .badge):not(.card .badge):not(table .badge)) {
+    & > *.card, & > * > *.card, & > * > * > *.card, & > *:is(table), & > * > *:is(table), & > * > * > *:is(table) {
+        margin-left: -0.65em; // --dt-badge-padding-x is 0.65em and for some reason doesn't resolve in the browser
+        margin-right: -0.65em; // --dt-badge-padding-x is 0.65em and for some reason doesn't resolve in the browser
+    }
+}

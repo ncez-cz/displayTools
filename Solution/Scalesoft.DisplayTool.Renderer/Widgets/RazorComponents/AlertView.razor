@@ -1,0 +1,46 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils
+<div id="@Model.Id" data-id="@Model.VisualId" class="mx-10 alert alert-@GetSeverityClass() @Model.CustomClass"
+     role="alert">
+    @if (Model.HeaderMessage != null)
+    {
+        <h4 class="alert-heading alert-flex-wrapper">
+            <span>
+                @((MarkupString)Model.HeaderMessage)
+            </span>
+        </h4>
+    }
+
+    @if (Model.HeaderMessage != null || Model.FooterMessage != null)
+    {
+        <p>
+            @((MarkupString)Model.MainMessage)
+        </p>
+    }
+    else
+    {
+        <span class="alert-flex-wrapper">
+            @((MarkupString)Model.MainMessage)
+        </span>
+    }
+
+    @if (Model.FooterMessage != null)
+    {
+        <hr>
+        <p class="mb-0">@((MarkupString)Model.FooterMessage)</p>
+    }
+</div>
+
+@code {
+    [Parameter] public required Alert.ViewModel Model { get; set; }
+
+    private string GetSeverityClass() => Model.Severity switch
+    {
+        Severity.Primary => "primary",
+        Severity.Secondary => "secondary",
+        Severity.Info => "info",
+        Severity.Success => "success",
+        Severity.Warning => "warning",
+        Severity.Error => "danger",
+        _ => throw new ArgumentOutOfRangeException(nameof(Model.Severity))
+    };
+}

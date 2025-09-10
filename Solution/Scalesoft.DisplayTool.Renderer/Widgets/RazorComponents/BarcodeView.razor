@@ -1,0 +1,10 @@
+@using Scalesoft.DisplayTool.Renderer.Widgets
+
+<div id="@Model.Id" class="@Model.CustomClass"
+     data-id="@Model.VisualId">
+    @((MarkupString)Model.Content)
+</div>
+
+@code {
+    [Parameter] public required Barcode.ViewModel Model { get; set; }
+}

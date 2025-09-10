@@ -1,0 +1,124 @@
+@import "../../HtmlResources/src/theme-variables";
+
+.btn {
+    /* Base button styling using Sass variables and our prefix */
+    --#{$prefix}button-bg: var(--#{$prefix}primary-500);
+    --#{$prefix}button-color: #fff;
+
+    border: none;
+    padding: 0.275rem 0.55rem;
+    cursor: pointer;
+    font-size: var(--#{$prefix}font-size);
+    transition: background-color 0.2s ease-in-out;
+    background-color: var(--#{$prefix}button-bg);
+    color: var(--#{$prefix}button-color);
+    border-radius: var(--#{$prefix}border-radius-sm);
+    margin: $spacing02;
+
+    &:hover {
+        opacity: 0.9;
+    }
+
+    /* Button variants */
+    &.btn-primary {
+        --#{$prefix}button-bg: var(--#{$prefix}primary-500);
+        --#{$prefix}button-color: #fff;
+    }
+
+    &.btn-secondary {
+        --#{$prefix}button-bg: var(--#{$prefix}secondary-500);
+        --#{$prefix}button-color: #fff;
+    }
+
+    &.btn-success {
+        --#{$prefix}button-bg: var(--#{$prefix}success-500);
+        --#{$prefix}button-color: #fff;
+    }
+
+    &.btn-danger {
+        --#{$prefix}button-bg: var(--#{$prefix}danger-500);
+        --#{$prefix}button-color: #fff;
+    }
+
+    &.btn-warning {
+        --#{$prefix}button-bg: var(--#{$prefix}warning-500);
+        --#{$prefix}button-color: #fff;
+    }
+
+    &.btn-info {
+        --#{$prefix}button-bg: var(--#{$prefix}info-500);
+        --#{$prefix}button-color: #fff;
+    }
+
+    &.btn-modal {
+        --#{$prefix}button-bg: var(--#{$prefix}blue-400);
+        --#{$prefix}button-color: #fff;
+        border: 1px solid var(--#{$prefix}blue-500);
+    }
+
+    /* Outline style */
+    &.btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--#{$prefix}button-bg);
+        color: var(--#{$prefix}button-bg);
+    }
+
+    @media print {
+        display: none !important;
+    }
+}
+
+.collapse-all-btn {
+    margin: 0;
+}
+
+.narrative-modal-button {
+    display: none;
+    padding-left: $spacing01;
+    padding-right: $spacing01;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+.card-header .narrative-modal-button, .card-body .narrative-modal-button, .collapse-all-btn ~ .narrative-modal-button {
+    margin-left: auto !important;
+}
+
+.narrative-modal-button {
+    height: $spacing05;
+    width: $spacing05;
+}
+
+.collapse-all-btn ~ .narrative-modal-button {
+    height: auto;
+    width: auto;
+}
+
+.show {
+    display: flex;
+}
+
+.toggle-details-container {
+    padding-left: $spacing02;
+
+    .checked-label, .unchecked-label {
+        height: 100%;
+    }
+
+    &:has(> #detail-toggle:not(:checked)) .checked-label {
+        display: none;
+    }
+
+    &:has(> #detail-toggle:checked) .unchecked-label {
+        display: none;
+    }
+
+    .btn {
+        margin: 0;
+    }
+}
+
+.ml-auto {
+    margin-left: auto !important;
+}
