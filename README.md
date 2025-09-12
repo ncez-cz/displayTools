@@ -17,6 +17,23 @@ This repository contains display tools for FHIR, CDA, and DASTA.
 ### Run
 
 - .NET 8.0 hosting bundle for IIS deployment, .NET 8.0 runtime otherwise
+- Chromium (for rendering PDFs)
+    - Can be downloaded automatically when needed
+        - in appsettings:
+            - ```json
+              "PdfRenderer": {
+                 "DownloadChromium": true
+              }
+              ```
+    - If internet access is not available, chromium may be pre-downloaded
+        - For example, from https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=win_rel/
+        - in appsettings:
+            - ```json
+              "PdfRenderer": {
+                 "DownloadChromium": false,
+                 "ChromiumExePath": "C:/path/to/chrome.exe"
+              }
+              ```
 
 ## First-time setup
 
