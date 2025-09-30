@@ -1,3 +1,4 @@
+using System.Globalization;
 using Scalesoft.DisplayTool.Renderer.Extensions;
 using Scalesoft.DisplayTool.Renderer.Models;
 using Scalesoft.DisplayTool.Renderer.Models.Enums;
@@ -46,7 +47,7 @@ public class ShowContactPoint(string telecomPath = "f:telecom") : Widget
 
                 int? rankValue = null;
                 var rankAttr = nav.SelectSingleNode("f:rank/@value").Node;
-                if (rankAttr != null && int.TryParse(rankAttr.Value, out var parsedRank))
+                if (rankAttr != null && int.TryParse(rankAttr.Value, CultureInfo.InvariantCulture, out var parsedRank))
                 {
                     rankValue = parsedRank;
                 }
@@ -68,30 +69,23 @@ public class ShowContactPoint(string telecomPath = "f:telecom") : Widget
             var telecom = $"{telecomPath}[{item.OriginalIndex}]";
             var widget =
                 new ChangeContext(telecom,
-                    new Container([
-                        new Concat([
-                            new Optional("f:system",
-                                new EnumLabel("@value", "http://hl7.org/fhir/ValueSet/contact-point-system")
-                            ),
-                            new Condition("f:system and f:use",
-                                new ConstantText(" ")
-                            ),
-                            new Optional("f:use",
-                                new Concat([
-                                    new TextContainer(TextStyle.Muted, [
-                                        new ConstantText("("),
-                                        new EnumLabel("@value", "http://hl7.org/fhir/ValueSet/contact-point-use"),
-                                        new ConstantText(")")
-                                    ])
-                                ], string.Empty)
-                            ),
-                            new Condition("(f:system | f:use) and f:value",
-                                new ConstantText(": ")
-                            ),
-                            new Optional("f:value", new Text("@value", optionalClass: "text-nowrap")),
-                            new LineBreak()
-                        ], string.Empty)
-                    ], ContainerType.Span)
+                    new NameValuePair([
+                        new Optional("f:system",
+                            new EnumLabel("@value", "http://hl7.org/fhir/ValueSet/contact-point-system")
+                        ),
+                        new Condition("f:system and f:use",
+                            new ConstantText(" ")
+                        ),
+                        new Optional("f:use",
+                            new Concat([
+                                new TextContainer(TextStyle.Muted, [
+                                    new ConstantText("("),
+                                    new EnumLabel("@value", "http://hl7.org/fhir/ValueSet/contact-point-use"),
+                                    new ConstantText(")")
+                                ])
+                            ], string.Empty)
+                        )
+                    ], [new Optional("f:value", new Text("@value", optionalClass: "text-nowrap")),])
                 );
             widgets.Add(widget);
         }

@@ -4,7 +4,6 @@ using Scalesoft.DisplayTool.Renderer.Models.Enums;
 using Scalesoft.DisplayTool.Renderer.Renderers;
 using Scalesoft.DisplayTool.Renderer.Utils;
 using Scalesoft.DisplayTool.Renderer.Utils.Language;
-using Scalesoft.DisplayTool.Renderer.Widgets.Fhir;
 using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
@@ -20,7 +19,9 @@ public class Section(
     IdentifierSource? idSource = null,
     IdentifierSource? visualIdSource = null,
     LocalizedAbbreviations? titleAbbreviations = null,
-    string? narrativeTextPath = null
+    Widget? narrativeModal = null,
+    string? customClass = null,
+    bool isCollapsed = false
 )
     : Widget
 {
@@ -34,8 +35,11 @@ public class Section(
         IdentifierSource? visualIdSource = null,
         LocalizedAbbreviations? titleAbbreviations = null,
         Severity? severity = null,
-        string? narrativeTextPath = null
-    ) : this(select, requiredSectionMissingTitle, title, content, () => severity, subtitle, idSource, visualIdSource, titleAbbreviations, narrativeTextPath)
+        Widget? narrativeModal = null,
+        string? customClass = null,
+        bool isCollapsed = false
+    ) : this(select, requiredSectionMissingTitle, title, content, () => severity, subtitle, idSource, visualIdSource,
+        titleAbbreviations, narrativeModal, customClass, isCollapsed)
     {
     }
 
@@ -73,13 +77,8 @@ public class Section(
         var contentResult = await contentWithContext.Render(navigator, renderer, context);
         var dividerIcon = IconHelper.GetInstance(SupportedIcons.CaretDown, context);
 
-
         var narrativeTextModal =
-            narrativeTextPath != null
-                ? await new ChangeContext(select,
-                    new NarrativeModal(narrativeTextPath)
-                ).Render(navigator, renderer, context)
-                : null;
+            narrativeModal != null ? await narrativeModal.Render(navigator, renderer, context) : null;
 
         var viewModel = new ViewModel
         {
@@ -91,6 +90,8 @@ public class Section(
             Severity = getSeverity(),
             DividerIcon = dividerIcon,
             NarrativeTextModal = narrativeTextModal?.Content,
+            CustomClass = customClass,
+            IsCollapsed = isCollapsed,
         };
         if (titleAbbreviations != null)
         {
@@ -128,6 +129,9 @@ public class Section(
         public Severity? Severity { get; set; }
 
         public required string DividerIcon { get; init; }
+
         public string? NarrativeTextModal { get; set; }
+
+        public bool IsCollapsed { get; set; }
     }
 }

@@ -33,7 +33,7 @@ public class DeviceRequest : Widget
         ], ContainerType.Div, "d-flex align-items-center gap-1");
 
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
         var basicInfo = new Container([
             new If(_ => infrequentProperties.Contains(DeviceRequestInfrequentProperties.Priority),
                 new NameValuePair(
@@ -83,7 +83,7 @@ public class DeviceRequest : Widget
         ]);
 
         var deviceBadge = new Concat([
-            new Badge(new ConstantText("Zařízení")),
+            new PlainBadge(new ConstantText("Zařízení")),
             new EnumIconTooltip("f:status",
                 "http://hl7.org/fhir/ValueSet/device-status-reason",
                 new ConstantText("Stav zařízení")
@@ -106,7 +106,7 @@ public class DeviceRequest : Widget
             )
         ]);
 
-        var actorBadge = new Badge(new ConstantText("Činitelé"));
+        var actorBadge = new PlainBadge(new ConstantText("Činitelé"));
         var actorInfo = new Container([
             new If(_ => infrequentProperties.Contains(DeviceRequestInfrequentProperties.Requester),
                 new NameValuePair(

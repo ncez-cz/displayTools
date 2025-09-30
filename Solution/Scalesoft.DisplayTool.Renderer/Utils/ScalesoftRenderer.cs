@@ -239,10 +239,7 @@ public class ScalesoftRenderer : SvgRenderer, IBarcodeRenderer<ScalesoftRenderer
 
         public void AddHeader()
         {
-            m_content.Append("<?xml version=\"1.0\" standalone=\"no\"?>");
-            m_content.Append("<!-- Created with ZXing.Net (http://zxingnet.codeplex.com/) -->");
-            m_content.Append(
-                "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">");
+            // Including a header would make the resulting HTML invalid
         }
 
         public void AddEnd() => m_content.Append("</svg>");

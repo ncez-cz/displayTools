@@ -1,0 +1,6 @@
+﻿@use "../../HtmlResources/src/theme-variables" as *;
+
+.plain-badge {
+    color: var(--#{$prefix}severity-color);
+    font-weight: 500;
+}

@@ -1,5 +1,7 @@
 ﻿using Scalesoft.DisplayTool.Renderer.Models;
+using Scalesoft.DisplayTool.Renderer.Models.Enums;
 using Scalesoft.DisplayTool.Renderer.Renderers;
+using Scalesoft.DisplayTool.Renderer.Widgets.Cda;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
 namespace Scalesoft.DisplayTool.Renderer.Widgets;
@@ -20,6 +22,11 @@ public class WidgetWithVariables(Widget widget, Variable[] variables) : Widget
         }
 
         var rendered = await widget.Render(newNavigator, renderer, context);
+
+        if (context.RenderMode == RenderMode.Documentation && (widget is FormatDateTimeWidget || widget is ShowTelecomWidget))
+        {
+            //rendered = new RenderResult(navigator.GetFullPath());
+        }
         
         return rendered;
     }

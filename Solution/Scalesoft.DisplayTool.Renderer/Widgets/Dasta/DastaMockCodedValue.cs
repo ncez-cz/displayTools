@@ -27,7 +27,7 @@ public class DastaMockCodedValue(string codeSelect, string codeSystem) : Widget
             return codeRendered;
         }
         
-        widget = new CodedValue(codeRendered.Content, codeSystem, codeRendered.Content);
+        widget = new CodedValue(codeRendered.Content, codeSystem, codeRendered.Content, file);
 
         return await widget.Render(navigator, renderer, context);
     }

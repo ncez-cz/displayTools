@@ -18,22 +18,22 @@ This repository contains display tools for FHIR, CDA, and DASTA.
 
 - .NET 8.0 hosting bundle for IIS deployment, .NET 8.0 runtime otherwise
 - Chromium (for rendering PDFs)
-    - Can be downloaded automatically when needed
-        - in appsettings:
-            - ```json
-              "PdfRenderer": {
-                 "DownloadChromium": true
-              }
-              ```
-    - If internet access is not available, chromium may be pre-downloaded
-        - For example, from https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=win_rel/
-        - in appsettings:
-            - ```json
-              "PdfRenderer": {
-                 "DownloadChromium": false,
-                 "ChromiumExePath": "C:/path/to/chrome.exe"
-              }
-              ```
+  - Can be downloaded automatically when needed
+    - in appsettings:
+      - ```json
+        "PdfRenderer": {
+           "DownloadChromium": true
+        }
+        ```
+  - If internet access is not available, chromium may be pre-downloaded
+    - For example, from https://commondatastorage.googleapis.com/chromium-browser-snapshots/index.html?prefix=win_rel/
+    - in appsettings:
+      - ```json
+        "PdfRenderer": {
+           "DownloadChromium": false,
+           "ChromiumExePath": "C:/path/to/chrome.exe"
+        }
+        ```
 
 ## First-time setup
 
@@ -57,7 +57,11 @@ This repository contains display tools for FHIR, CDA, and DASTA.
 ## Default usage
 
 - Reference the `Scalesoft.DisplayTool.Renderer` project in your own project
-- Instantiate the `DocumentRenderer` class using the parameterless constructor
+- Instantiate the `DocumentRenderer` class
+  - See `appsettings.json`, section `ExternalServices` for example values
+  - TranslationSourceConfiguration.BaseUrl is required when using Termx translator
+  - DocumentConverterConfiguration.BaseUrl is required for rendering DASTA documents
+    - Patient summary may be rendered directly without conversion when `UseConverterForPatientSummary` is false.
 - Create an instance of `DocumentOptions`
     - ValidateDocument: false
     - ValidateCodeValues: false
@@ -72,14 +76,13 @@ This repository contains display tools for FHIR, CDA, and DASTA.
 
 ### Configuration changes
 
-- Some options (logging, choosing between predefined validators, PDF renderer config) can be changed by passing a
-  `DocumentRenderOptions` instance to the `DocumentRenderer` constructor.
+- Some options (logging, choosing between predefined validators, PDF renderer config, external services) can be changed by modifying the `DocumentRenderOptions` instance given to the `DocumentRenderer` constructor.
 
 ### Custom implementations of interfaces
 
 - Make a copy of the `ServiceRegistration.CreateServiceProvider` method.
 - Change the registration of the desired interfaces to use your own implementations.
-- Call the custom `CreateServiceProvider` method and pass the result to the `DocumentRenderer` constructor.
+- Call the custom `CreateServiceProvider` method and pass the result to the `DocumentRenderer` constructor instead of the default one.
 
 #### Custom translation source
 

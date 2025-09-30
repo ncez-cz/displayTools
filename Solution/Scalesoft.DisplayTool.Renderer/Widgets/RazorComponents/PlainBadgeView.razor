@@ -1,0 +1,23 @@
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets
+@using Scalesoft.DisplayTool.Renderer.Extensions
+
+@code {
+
+    private string GetSeverityClass()
+    {
+        if (Model.Severity != null)
+        {
+            return $"severity-{Model.Severity?.ToEnumString()}";
+        }
+
+        return string.Empty;
+    }
+
+}
+
+<span id="@Model.Id" data-id="@Model.VisualId"
+      class="plain-badge @GetSeverityClass() @Model.CustomClass">@((MarkupString)Model.Text) </span>
+
+@code {
+    [Parameter] public required PlainBadge.ViewModel Model { get; set; }
+}

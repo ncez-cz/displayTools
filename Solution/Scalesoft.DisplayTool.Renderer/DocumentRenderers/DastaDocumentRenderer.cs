@@ -1,6 +1,7 @@
 ﻿using System.Xml;
 using System.Xml.XPath;
 using Microsoft.Extensions.Logging;
+using Scalesoft.DisplayTool.Renderer.Clients.Converter;
 using Scalesoft.DisplayTool.Renderer.DocumentRenderers.Tools;
 using Scalesoft.DisplayTool.Renderer.Extensions;
 using Scalesoft.DisplayTool.Renderer.Models;
@@ -11,6 +12,7 @@ using Scalesoft.DisplayTool.Renderer.Utils.Language;
 using Scalesoft.DisplayTool.Renderer.Validators;
 using Scalesoft.DisplayTool.Renderer.Widgets;
 using Scalesoft.DisplayTool.Renderer.Widgets.Dasta;
+using Scalesoft.DisplayTool.Shared.Configuration;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 using Scalesoft.DisplayTool.Shared.Translation;
 
@@ -22,6 +24,9 @@ public class DastaDocumentRenderer : SpecificDocumentRendererBase
     private readonly ICodeTranslator m_translator;
     private readonly Language m_language;
     private readonly ILoggerFactory m_loggerFactory;
+    private readonly DastaFhirDocumentConverterClient m_converterClient;
+    private readonly FhirXmlDocumentRenderer m_fhirRenderer;
+    private readonly ExternalServicesConfiguration m_configuration;
 
     public override InputFormat InputFormat => InputFormat.Dasta;
 
@@ -31,20 +36,29 @@ public class DastaDocumentRenderer : SpecificDocumentRendererBase
         HtmlToPdfConverter htmlToPdfConverter,
         ICodeTranslator translator,
         Language language,
-        ILoggerFactory loggerFactory) : base(documentValidatorProvider, htmlToPdfConverter)
+        ILoggerFactory loggerFactory,
+        DastaFhirDocumentConverterClient converterClient,
+        FhirXmlDocumentRenderer fhirRenderer,
+        ExternalServicesConfiguration configuration
+    ) : base(documentValidatorProvider, htmlToPdfConverter)
     {
         m_widgetRenderer = widgetRenderer;
         m_translator = translator;
         m_language = language;
         m_loggerFactory = loggerFactory;
+        m_converterClient = converterClient;
+        m_fhirRenderer = fhirRenderer;
+        m_configuration = configuration;
     }
 
     public override async Task<DocumentResult> RenderAsync(
         byte[] fileContent,
         OutputFormat outputFormat,
         DocumentOptions options,
+        DocumentType documentType,
         RenderMode renderMode = RenderMode.Standard,
-        DocumentType? documentType = null)
+        LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
+    )
     {
         if (outputFormat != OutputFormat.Html && outputFormat != OutputFormat.Pdf)
         {
@@ -59,6 +73,31 @@ public class DastaDocumentRenderer : SpecificDocumentRendererBase
             if (validationResult.ErrorMessage != null)
             {
                 return CreateResultForError(validationResult.ErrorMessage);
+            }
+        }
+
+        if (documentType != DocumentType.PatientSummary ||
+            m_configuration.DocumentConverter.UseConverterForPatientSummary)
+        {
+            try
+            {
+                var content = await m_converterClient.Convert(fileContent, documentType);
+                return await m_fhirRenderer.RenderAsync(
+                    content,
+                    outputFormat,
+                    options,
+                    documentType,
+                    renderMode,
+                    levelOfDetail
+                );
+            }
+            catch (HttpRequestException e)
+            {
+                return new DocumentResult
+                {
+                    Errors = [$"Dasta2Fhir converter failed to convert document: {e.StatusCode}, {e.Message}"],
+                    Content = [], IsRenderedSuccessfully = false
+                };
             }
         }
 
@@ -77,11 +116,22 @@ public class DastaDocumentRenderer : SpecificDocumentRendererBase
             m_translator,
             m_language,
             m_loggerFactory,
-            documentType ?? DocumentType.PatientSummary,
+            documentType,
             renderMode,
-            options.PreferTranslationsFromDocument);
-        
-        List<Widget> widgets = [new DastaRootWidget(), new Container(new LazyWidget(()=> renderContext.RenderedIcons.Select(x => new RawText(IconHelper.GetOriginal(x))).ToList<Widget>()), optionalClass: "icon-reservoir")];
+            options.PreferTranslationsFromDocument,
+            levelOfDetail
+        );
+
+        List<Widget> widgets =
+        [
+            new DastaRootWidget(),
+            new Container(
+                new LazyWidget(() =>
+                    renderContext.RenderedIcons.Select(x => new RawText(IconHelper.GetOriginal(x))).ToList<Widget>()
+                ),
+                optionalClass: "icon-reservoir"
+            )
+        ];
 
         var renderResult = await widgets.RenderConcatenatedResult(root, m_widgetRenderer, renderContext);
 

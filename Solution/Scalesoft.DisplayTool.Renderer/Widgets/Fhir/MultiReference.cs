@@ -8,15 +8,14 @@ namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir;
 
 public class MultiReference(
     Func<List<XmlDocumentNavigator>, Widget> contentBuilder,
-    string elementName = "f:entry/f:reference",
-    string? referencePrefix = null)
+    string elementName = "f:entry/f:reference")
     : Reference(elementName)
 {
     public override async Task<RenderResult> Render(XmlDocumentNavigator navigator, IWidgetRenderer renderer,
         RenderContext context)
     {
         //This returns only references with existing content
-        var referenceResult = GetReferences(navigator, referencePrefix);
+        var referenceResult = GetReferences(navigator);
 
         var errors = referenceResult.Errors;
         var itemNavigators = referenceResult.Navigators;

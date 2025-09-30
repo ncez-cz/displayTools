@@ -89,18 +89,11 @@ public class DeviceUseStatement(List<XmlDocumentNavigator> items) : Widget
                                 ItemListType.Unordered,
                                 _ => [new CodeableConcept()]), new LineBreak()),
                         new If(_ => infrequentOptions.Contains(InfrequentPropertiesPaths.ReasonReference),
-                            new TextContainer(
-                                TextStyle.Regular, [
-                                    new TextContainer(TextStyle.Bold, [new ConstantText("Odkaz na důvod")]),
-                                    new ConstantText(": "),
-                                    new LineBreak(),
-                                    new TextContainer(TextStyle.Regular,
-                                    [
-                                        new ItemListBuilder("f:reasonReference", ItemListType.Unordered,
-                                            _ => [new AnyReferenceNamingWidget()])
-                                    ]),
-                                    new LineBreak()
-                                ]))
+                            new NameValuePair([new ConstantText("Odkaz na důvod")],
+                            [
+                                new ItemListBuilder("f:reasonReference", ItemListType.Unordered,
+                                    _ => [new AnyReferenceNamingWidget()])
+                            ]))
                     ])),
                 new If(_ => infrequentOptions.Contains(InfrequentPropertiesPaths.Status),
                     new TableCell([

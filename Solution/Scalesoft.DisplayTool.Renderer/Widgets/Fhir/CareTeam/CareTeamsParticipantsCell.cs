@@ -8,41 +8,43 @@ namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir.CareTeam;
 
 public class CareTeamsParticipantsCell(XmlDocumentNavigator item) : Widget
 {
-    public override Task<RenderResult> Render(XmlDocumentNavigator navigator, IWidgetRenderer renderer,
-        RenderContext context)
+    public override Task<RenderResult> Render(
+        XmlDocumentNavigator navigator,
+        IWidgetRenderer renderer,
+        RenderContext context
+    )
     {
         var participantTableCell = new TableCell(
         [
             new ItemListBuilder("f:participant", ItemListType.Unordered, (_, x) =>
             {
-                var infrequentOptions = 
+                var infrequentOptions =
                     InfrequentProperties.Evaluate<InfrequentPropertiesPaths>([x]);
-                
+
                 return
                 [
                     infrequentOptions.Contains(InfrequentPropertiesPaths.Member)
                         ? new TextContainer(TextStyle.Bold | TextStyle.Underlined,
-                        [new Optional("f:member", new AnyReferenceNamingWidget(".")), new LineBreak()])
+                            [new Optional("f:member", new AnyReferenceNamingWidget()), new LineBreak()])
                         : new NullWidget(),
                     infrequentOptions.Contains(InfrequentPropertiesPaths.Role)
-                        ? new Concat([
-                            new TextContainer(TextStyle.Bold, [new ConstantText("Role")]),
-                            new ConstantText(": "),
+                        ? new NameValuePair([new ConstantText("Role")],
+                        [
                             new Optional("f:role", new CodeableConcept()),
-                            new LineBreak()
-                        ], string.Empty): new NullWidget(),
+                        ])
+                        : new NullWidget(),
                     infrequentOptions.Contains(InfrequentPropertiesPaths.Period)
-                        ? new Concat([
-                            new TextContainer(TextStyle.Bold, [new DisplayLabel(LabelCodes.Duration)]),
-                            new ConstantText(": "),
-                            new ShowPeriod("f:period"), new LineBreak()
-                        ], string.Empty): new NullWidget(),
+                        ? new NameValuePair([new DisplayLabel(LabelCodes.Duration)],
+                        [
+                            new ShowPeriod("f:period")
+                        ])
+                        : new NullWidget(),
                     infrequentOptions.Contains(InfrequentPropertiesPaths.OnBehalfOf)
-                        ? new Concat([
-                            new TextContainer(TextStyle.Bold, [new ConstantText("Organizace")]),
-                            new ConstantText(": "),
-                            new Optional("f:onBehalfOf", new AnyReferenceNamingWidget("."))
-                        ],string.Empty): new NullWidget()
+                        ? new NameValuePair([new ConstantText("Organizace")],
+                        [
+                            new Optional("f:onBehalfOf", new AnyReferenceNamingWidget())
+                        ])
+                        : new NullWidget()
                 ];
             }),
         ]);

@@ -20,45 +20,34 @@ public class CareTeamsAdditionalInfoCell(XmlDocumentNavigator item) : Widget
         [
             new HideableDetails(
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Identifier)
-                    ? new Concat([
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Identifikátor týmu")]),
-                        new ConstantText(": "),
+                    ? new NameValuePair([new ConstantText("Identifikátor týmu")],
+                    [
                         new CommaSeparatedBuilder("f:identifier", _ => [new ShowIdentifier()]),
-                        new LineBreak(),
-                    ], string.Empty)
+                    ])
                     : infrequentOptions.Contains(InfrequentPropertiesPaths.Id)
-                        ? new Concat([
-                            new TextContainer(TextStyle.Bold, [new ConstantText("Technický identifikátor týmu")]),
-                            new ConstantText(": "),
-                            new Optional("f:id", new Text("@value")),
-                            new LineBreak(),
+                        ? new NameValuePair([new ConstantText("Technický identifikátor týmu")],
+                        [
+                            new Optional("f:id", new Text("@value"))
                         ])
                         : new ConstantText("Identifikátor podání není specifikován")
             ),
             infrequentOptions.Contains(InfrequentPropertiesPaths.ReasonCode)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Účel týmu")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Účel týmu")],
+                [
                     new CommaSeparatedBuilder("f:reasonCode", _ => [new CodeableConcept()]),
-                    new LineBreak(),
-                ], string.Empty)
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.ManagingOrganization)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Odpovědná organizace")]),
-                    new ConstantText(": "),
-                    new CommaSeparatedBuilder("f:managingOrganization", _ => [new AnyReferenceNamingWidget(".")]),
-                    new LineBreak()
-                ], string.Empty)
+                ? new NameValuePair([new ConstantText("Odpovědná organizace")],
+                [
+                    new CommaSeparatedBuilder("f:managingOrganization", _ => [new AnyReferenceNamingWidget()]),
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Note)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Komentář")]),
-                    new ConstantText(": "),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Komentář")],
+                [
                     new ItemListBuilder("f:note", ItemListType.Unordered, _ => [new ShowAnnotationCompact()]),
-                    new LineBreak()
-                ], string.Empty)
+                ])
                 : new NullWidget()
         ]);
 

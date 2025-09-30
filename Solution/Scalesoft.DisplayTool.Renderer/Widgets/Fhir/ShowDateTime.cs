@@ -1,4 +1,5 @@
-﻿using Scalesoft.DisplayTool.Renderer.Models;
+﻿using System.Globalization;
+using Scalesoft.DisplayTool.Renderer.Models;
 using Scalesoft.DisplayTool.Renderer.Models.Enums;
 using Scalesoft.DisplayTool.Renderer.Renderers;
 using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils;
@@ -47,7 +48,7 @@ public class ShowDateTime(string path = ".") : Widget
         };
 
 
-        if (DateTime.TryParse(value, out var date))
+        if (DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, out var date))
         {
             if (context.RenderMode == RenderMode.Documentation)
             {

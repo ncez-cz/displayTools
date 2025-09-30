@@ -6,7 +6,7 @@ using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
 namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir;
 
-public class NarrativeModal(string path = "f:text") : Widget
+public class NarrativeModal(string path = "f:text", bool alignRight = true) : Widget
 {
     public override Task<RenderResult> Render(
         XmlDocumentNavigator navigator,
@@ -15,15 +15,22 @@ public class NarrativeModal(string path = "f:text") : Widget
     )
     {
         var modal =
-            new HideableDetails(ContainerType.Div, "ms-auto",
+            new HideableDetails(
+                ContainerType.Div,
+                alignRight ? "ms-auto" : null,
                 new Modal(
-                    new Heading([
-                        new DisplayLabel(LabelCodes.OriginalNarrative),
-                        new Optional("f:code",
-                            new ConstantText(" - "),
-                            new CodeableConcept()
-                        )
-                    ], HeadingSize.H4, customClass: "my-2"),
+                    new Heading(
+                        [
+                            new DisplayLabel(LabelCodes.OriginalNarrative),
+                            new Optional(
+                                "f:code",
+                                new ConstantText(" - "),
+                                new CodeableConcept()
+                            ),
+                        ],
+                        HeadingSize.H4,
+                        "m-0"
+                    ),
                     new Narrative(path),
                     SupportedIcons.File,
                     openButtonCustomClass: "narrative-modal-button"

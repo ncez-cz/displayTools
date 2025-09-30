@@ -1,26 +1,35 @@
 using System.Text.Json.Serialization;
 using Scalesoft.DisplayTool.Renderer;
+using Scalesoft.DisplayTool.Shared.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services
     .AddControllers()
     .AddJsonOptions(options =>
-    {
-        var converter = new JsonStringEnumConverter();
-        options.JsonSerializerOptions.Converters.Add(converter);
-    });
+        {
+            var converter = new JsonStringEnumConverter();
+            options.JsonSerializerOptions.Converters.Add(converter);
+        }
+    );
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton(serviceProvider => new DocumentRenderer(new DocumentRendererOptions
-{
-    LoggerFactory = serviceProvider.GetService<ILoggerFactory>(),
-    UseExternalValidators = builder.Configuration.GetSection("ValidatorOptions").GetValue<bool>("UseExternal"),
-    PdfRenderer = builder.Configuration.GetSection("PdfRenderer").Get<PdfRendererOptions>(),
-}));
+builder.Services.Configure<ExternalServicesConfiguration>(builder.Configuration.GetSection("ExternalServices"));
+builder.Services.AddSingleton(serviceProvider => new DocumentRenderer(
+        new DocumentRendererOptions
+        {
+            LoggerFactory = serviceProvider.GetService<ILoggerFactory>(),
+            PdfRenderer = builder.Configuration.GetSection("PdfRenderer").Get<PdfRendererOptions>(),
+            ExternalServicesConfiguration =
+                builder.Configuration.GetSection("ExternalServices").Get<ExternalServicesConfiguration>() ??
+                throw new InvalidOperationException("Missing ExternalServices configuration section"),
+        }
+    )
+);
 
 var app = builder.Build();
 

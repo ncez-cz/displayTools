@@ -7,7 +7,7 @@ using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
 namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir;
 
-public class ShowTiming(string path = ".") : Widget
+public class ShowTiming(string path = ".", FlexDirection nameValuePairDirection = FlexDirection.Row) : Widget
 {
     public override Task<RenderResult> Render(
         XmlDocumentNavigator navigator,
@@ -26,123 +26,65 @@ public class ShowTiming(string path = ".") : Widget
         }
 
         var tree = new ChangeContext(path,
-            new Container([
-                new Optional("f:event",
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Datum: ")])),
-                new CommaSeparatedBuilder("f:event", _ => [new ShowDateTime()]),
+            new Concat([
+                new Condition("f:event",
+                    new NameValuePair([new ConstantText("Datum")],
+                        [new CommaSeparatedBuilder("f:event", _ => [new ShowDateTime()]),],
+                        direction: nameValuePairDirection)
+                ),
 
-                new Optional("f:event",
-                    new OptionalLineBreak(
+                new Condition("f:repeat/f:*[starts-with(name(), 'bounds')]",
+                    new ChangeContext("f:repeat", new NameValuePair(new Choose([
+                        new When("f:boundsDuration", new ConstantText("Délka trvání")),
+                        new When("f:boundsRange", new ConstantText("Rozsah")),
+                        new When("f:boundsPeriod", new ConstantText("Doba")),
+                    ]), new OpenTypeElement(null, "bounds"), direction: nameValuePairDirection))
+                ),
+
+                new Condition("f:repeat/f:frequency | f:repeat/f:period | f:repeat/f:periodUnit",
+                    new NameValuePair(
                         [
-                            "../f:repeat/f:boundsDuration",
-                            "../f:repeat/f:boundsRange",
-                            "../f:repeat/f:boundsPeriod",
-                            "../f:repeat/f:frequency",
-                            "../f:repeat/f:period",
-                            "../f:repeat/f:timeOfDay",
-                            "../f:repeat/f:dayOfWeek",
-                            "../f:repeat/f:when"
-                        ]
+                            new ConstantText("Četnost")
+                        ],
+                        [
+                            new Optional("f:repeat/f:frequency",
+                                new Text("@value"),
+                                new ConstantText(" "),
+                                new DisplayLabel(LabelCodes.Times)
+                            ),
+                            new Optional("f:repeat/f:period",
+                                new ConstantText(" "),
+                                new DisplayLabel(LabelCodes.Every),
+                                new ConstantText(" "),
+                                new Text("@value"),
+                                new ConstantText(" ")
+                            ),
+                            new Optional("f:repeat/f:periodUnit",
+                                new EnumLabel("@value", "http://hl7.org/fhir/ValueSet/units-of-time")
+                            )
+                        ], direction: nameValuePairDirection
                     )
                 ),
 
-                new Optional("f:repeat/f:boundsDuration",
-                    new NameValuePair(new ConstantText("Doba trvání: "), new ShowDuration()),
-                    new OptionalLineBreak(
-                        [
-                            "../f:boundsRange",
-                            "../f:boundsPeriod",
-                            "../f:frequency",
-                            "../f:period",
-                            "../f:timeOfDay",
-                            "../f:dayOfWeek",
-                            "../f:when"
-                        ]
-                    )
+                new Condition("f:repeat/f:timeOfDay",
+                    new NameValuePair([new ConstantText("Časy")],
+                        [new CommaSeparatedBuilder("f:repeat/f:timeOfDay", _ => [new Text("@value")])],
+                        direction: nameValuePairDirection)
                 ),
 
-                new Optional("f:repeat/f:boundsRange",
-                    new ShowRange(),
-                    new OptionalLineBreak(
-                        [
-                            "../f:boundsPeriod",
-                            "../f:frequency",
-                            "../f:period",
-                            "../f:timeOfDay",
-                            "../f:dayOfWeek",
-                            "../f:when"
-                        ]
-                    )
+                new Condition("f:repeat/f:dayOfWeek",
+                    new NameValuePair([new ConstantText("Dny v týdnu")],
+                        [new CommaSeparatedBuilder("f:repeat/f:dayOfWeek", _ => [new Text("@value")])],
+                        direction: nameValuePairDirection)
                 ),
 
-                new Optional("f:repeat/f:boundsPeriod",
-                    new ShowPeriod(),
-                    new OptionalLineBreak(
-                        [
-                            "../f:frequency",
-                            "../f:period",
-                            "../f:timeOfDay",
-                            "../f:dayOfWeek",
-                            "../f:when"
-                        ]
-                    )
-                ),
 
-                new Optional("f:repeat/f:frequency",
-                    new Text("@value"),
-                    new ConstantText(" "),
-                    new DisplayLabel(LabelCodes.Times)
+                new Condition("f:repeat/f:when",
+                    new NameValuePair([new ConstantText("Denní doby")],
+                        [new CommaSeparatedBuilder("f:repeat/f:when", _ => [new Text("@value")])],
+                        direction: nameValuePairDirection)
                 ),
-
-                new Optional("f:repeat/f:period",
-                    new ConstantText(" "),
-                    new DisplayLabel(LabelCodes.Every),
-                    new ConstantText(" "),
-                    new Text("@value"),
-                    new ConstantText(" ")
-                ),
-                new Optional("f:repeat/f:periodUnit",
-                    new EnumLabel("@value", "http://hl7.org/fhir/ValueSet/units-of-time"),
-                    new OptionalLineBreak(
-                        [
-                            "../f:timeOfDay",
-                            "../f:dayOfWeek",
-                            "../f:when"
-                        ]
-                    )
-                ),
-
-                new Optional("f:repeat/f:timeOfDay",
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Časy: ")])
-                ),
-                new CommaSeparatedBuilder("f:repeat/f:timeOfDay", _ => [new Text("@value")]),
-                new Optional("f:repeat/f:timeOfDay",
-                    new OptionalLineBreak(
-                        [
-                            "../f:dayOfWeek",
-                            "../f:when"
-                        ]
-                    )
-                ),
-
-                new Optional("f:repeat/f:dayOfWeek",
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Dny v týdnu: ")])
-                ),
-
-                new CommaSeparatedBuilder("f:repeat/f:dayOfWeek", _ => [new Text("@value")]),
-                new Optional("f:repeat/f:dayOfWeek",
-                    new OptionalLineBreak(
-                        [
-                            "../f:when"
-                        ]
-                    )
-                ),
-
-                new Optional("f:repeat/f:when",
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Denní doby: ")])
-                ),
-                new CommaSeparatedBuilder("f:repeat/f:when", _ => [new Text("@value")])
-            ], ContainerType.Span)
+            ])
         );
 
         return tree.Render(navigator, renderer, context);

@@ -34,6 +34,11 @@ public class Optional : Widget
         RenderContext context
     )
     {
+        if (navigator.Node == null)
+        {
+            return RenderResult.NullResult;
+        }
+        
         var element = navigator.SelectSingleNode(m_path);
         return element.Node == null
             ? RenderResult.NullResult

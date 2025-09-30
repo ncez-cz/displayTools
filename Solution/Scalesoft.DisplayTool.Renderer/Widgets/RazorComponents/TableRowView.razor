@@ -10,7 +10,7 @@ else
         @((MarkupString)Model.Content)
     </tr>
     <tr class="collapsible-row-wrapper">
-        <td colspan="100%">
+        <td colspan="100%" class="collapsible-row-details @Model.CollapsibleRowCustomCss">
             @if (Model.CollapsibleRowContent != null)
             {
                 @((MarkupString)Model.CollapsibleRowContent)

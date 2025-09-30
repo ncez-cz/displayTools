@@ -97,3 +97,7 @@
         margin-right: calc(-0.65em - $spacing01); // --dt-badge-padding-x is 0.65em and for some reason doesn't resolve in the browser
     }
 }
+
+.other-section-margin:not(:only-child) {
+    margin-top: $spacing02;
+}

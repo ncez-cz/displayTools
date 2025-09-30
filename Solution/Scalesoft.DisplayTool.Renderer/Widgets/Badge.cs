@@ -1,4 +1,4 @@
-﻿using Scalesoft.DisplayTool.Renderer.Models;
+using Scalesoft.DisplayTool.Renderer.Models;
 using Scalesoft.DisplayTool.Renderer.Renderers;
 using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;

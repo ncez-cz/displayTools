@@ -1,4 +1,4 @@
-@import "../../HtmlResources/src/theme-variables";
+@use "../../HtmlResources/src/theme-variables" as *;
 
 .modal {
     cursor: default;
@@ -12,7 +12,7 @@
     color: black;
 }
 
-.card-footer {
+.modal-footer {
     background-color: var(--#{$prefix}card-cap-bg);
 }
 

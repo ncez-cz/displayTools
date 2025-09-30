@@ -13,16 +13,14 @@ public class ShowSingleReference : Widget
     private Func<XmlDocumentNavigator, IList<Widget>>? BuilderByNavigator { get; }
     private Func<ReferenceNavigatorOrDisplay, IList<Widget>>? BuilderByNavigatorOrDisplay { get; }
     private string Path { get; }
-    private string? ReferencePrefix { get; }
 
     [MemberNotNullWhen(true, nameof(BuilderByNavigator))]
     [MemberNotNullWhen(false, nameof(BuilderByNavigatorOrDisplay))]
     private bool UsingReferencedResourceOnly { get; }
 
-    private ShowSingleReference(Func<XmlDocumentNavigator, IList<Widget>> contentBuilder, string path = ".", string? referencePrefix = null)
+    private ShowSingleReference(Func<XmlDocumentNavigator, IList<Widget>> contentBuilder, string path = ".")
     {
         Path = path;
-        ReferencePrefix = referencePrefix;
         BuilderByNavigator = contentBuilder;
         UsingReferencedResourceOnly = true;
     }
@@ -36,18 +34,15 @@ public class ShowSingleReference : Widget
     /// <returns></returns>
     public static ShowSingleReference WithDefaultDisplayHandler(
         Func<XmlDocumentNavigator, IList<Widget>> contentBuilder,
-        string path = ".",
-        string? referencePrefix = null
-    ) => new ShowSingleReference(contentBuilder, path, referencePrefix);
+        string path = "."
+    ) => new ShowSingleReference(contentBuilder, path);
 
     public ShowSingleReference(
         Func<ReferenceNavigatorOrDisplay, IList<Widget>> contentBuilder,
-        string path = ".",
-        string? referencePrefix = null
+        string path = "."
     )
     {
         Path = path;
-        ReferencePrefix = referencePrefix;
         BuilderByNavigatorOrDisplay = contentBuilder;
         UsingReferencedResourceOnly = false;
     }
@@ -83,11 +78,11 @@ public class ShowSingleReference : Widget
         SingleReference sr;
         if (UsingReferencedResourceOnly)
         {
-            sr = new SingleReference(BuilderByNavigator, $"{Path}/f:reference", ReferencePrefix);
+            sr = new SingleReference(BuilderByNavigator, $"{Path}/f:reference");
         }
         else
         {
-            sr = new SingleReference(nav => BuilderByNavigatorOrDisplay(nav), $"{Path}/f:reference", ReferencePrefix);
+            sr = new SingleReference(nav => BuilderByNavigatorOrDisplay(nav), $"{Path}/f:reference");
         }
 
         return sr.Render(navigator, renderer, context);

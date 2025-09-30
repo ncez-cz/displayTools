@@ -11,16 +11,17 @@ public class DocumentRenderer
 {
     private readonly IServiceProvider m_serviceProvider;
 
-    public DocumentRenderer() : this(new DocumentRendererOptions())
-    {
-    }
-
     public DocumentRenderer(DocumentRendererOptions options)
     {
         var loggerFactory = options.LoggerFactory ?? new NullLoggerFactory();
         m_serviceProvider =
-            ServicesRegistration.CreateServiceProvider(loggerFactory, options.UseExternalValidators,
-                options.PdfRenderer);
+            ServicesRegistration.CreateServiceProvider(loggerFactory,
+                options.PdfRenderer, options.ExternalServicesConfiguration);
+    }
+    
+    public DocumentRenderer(IServiceProvider serviceProvider)
+    {
+        m_serviceProvider = serviceProvider;
     }
 
 
@@ -52,8 +53,7 @@ public class DocumentRenderer
                 language.Primary = options.LanguageOption;
             }
 
-            var result = await specificDocumentRenderer.RenderAsync(fileContent, outputFormat, options,
-                RenderMode.Documentation, documentType);
+            var result = await specificDocumentRenderer.RenderAsync(fileContent, outputFormat, options, documentType, RenderMode.Documentation, levelOfDetail: LevelOfDetail.Detailed);
             return result;
         }
         catch (NotSupportedException)
@@ -68,7 +68,8 @@ public class DocumentRenderer
         InputFormat inputFormat,
         OutputFormat outputFormat,
         DocumentOptions options,
-        DocumentType documentType
+        DocumentType documentType,
+        LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
     )
     {
         using var scope = m_serviceProvider.CreateScope();
@@ -82,7 +83,7 @@ public class DocumentRenderer
 
             var specificDocumentRenderer = GetSpecificDocumentRenderer(scope.ServiceProvider, inputFormat);
             var result = await specificDocumentRenderer.RenderAsync(fileContent, outputFormat, options,
-                documentType: documentType);
+                documentType: documentType, levelOfDetail: levelOfDetail);
             return result;
         }
         catch (NotSupportedException)

@@ -21,7 +21,7 @@ public class Group : Widget
                         [new ConstantText("Skupina")],
                         [],
                         [
-                            new Badge(new ConstantText("Základní informace")),
+                            new PlainBadge(new ConstantText("Základní informace")),
                             new Container(
                                 [
                                     new Optional(
@@ -75,7 +75,7 @@ public class Group : Widget
                             new Condition(
                                 "f:characteristic",
                                 new ThematicBreak(),
-                                new Badge(new ConstantText("Charakteristika skupiny")),
+                                new PlainBadge(new ConstantText("Charakteristika skupiny")),
                                 new Container(
                                     [
                                         new Column(
@@ -96,7 +96,7 @@ public class Group : Widget
                             new Condition(
                                 "f:member",
                                 new ThematicBreak(),
-                                new Badge(new ConstantText("Členové skupiny")),
+                                new PlainBadge(new ConstantText("Členové skupiny")),
                                 new ItemListBuilder(
                                     "f:member",
                                     ItemListType.Unordered,
@@ -170,31 +170,20 @@ public class OptionalGroupCharacteristicCard(string path, string title) : Widget
                     path,
                     _ =>
                     [
-                        new TextContainer(
-                            TextStyle.Regular,
-                            [
+                        new NameValuePair([new ChangeContext("f:code", new CodeableConcept())], [
+                            new OpenTypeElement(null), // CodeableConcept | boolean | Quantity | Range | Reference()
+                            new Optional(
+                                "f:period",
                                 new TextContainer(
-                                    TextStyle.Bold,
+                                    TextStyle.Muted,
                                     [
-                                        new ChangeContext("f:code", new CodeableConcept()),
-                                        new ConstantText(": "),
+                                        new ConstantText(" (V období: "),
+                                        new ShowPeriod(),
+                                        new ConstantText(")"),
                                     ]
-                                ),
-                                new OpenTypeElement(null), // CodeableConcept | boolean | Quantity | Range | Reference()
-                                new Optional(
-                                    "f:period",
-                                    new TextContainer(
-                                        TextStyle.Muted,
-                                        [
-                                            new ConstantText(" (V období: "),
-                                            new ShowPeriod(),
-                                            new ConstantText(")"),
-                                        ]
-                                    )
-                                ),
-                                new LineBreak(),
-                            ]
-                        )
+                                )
+                            )
+                        ])
                     ]
                 )
             )

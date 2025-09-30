@@ -52,10 +52,7 @@ public class EnumIconTooltip(string nodePath, string enumDefinitionUri, Widget t
         {
             return await new Tooltip([],
                 [
-                    new TextContainer(TextStyle.Bold,
-                        [title, new ConstantText(": ")]
-                    ),
-                    valueToDisplay ?? displayWidget
+                    new NameValuePair([title], [valueToDisplay ?? displayWidget])
                 ],
                 [new HideableDetails(ContainerType.Span, new ConstantText(enumDefinitionUri))],
                 icon: new Icon(SupportedIcons.TooltipInfo, " enum-tooltip-icon")
@@ -73,10 +70,7 @@ public class EnumIconTooltip(string nodePath, string enumDefinitionUri, Widget t
         var tooltip = new Tooltip(
             [],
             [
-                new TextContainer(TextStyle.Bold,
-                    [title, new ConstantText(": ")]
-                ),
-                valueToDisplay ?? displayWidget
+                new NameValuePair([title], [valueToDisplay ?? displayWidget])
             ],
             [new HideableDetails(ContainerType.Span, new ConstantText(enumDefinitionUri))],
             icon: new Icon(icon, iconClass + " enum-tooltip-icon")

@@ -18,14 +18,15 @@ public class ContactInformation(string addressPath = "f:address", string telecom
         List<Widget> contact =
         [
             new If(_ => navigator.EvaluateCondition(addressPath) ||
-                        navigator.EvaluateCondition(telecomPath), new Badge(new DisplayLabel(LabelCodes.ContactInformation)), new Row(
-            [
-                new If(_ => navigator.EvaluateCondition(addressPath), new Container(new Address(addressPath))),
-                new If(_ => navigator.EvaluateCondition(telecomPath), new Container([
-                    new TextContainer(TextStyle.Bold, [new DisplayLabel(LabelCodes.Telecom), new ConstantText(": ")]), new LineBreak(),
-                    new ShowContactPoint(telecomPath)
-                ])),
-            ], flexContainerClasses: "column-gap-8")),
+                        navigator.EvaluateCondition(telecomPath),
+                new PlainBadge(new DisplayLabel(LabelCodes.ContactInformation)), new Row(
+                    [
+                        new If(_ => navigator.EvaluateCondition(addressPath), new Address(addressPath)),
+                        new If(_ => navigator.EvaluateCondition(telecomPath),
+                            new NameValuePair([new DisplayLabel(LabelCodes.Telecom)],
+                                [new ShowContactPoint(telecomPath)], direction: FlexDirection.Column)),
+                    ],
+                    flexContainerClasses: "column-gap-8")),
         ];
 
         return await contact.RenderConcatenatedResult(navigator, renderer, context);

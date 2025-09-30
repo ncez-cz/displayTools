@@ -8,7 +8,11 @@ namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir.Alert.RiskAssessment;
 
 public class RiskAssessmentPredictionCell(XmlDocumentNavigator item) : Widget
 {
-    public override Task<RenderResult> Render(XmlDocumentNavigator navigator, IWidgetRenderer renderer, RenderContext context)
+    public override Task<RenderResult> Render(
+        XmlDocumentNavigator navigator,
+        IWidgetRenderer renderer,
+        RenderContext context
+    )
     {
         var predictionNav = item.SelectSingleNode("f:prediction");
         var infrequentOptions = InfrequentProperties.Evaluate<InfrequentPropertiesPaths>([predictionNav]);
@@ -17,56 +21,39 @@ public class RiskAssessmentPredictionCell(XmlDocumentNavigator item) : Widget
         [
             new ChangeContext(predictionNav,
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Outcome)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Důsledek")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new Optional("f:outcome", new CodeableConcept())]),
-                        new LineBreak()
+                    ? new NameValuePair([new ConstantText("Důsledek")],
+                    [
+                        new Optional("f:outcome", new CodeableConcept())
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Probability)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Pravděpodobnost")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular, [new OpenTypeElement(null, "probability")]), // decimal | Range
-                        new LineBreak()
+                    ? new NameValuePair([new ConstantText("Pravděpodobnost")],
+                    [
+                        new OpenTypeElement(null, "probability") // decimal | Range
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.QualitativeRisk)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Kvalitativní riziko")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new Optional("f:qualitativeRisk", new CodeableConcept())]),
-                        new LineBreak()
+                    ? new NameValuePair([new ConstantText("Kvalitativní riziko")],
+                    [
+                        new Optional("f:qualitativeRisk", new CodeableConcept())
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.RelativeRisk)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Relativní riziko")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new Optional("f:relativeRisk", new ShowDecimal())]),
-                        new LineBreak()
+                    ? new NameValuePair([new ConstantText("Relativní riziko")],
+                    [
+                        new Optional("f:relativeRisk", new ShowDecimal())
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.When)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Období")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new OpenTypeElement(null, "when")]), // Period | Range
-                        new LineBreak()
+                    ? new NameValuePair([new ConstantText("Období")],
+                    [
+                        new OpenTypeElement(null, "when") // Period | Range
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Rationale)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Vysvětlení")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new Optional("f:rationale", new Text("@value"))]),
-                        new LineBreak()
+                    ? new NameValuePair([new ConstantText("Vysvětlení")],
+                    [
+                        new Optional("f:rationale", new Text("@value"))
                     ])
                     : new NullWidget()
             )
@@ -74,7 +61,9 @@ public class RiskAssessmentPredictionCell(XmlDocumentNavigator item) : Widget
 
         if (infrequentOptions.Count == 0)
         {
-            actorsTableCell = new TableCell([new TextContainer(TextStyle.Muted, [new ConstantText("Informace nejsou k dispozici")])]);
+            actorsTableCell = new TableCell([
+                new TextContainer(TextStyle.Muted, [new ConstantText("Informace nejsou k dispozici")])
+            ]);
         }
 
         return actorsTableCell.Render(item, renderer, context);

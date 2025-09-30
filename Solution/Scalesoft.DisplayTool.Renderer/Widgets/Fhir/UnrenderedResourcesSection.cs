@@ -30,7 +30,8 @@ public class UnrenderedResourcesSection : Widget
         var widgets = grouped.Select(x => new AnyResource(x.ToList(), x.Key)).Cast<Widget>().ToList();
 
         var tree = new Section(".", null, [new ConstantText("Ostatní")],
-            widgets, titleAbbreviations: SectionTitleAbbreviations.Other);
+            widgets, titleAbbreviations: SectionTitleAbbreviations.Other, customClass: "other-section-margin",
+            isCollapsed: true);
 
         return await tree.Render(navigator, renderer, context);
     }

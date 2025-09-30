@@ -16,14 +16,7 @@
 
 <div id="@Model.Id" data-id="@Model.VisualId"
      class="collapse card overflow-auto @(GetSeverityClass()) @Model.CustomClass ">
-    @if (Model.IsCollapsed)
-    {
-        <input type="checkbox" class="collapse-checkbox" id="@Model.InputId"/>
-    }
-    else
-    {
-        <input type="checkbox" class="collapse-checkbox" id="@Model.InputId" checked/>
-    }
+    <input type="checkbox" class="collapse-checkbox" id="@Model.InputId" checked=@(!Model.IsCollapsed)/>
     <label class="collapse-header collapse-label card-header d-flex align-items-center justify-content-between py-0"
            for="@Model.InputId">
         <span class="d-flex flex-column toggle-label-content">
@@ -60,4 +53,14 @@
 
 @code {
     [Parameter] public required Collapser.ViewModel Model { get; set; }
+
+    private bool CollapserInputChecked { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CollapserInputChecked = !Model.IsCollapsed;
+
+        base.OnInitialized();
+    }
+
 }

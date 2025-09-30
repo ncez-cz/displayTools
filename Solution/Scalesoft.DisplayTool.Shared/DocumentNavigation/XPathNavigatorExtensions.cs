@@ -6,11 +6,8 @@ namespace Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
 public static class XPathNavigatorExtensions
 {
-    public static IEnumerable<XPathNavigator> SelectAllNodes(
-        this XPathNavigator nav,
-        string xpath,
-        IXmlNamespaceResolver? resolver = null
-    )
+    public static IEnumerable<XPathNavigator> SelectAllNodes(this XPathNavigator nav, string xpath,
+        IXmlNamespaceResolver? resolver = null)
     {
         var iterator = resolver == null ? nav.Select(xpath) : nav.Select(xpath, resolver);
 
@@ -24,11 +21,8 @@ public static class XPathNavigatorExtensions
         return SelectAllNodes(iterator);
     }
 
-    public static IEnumerable<XPathNavigator> SelectAllNodes(
-        this IEnumerable<XPathNavigator> navs,
-        string xpath,
-        IXmlNamespaceResolver? resolver = null
-    )
+    public static IEnumerable<XPathNavigator> SelectAllNodes(this IEnumerable<XPathNavigator> navs, string xpath,
+        IXmlNamespaceResolver? resolver = null)
     {
         return navs.SelectMany(nav => SelectAllNodes(nav, xpath, resolver));
     }

@@ -29,7 +29,7 @@ public class Contract(XmlDocumentNavigator navigator) : Widget
         var globalInfrequentProperties =
             Widgets.InfrequentProperties.Evaluate<InfrequentProperties>([navigator]);
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
 
         var basicInfo = new Container([
             new Optional("f:title|f:alias|f:name", new NameValuePair(
@@ -90,7 +90,7 @@ public class Contract(XmlDocumentNavigator navigator) : Widget
             )),
         ]);
 
-        var actorsBadge = new Badge(new ConstantText("Činitelé"));
+        var actorsBadge = new PlainBadge(new ConstantText("Činitelé"));
         var actorsInfo = new Container([
             new Condition("f:subject", new NameValuePair(
                 new ConstantText("Předmět"),
@@ -136,7 +136,7 @@ public class Contract(XmlDocumentNavigator navigator) : Widget
             )
         ]);
 
-        var precursorBadge = new Badge(new ConstantText("Předzvěst smlouvy"));
+        var precursorBadge = new PlainBadge(new ConstantText("Předzvěst smlouvy"));
         var precursorInfo = new Container([
             new NameValuePair(
                 new ConstantText("Typ"),
@@ -164,7 +164,7 @@ public class Contract(XmlDocumentNavigator navigator) : Widget
             )),
         ]);
 
-        var contractsBadge = new Badge(new ConstantText("Právní obsah"));
+        var contractsBadge = new PlainBadge(new ConstantText("Právní obsah"));
         var contractsInfo = new Row([
             new Condition("f:friendly",
                 new Container([
@@ -212,56 +212,54 @@ public class Contract(XmlDocumentNavigator navigator) : Widget
         ], flexContainerClasses: "gap-2");
 
         var complete =
-            new Container([
-                new Collapser([headerInfo], [], [
-                        new If(
-                            _ => navigator.EvaluateCondition(
-                                     "f:title or f:alias or f:subtitle or f:name or f:status or f:legalState or " +
-                                     "f:scope or f:type or f:subtype or f:contentDerivative or f:issued or f:applies or f:expirationType") ||
-                                 globalInfrequentProperties.Contains(InfrequentProperties.Topic),
-                            badge,
-                            basicInfo,
-                            new Condition(
-                                "f:subject or f:author or f:authority or f:domain or f:site or f:signer or f:contentDefinition or f:term",
-                                new ThematicBreak()
-                            )
-                        ),
-                        new Condition("f:subject or f:author or f:authority or f:domain or f:site or f:signer",
-                            actorsBadge,
-                            actorsInfo,
-                            new Condition("f:contentDefinition or f:term",
-                                new ThematicBreak()
-                            )
-                        ),
-                        new Optional("f:contentDefinition",
-                            precursorBadge,
-                            precursorInfo,
-                            new If(_ => navigator.EvaluateCondition("f:term or f:friendly or f:legal or f:rule") ||
-                                        globalInfrequentProperties.Contains(InfrequentProperties.LegallyBinding),
-                                new ThematicBreak()
-                            )
-                        ),
-                        new If(_ => navigator.EvaluateCondition("f:friendly or f:legal or f:rule") ||
-                                    globalInfrequentProperties.Contains(InfrequentProperties.LegallyBinding),
-                            contractsBadge,
-                            contractsInfo,
-                            new Condition("f:term",
-                                new ThematicBreak()
-                            )
-                        ),
-                        new Condition("f:term",
-                            new Badge(new ConstantText("Smluvní ustanovení")),
-                            new ListBuilder("f:term", FlexDirection.Row, _ => [new ContractTerm()])
+            new Collapser([headerInfo], [], [
+                    new If(
+                        _ => navigator.EvaluateCondition(
+                                 "f:title or f:alias or f:subtitle or f:name or f:status or f:legalState or " +
+                                 "f:scope or f:type or f:subtype or f:contentDerivative or f:issued or f:applies or f:expirationType") ||
+                             globalInfrequentProperties.Contains(InfrequentProperties.Topic),
+                        badge,
+                        basicInfo,
+                        new Condition(
+                            "f:subject or f:author or f:authority or f:domain or f:site or f:signer or f:contentDefinition or f:term",
+                            new ThematicBreak()
                         )
-                    ], footer: navigator.EvaluateCondition("f:text")
-                        ?
-                        [
-                            new NarrativeCollapser()
-                        ]
-                        : null,
-                    iconPrefix: [new NarrativeModal()]
-                )
-            ]);
+                    ),
+                    new Condition("f:subject or f:author or f:authority or f:domain or f:site or f:signer",
+                        actorsBadge,
+                        actorsInfo,
+                        new Condition("f:contentDefinition or f:term",
+                            new ThematicBreak()
+                        )
+                    ),
+                    new Optional("f:contentDefinition",
+                        precursorBadge,
+                        precursorInfo,
+                        new If(_ => navigator.EvaluateCondition("f:term or f:friendly or f:legal or f:rule") ||
+                                    globalInfrequentProperties.Contains(InfrequentProperties.LegallyBinding),
+                            new ThematicBreak()
+                        )
+                    ),
+                    new If(_ => navigator.EvaluateCondition("f:friendly or f:legal or f:rule") ||
+                                globalInfrequentProperties.Contains(InfrequentProperties.LegallyBinding),
+                        contractsBadge,
+                        contractsInfo,
+                        new Condition("f:term",
+                            new ThematicBreak()
+                        )
+                    ),
+                    new Condition("f:term",
+                        new PlainBadge(new ConstantText("Smluvní ustanovení")),
+                        new ListBuilder("f:term", FlexDirection.Row, _ => [new ContractTerm()])
+                    )
+                ], footer: navigator.EvaluateCondition("f:text")
+                    ?
+                    [
+                        new NarrativeCollapser()
+                    ]
+                    : null,
+                iconPrefix: [new NarrativeModal()]
+            );
 
 
         return complete.Render(navigator, renderer, context);

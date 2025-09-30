@@ -7,14 +7,16 @@ namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir;
 
 public class LocalNodeName(string? resourceType = null, bool isPlural = false) : Widget
 {
+    private string? m_resourceType = resourceType;
+
     public override Task<RenderResult> Render(
         XmlDocumentNavigator navigator,
         IWidgetRenderer renderer,
         RenderContext context
     )
     {
-        var type = resourceType ?? navigator.Node?.LocalName;
-        Widget nodeName = type switch
+        m_resourceType ??= navigator.Node?.LocalName;
+        Widget nodeName = m_resourceType switch
         {
             "AllergyIntolerance" => new ConstantText("Alergie a intolerance"),
             "Appointment" => new ConstantText(isPlural ? "Schůzky / objednání k lékaři" : "Schůzka / objednání k lékaři"),

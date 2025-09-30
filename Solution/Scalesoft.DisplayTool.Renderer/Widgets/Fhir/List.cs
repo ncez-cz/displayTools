@@ -15,7 +15,7 @@ public class List : Widget
         RenderContext context
     )
     {
-        var basicBadge = new Badge(new ConstantText("Základní informace"));
+        var basicBadge = new PlainBadge(new ConstantText("Základní informace"));
         var basicInfo = new Container([
             new NameValuePair(
                 new ConstantText("Mód"),
@@ -65,7 +65,7 @@ public class List : Widget
             ),
         ]);
 
-        var entriesBadge = new Badge(new ConstantText("Položky seznamu"));
+        var entriesBadge = new PlainBadge(new ConstantText("Položky seznamu"));
 
         var entries = navigator.SelectAllNodes("f:entry").ToList();
         var complex = entries.Where(x => x.EvaluateCondition("f:flag or f:date")).ToList();
@@ -158,7 +158,7 @@ public class List : Widget
                     ),
                     new Condition("f:note",
                         new ThematicBreak(),
-                        new Badge(new ConstantText("Poznámky")),
+                        new PlainBadge(new ConstantText("Poznámky")),
                         new ListBuilder("f:note", FlexDirection.Column, _ => [new ShowAnnotationCompact()],
                             flexContainerClasses: "")
                     ),

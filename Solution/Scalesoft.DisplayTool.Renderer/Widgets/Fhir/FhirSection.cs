@@ -27,18 +27,17 @@ public class FhirSection(
     LocalizedAbbreviations? titleAbbreviations
 ) : Widget
 {
-    
     public FhirSection(
         string code,
         Func<List<XmlDocumentNavigator>, string?, Widget> codedSectionBuilder,
         Severity? severity = null,
         LocalizedAbbreviations? titleAbbreviations = null
     )
-        : this(code, codedSectionBuilder, (_) => severity, titleAbbreviations)
+        : this(code, codedSectionBuilder, _ => severity, titleAbbreviations)
     {
     }
 
-    public FhirSection() : this(null, (x, type) => new AnyResource(x, type), (_) => null, null)
+    public FhirSection() : this(null, (x, type) => new AnyResource(x, type), _ => null, null)
     {
     }
 
@@ -58,80 +57,103 @@ public class FhirSection(
             return string.Empty;
         }
 
+        var narrativeModal = new NarrativeModal();
+
         var tree = new ChangeContext(
             sectionNav,
             new MultiReference(navigators =>
-                new Section(
+            {
+                var sectionContentWithTypes = BuildSectionContent(sectionNav, navigators, navigator, context, renderer);
+                var anyStructuredContent = sectionContentWithTypes.ContentType.Any(x =>
+                    x is SectionElements.Entries or SectionElements.EmptyReason or SectionElements.Subsection);
+                Widget[] sectionContent;
+                if (anyStructuredContent)
+                {
+                    sectionContent = [..sectionContentWithTypes.Content, new NarrativeCollapser()];
+                }
+                else
+                {
+                    sectionContent = [..sectionContentWithTypes.Content, new NarrativeCard()];
+                }
+
+                return new Section(
                     ".",
                     null,
                     [
                         // new Text("f:title/@value"),
                         new ChangeContext("f:code", new CodeableConcept()),
                     ],
-                    BuildSectionContent(sectionNav, navigators, context, renderer),
+                    sectionContent,
                     idSource: sectionNav,
                     titleAbbreviations: titleAbbreviations,
                     severity: getSeverity(navigators),
-                    narrativeTextPath: "f:text"
-                )
-            )
+                    narrativeModal: anyStructuredContent ? narrativeModal : null
+                );
+            })
         );
 
         return await tree.Render(navigator, renderer, context);
     }
 
-    private List<Widget> BuildSectionContent(
+    private SectionContent BuildSectionContent(
         XmlDocumentNavigator sectionNav,
         List<XmlDocumentNavigator> entryNavs,
+        XmlDocumentNavigator navigator,
         RenderContext context,
         IWidgetRenderer renderer
     )
     {
-        var sectionContent = new List<Widget>(
-            [
-                new Condition(
-                    "f:author",
-                    new NameValuePair(
-                        [new ConstantText("Autor sekce")],
-                        [
-                            new ConcatBuilder(
-                                "f:author",
-                                _ =>
-                                [
-                                    new ShowSingleReference(authNav =>
-                                        {
-                                            if (authNav.ResourceReferencePresent)
-                                            {
-                                                return
-                                                [
-                                                    new Container(
-                                                        [new ActorsNaming()],
-                                                        ContainerType.Span,
-                                                        idSource: authNav.Navigator
-                                                    ),
-                                                ];
-                                            }
+        var sectionContent = new List<Widget>();
+        var sectionContentType = new List<SectionElements>();
 
-                                            return [new ConstantText(authNav.ReferenceDisplay)];
-                                        }
-                                    ),
-                                ], ", "
+        if (sectionNav.EvaluateCondition("f:author"))
+        {
+            sectionContentType.Add(SectionElements.Author);
+            sectionContent.Add(new NameValuePair(
+                [new ConstantText("Autor sekce")],
+                [
+                    new ConcatBuilder(
+                        "f:author",
+                        _ =>
+                        [
+                            new ShowSingleReference(authNav =>
+                                {
+                                    if (authNav.ResourceReferencePresent)
+                                    {
+                                        return
+                                        [
+                                            new Container(
+                                                [new ActorsNaming()],
+                                                ContainerType.Span,
+                                                idSource: authNav.Navigator
+                                            ),
+                                        ];
+                                    }
+
+                                    return [new ConstantText(authNav.ReferenceDisplay)];
+                                }
                             ),
-                        ]
-                    )
-                ),
-                new Optional(
-                    "f:focus",
-                    new NameValuePair(
-                        [new ConstantText("Subjekt")],
-                        [ReferenceHandler.BuildAnyReferencesNaming(sectionNav, "f:focus", context, renderer)]
-                    )
-                ),
-            ]
-        );
+                        ], ", "
+                    ),
+                ]
+            ));
+        }
+
+        if (sectionNav.EvaluateCondition("f:focus"))
+        {
+            sectionContentType.Add(SectionElements.Focus);
+            sectionContent.Add(new ChangeContext(
+                "f:focus",
+                new NameValuePair(
+                    [new ConstantText("Subjekt")],
+                    [ReferenceHandler.BuildAnyReferencesNaming(sectionNav, "f:focus", context, renderer)]
+                )
+            ));
+        }
 
         if (entryNavs.Count != 0)
         {
+            sectionContentType.Add(SectionElements.Entries);
             sectionContent.Add(
                 new Container(
                     entryNavs
@@ -146,6 +168,7 @@ public class FhirSection(
         }
         else if (sectionNav.EvaluateCondition("f:emptyReason"))
         {
+            sectionContentType.Add(SectionElements.EmptyReason);
             sectionContent.Add(
                 new Widgets.Alert(
                     new NameValuePair(
@@ -159,6 +182,7 @@ public class FhirSection(
 
         if (sectionNav.EvaluateCondition("f:section"))
         {
+            sectionContentType.Add(SectionElements.Subsection);
             sectionContent.Add(
                 new ConcatBuilder(
                     "f:section",
@@ -170,12 +194,21 @@ public class FhirSection(
             );
         }
 
-        sectionContent.AddRange(
-            [
-                new NarrativeCollapser()
-            ]
-        );
+        return new SectionContent(sectionContent, sectionContentType);
+    }
 
-        return sectionContent;
+    private enum SectionElements
+    {
+        Author,
+        Focus,
+        Entries,
+        EmptyReason,
+        Subsection
+    }
+
+    private class SectionContent(List<Widget> content, List<SectionElements> contentType)
+    {
+        public List<Widget> Content { get; } = content;
+        public List<SectionElements> ContentType { get; } = contentType;
     }
 }

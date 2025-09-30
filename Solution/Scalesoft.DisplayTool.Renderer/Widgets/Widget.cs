@@ -10,7 +10,7 @@ public abstract class Widget
 {
     protected uint Id { get; } = GenerateId();
 
-    private static uint m_idCounter = 0;
+    private static uint m_idCounter;
     private static uint GenerateId() => Interlocked.Increment(ref m_idCounter);
 
     protected bool IsNullWidget { get; init; }
@@ -18,7 +18,8 @@ public abstract class Widget
     public abstract Task<RenderResult> Render(
         XmlDocumentNavigator navigator,
         IWidgetRenderer renderer,
-        RenderContext context);
+        RenderContext context
+    );
 
     protected bool IsDataAbsent(XmlDocumentNavigator navigator, string path)
     {
@@ -34,10 +35,12 @@ public abstract class Widget
         return absentReasonValue != null || absentReasonCodingValue != null;
     }
 
-    protected async Task<InternalRenderResult> RenderInternal(XmlDocumentNavigator data,
+    protected async Task<InternalRenderResult> RenderInternal(
+        XmlDocumentNavigator data,
         IWidgetRenderer renderer,
         RenderContext context,
-        params Widget[] widgets)
+        params Widget[] widgets
+    )
     {
         return await RenderInternal(data, renderer, widgets, context);
     }
@@ -45,7 +48,9 @@ public abstract class Widget
     protected async Task<InternalRenderResult> RenderInternal(
         XmlDocumentNavigator data,
         IWidgetRenderer renderer,
-        IEnumerable<Widget> widgets, RenderContext context)
+        IEnumerable<Widget> widgets,
+        RenderContext context
+    )
     {
         var results = new Dictionary<uint, string?>();
         List<ParseError> errors = [];
@@ -59,7 +64,7 @@ public abstract class Widget
 
             var result = await widget.Render(data, renderer, context);
 
-            
+
             results[widget.Id] = result.Content;
             errors.AddRange(result.Errors);
         }
@@ -71,7 +76,13 @@ public abstract class Widget
         };
     }
 
-    protected void HandleIds(RenderContext context, XmlDocumentNavigator navigator, ViewModelBase viewModel, IdentifierSource? idSource, IdentifierSource? visualIdSource)
+    protected void HandleIds(
+        RenderContext context,
+        XmlDocumentNavigator navigator,
+        ViewModelBase viewModel,
+        IdentifierSource? idSource,
+        IdentifierSource? visualIdSource
+    )
     {
         if (idSource?.ConstantVal != null)
         {
@@ -93,7 +104,7 @@ public abstract class Widget
     }
 
     /// <summary>
-    /// Parses and registers rendered resource id.
+    ///     Parses and registers rendered resource id.
     /// </summary>
     /// <param name="context"></param>
     /// <param name="navigator"></param>
@@ -135,7 +146,8 @@ public abstract class Widget
             case RenderedResourceAddFailReason.MissingId:
                 if (logger.IsEnabled(LogLevel.Debug))
                 {
-                    logger.LogDebug("Failed to register a rendered widget with path {xpath} - the resource id is missing",
+                    logger.LogDebug(
+                        "Failed to register a rendered widget with path {xpath} - the resource id is missing",
                         fullPath); // decrease the logging level to avoid spamming the log
                 }
 
@@ -143,7 +155,8 @@ public abstract class Widget
             case RenderedResourceAddFailReason.MissingReferencedResource:
                 if (logger.IsEnabled(LogLevel.Information))
                 {
-                    logger.LogInformation("Failed to register a rendered widget with path {xpath} - the referenced resource is missing",
+                    logger.LogInformation(
+                        "Failed to register a rendered widget with path {xpath} - the referenced resource is missing",
                         fullPath);
                 }
 
@@ -152,7 +165,8 @@ public abstract class Widget
                 if (logger.IsEnabled(LogLevel.Information))
                 {
                     logger.LogInformation(
-                        "Failed to register a rendered widget with path {xpath} - referenced resource XML node is missing", fullPath);
+                        "Failed to register a rendered widget with path {xpath} - referenced resource XML node is missing",
+                        fullPath);
                 }
 
                 break;
@@ -193,6 +207,11 @@ public abstract class Widget
 
         public string? GetContent(Widget widget)
         {
+            if (widget.IsNullWidget)
+            {
+                return null;
+            }
+
             return Contents[widget.Id];
         }
 
@@ -213,7 +232,7 @@ public abstract class Widget
 
         public bool IsFatal =>
             Errors.Count > 0 && Errors.Max(e => e.Severity) >= ErrorSeverity.Fatal;
-        
-        public bool IsNull => Contents.All(x=>x.Value == null) && Errors.Count == 0;
+
+        public bool IsNull => Contents.All(x => x.Value == null) && Errors.Count == 0;
     }
 }

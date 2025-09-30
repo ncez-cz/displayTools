@@ -19,7 +19,7 @@ public class Location(XmlDocumentNavigator navigator) : Widget
             ),
         ], ContainerType.Span);
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
 
         var basicInfo = new Container([
             new Optional("f:status", new NameValuePair(
@@ -44,7 +44,7 @@ public class Location(XmlDocumentNavigator navigator) : Widget
             )),
         ]);
 
-        var locationBadge = new Badge(new ConstantText("Informace o umístění"));
+        var locationBadge = new PlainBadge(new ConstantText("Informace o umístění"));
         var locationInfo = new Container([
             new Condition("f:type", new NameValuePair(
                 new ConstantText("Typ"),
@@ -88,7 +88,7 @@ public class Location(XmlDocumentNavigator navigator) : Widget
             ),
         ]);
 
-        var operationBadge = new Badge(new ConstantText("Provozní informace"));
+        var operationBadge = new PlainBadge(new ConstantText("Provozní informace"));
         var operationInfo = new Container([
             new Optional("f:managingOrganization",
                 new NameValuePair(

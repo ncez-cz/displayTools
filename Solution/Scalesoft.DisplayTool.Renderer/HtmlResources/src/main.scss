@@ -1,7 +1,8 @@
 ﻿@use "sass:math";
-@import "theme-variables";
+@use "theme-variables" as *;
 @import "sizing-variables";
 @import "hideable-content";
+@import "print";
 
 @layer documentation-mode, bootstrap;
 
@@ -121,7 +122,7 @@ h6, .h6 {
         + .collapsible-content-wrapper {
             grid-template-rows: 1fr;
 
-            .collapsible-content:not(.card > .collapsible-content-wrapper > .collapsible-content) {
+            > .collapsible-content:not(.card > .collapsible-content-wrapper > .collapsible-content) {
                 padding-top: $spacing02;
             }
         }
@@ -204,109 +205,6 @@ h6, .h6 {
             --#{$prefix}badge-bg: #{$documentation-darker-bg-color} !important;
             --#{$prefix}badge-color: #{$documentation-text-color} !important;
         }
-    }
-}
-
-@media print {
-    @page {
-        size: A4 landscape;
-    }
-
-    :root {
-        font-size: 10px;
-    }
-
-    ::-webkit-scrollbar {
-        display: none;
-    }
-
-    .collapsible-content-wrapper {
-        grid-template-rows: 1fr;
-    }
-
-    .card {
-        border-radius: 0 !important;
-    }
-
-    .badge,
-    .text-icon {
-        background-color: unset !important;
-    }
-
-    .divider hr {
-        border-top: $spacing02 solid var(--#{$prefix}primary-600) !important;
-
-        &:nth-of-type(2) {
-            border-top-right-radius: 0 !important;
-            border-bottom-right-radius: 0 !important;
-        }
-    }
-
-    .card-header {
-        padding-inline: $spacing02 !important;
-        font-weight: bold;
-        background-color: unset !important;
-        border: none !important;
-    }
-
-    .collapse-icon,
-    .collapse-toggler-column,
-    .collapse-toggler-empty-column,
-    .collapse-label .divider-label-subtitle,
-    .divider .collapse-icon + hr,
-    .narrative-modal-button,
-    .narrative-cell,
-    .collapse-all-btn {
-        display: none !important;
-    }
-
-    .section {
-        page-break-after: always;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-
-        .collapsible-content-wrapper {
-            display: block !important;
-        }
-    }
-
-    td:has(> .card) {
-        padding: 0 !important;
-
-        > .card {
-            border: none !important;
-        }
-    }
-
-    .patient-cards-layout {
-        --row-items-count: 4 !important;
-
-        .card {
-            break-inside: avoid;
-
-            .collapsible-content-wrapper {
-                padding-inline: $spacing02 !important;
-            }
-        }
-    }
-
-    .card-body,
-    .section .collapsible-content-wrapper {
-        padding: 0 !important;
-
-        > p {
-            padding-inline: $spacing02;
-        }
-    }
-
-    .table,
-    p {
-        margin-bottom: 0 !important;
-    }
-
-    .card > .collapsible-content-wrapper > .collapsible-content > .card-body > .table-bordered {
-        width: calc(100% + (2 * var(--#{$prefix}card-border-width))) !important;
-        margin-inline: calc(-1 * var(--#{$prefix}card-border-width)) !important;
     }
 }
 
@@ -453,15 +351,9 @@ h6, .h6 {
 }
 
 .header-code {
-    max-height: calc((var(--#{$prefix}h1-font-size) * 4) - var(--#{$prefix}h6-font-size) * 2.1);
+    max-height: calc((var(--#{$prefix}h1-font-size) * 4) - var(--#{$prefix}h6-font-size) * 3);
     width: auto;
     height: auto;
-}
-
-.header-code-label {
-    margin-top: $spacing01;
-    display: block;
-    max-width: calc(var(--#{$prefix}h1-font-size) * 4);
 }
 
 .header-image {
@@ -559,7 +451,7 @@ h6, .h6 {
 }
 
 .yellow-warning-icon {
-    color: var(--#{$prefix}warning-400)
+    color: var(--#{$prefix}warning-900)
 }
 
 .blue-info-icon {
@@ -571,6 +463,11 @@ h6, .h6 {
     width: calc(var(--#{$prefix}tooltip-icon-font-size) * 0.8);
     margin-right: 0;
     margin-left: 0;
+}
+
+.card-header .icon {
+    height: $spacing03;
+    width: $spacing03;
 }
 
 .abnormal {
@@ -616,6 +513,10 @@ h6, .h6 {
     color: #{$blue-400};
 }
 
+.collapsible-row-details {
+    background-color: #F3F7FB;
+}
+
 .sub-component-row {
     td:first-child {
         box-shadow: inset 0.35rem 0 0 0 #{$table-border-color};
@@ -626,7 +527,7 @@ h6, .h6 {
 body {
     --#{$prefix}severity-card-header-bg: var(--#{$prefix}primary-100);
     --#{$prefix}severity-card-header-color: var(--#{$prefix}primary-600);
-    --#{$prefix}severity-card-border-color: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}primary-300);
     --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}primary-100) 40%, transparent);
     --#{$prefix}severity-badge-bg: var(--#{$prefix}primary-100);
     --#{$prefix}severity-badge-color: var(--#{$prefix}primary-600);
@@ -637,8 +538,9 @@ body {
 .severity-primary {
     --#{$prefix}severity-card-header-bg: var(--#{$prefix}primary-100);
     --#{$prefix}severity-card-header-color: var(--#{$prefix}primary-600);
-    --#{$prefix}severity-card-border-color: var(--#{$prefix}primary-100);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}primary-300);
     --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}primary-100) 40%, transparent);
+    --#{$prefix}severity-card-bg: var(--#{$prefix}primary-50);
     --#{$prefix}severity-badge-bg: var(--#{$prefix}primary-100);
     --#{$prefix}severity-badge-color: var(--#{$prefix}primary-600);
     --#{$prefix}severity-badge-border-color: var(--#{$prefix}primary-100);
@@ -646,12 +548,13 @@ body {
 }
 
 .severity-secondary {
-    --#{$prefix}severity-card-header-bg: var(--#{$prefix}secondary-200);
+    --#{$prefix}severity-card-header-bg: var(--#{$prefix}secondary-300);
     --#{$prefix}severity-card-header-color: var(--#{$prefix}secondary-900);
-    --#{$prefix}severity-card-border-color: var(--#{$prefix}secondary-200);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}secondary-400);
     --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}secondary-100) 40%, transparent);
-    --#{$prefix}severity-badge-bg: var(--#{$prefix}secondary-100);
-    --#{$prefix}severity-badge-color: var(--#{$prefix}secondary-900);
+    --#{$prefix}severity-card-bg: var(--#{$prefix}secondary-100);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}secondary-800);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}secondary-200);
     --#{$prefix}severity-badge-border-color: var(--#{$prefix}secondary-100);
     --#{$prefix}severity-color: var(--#{$prefix}secondary-700);
 }
@@ -659,7 +562,7 @@ body {
 .severity-info {
     --#{$prefix}severity-card-header-bg: var(--#{$prefix}info-100);
     --#{$prefix}severity-card-header-color: var(--#{$prefix}info-900);
-    --#{$prefix}severity-card-border-color: var(--#{$prefix}info-100);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}info-300);
     --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}info-100) 20%, transparent);
     --#{$prefix}severity-badge-bg: var(--#{$prefix}info-100);
     --#{$prefix}severity-badge-color: var(--#{$prefix}info-900);
@@ -670,7 +573,7 @@ body {
 .severity-success {
     --#{$prefix}severity-card-header-bg: var(--#{$prefix}success-200);
     --#{$prefix}severity-card-header-color: var(--#{$prefix}success-900);
-    --#{$prefix}severity-card-border-color: var(--#{$prefix}success-200);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}success-400);
     --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}success-100) 40%, transparent);
     --#{$prefix}severity-badge-bg: var(--#{$prefix}success-100);
     --#{$prefix}severity-badge-color: var(--#{$prefix}success-900);
@@ -681,10 +584,10 @@ body {
 .severity-warning {
     --#{$prefix}severity-card-header-bg: var(--#{$prefix}warning-200);
     --#{$prefix}severity-card-header-color: var(--#{$prefix}warning-900);
-    --#{$prefix}severity-card-border-color: var(--#{$prefix}warning-200);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}warning-400);
     --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}warning-100) 30%, transparent);
-    --#{$prefix}severity-badge-bg: var(--#{$prefix}warning-100);
-    --#{$prefix}severity-badge-color: var(--#{$prefix}warning-900);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}warning-500);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}warning-100);
     --#{$prefix}severity-badge-border-color: var(--#{$prefix}warning-100);
     --#{$prefix}severity-color: var(--#{$prefix}warning-700);
 }
@@ -694,8 +597,9 @@ body {
     --#{$prefix}severity-card-header-color: var(--#{$prefix}danger-900);
     --#{$prefix}severity-card-border-color: var(--#{$prefix}danger-300);
     --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}danger-100) 40%, transparent);
-    --#{$prefix}severity-badge-bg: var(--#{$prefix}danger-100);
-    --#{$prefix}severity-badge-color: var(--#{$prefix}danger-900);
+    --#{$prefix}severity-card-bg: color-mix(in srgb, var(--#{$prefix}danger-100) 50%, transparent);
+    --#{$prefix}severity-badge-bg: var(--#{$prefix}danger-800);
+    --#{$prefix}severity-badge-color: var(--#{$prefix}danger-100);
     --#{$prefix}severity-badge-border-color: var(--#{$prefix}danger-100);
     --#{$prefix}severity-color: var(--#{$prefix}danger-700);
 }
@@ -703,8 +607,9 @@ body {
 .severity-gray {
     --#{$prefix}severity-card-header-bg: var(--#{$prefix}gray-200);
     --#{$prefix}severity-card-header-color: var(--#{$prefix}gray-900);
-    --#{$prefix}severity-card-border-color: var(--#{$prefix}gray-200);
+    --#{$prefix}severity-card-border-color: var(--#{$prefix}gray-400);
     --#{$prefix}severity-card-footer-bg: color-mix(in srgb, var(--#{$prefix}gray-100) 100%, transparent);
+    --#{$prefix}severity-card-bg: var(--#{$prefix}gray-100);
     --#{$prefix}severity-badge-bg: var(--#{$prefix}gray-200);
     --#{$prefix}severity-badge-color: var(--#{$prefix}gray-900);
     --#{$prefix}severity-badge-border-color: var(--#{$prefix}gray-200);
@@ -781,4 +686,79 @@ input:checked + .collapse-header:has(.card-subtitle) {
         margin-left: -0.65em; // --dt-badge-padding-x is 0.65em and for some reason doesn't resolve in the browser
         margin-right: -0.65em; // --dt-badge-padding-x is 0.65em and for some reason doesn't resolve in the browser
     }
+}
+
+.two-col-grid {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    grid-column-gap: $spacing02;
+    justify-content: space-between;
+}
+
+.card-header {
+    color: var(--#{$prefix}severity-card-header-color);
+    background-color: var(--#{$prefix}severity-card-header-bg);
+    border-bottom: none;
+    min-height: calc(var(--#{$prefix}card-cap-padding-y) + var(--#{$prefix}h6-font-size) + 0.4rem);
+}
+
+.card {
+    --#{$prefix}card-spacer-x: #{$spacing02};
+    --#{$prefix}card-spacer-y: #{$spacing02};
+    --#{$prefix}card-cap-padding-x: #{$spacing02};
+}
+
+.striped-row-bg {
+    padding: $spacing02;
+    margin: -$spacing02;
+    background: var(--#{$prefix}gray-100);
+}
+
+.mx-negative-2 {
+    margin-left: -$spacing02 !important;
+    margin-right: -$spacing02 !important;
+}
+
+.blue-color {
+    color: var(--#{$prefix}blue);
+}
+
+.interpretation-scale {
+    color: var(--#{$prefix}gray-500);
+    user-select: none;
+    white-space: nowrap;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-sizing: border-box;
+
+    font-family: monospace;
+
+    .interpretation-bullet {
+        margin-left: 1px;
+        margin-right: 1px;
+    }
+
+    .critical-bullet {
+        color: var(--#{$prefix}danger-200);
+        -webkit-text-stroke: 1px var(--#{$prefix}danger-500);
+    }
+
+    .abnormal-bullet {
+        color: var(--#{$prefix}secondary-300);
+        -webkit-text-stroke: 1px var(--#{$prefix}secondary-700);
+    }
+
+    .normal-bullet {
+        color: var(--#{$prefix}success-300);
+        -webkit-text-stroke: 1px var(--#{$prefix}success-600);
+    }
+}
+
+.fixed-aligned-content {
+    align-items: center;
+    display: flex;
+    height: 1rem;
 }

@@ -24,7 +24,7 @@ public class Specimen(XmlDocumentNavigator navigator) : Widget
                 new DisplayLabel(LabelCodes.Status))
         ], ContainerType.Div, "d-flex align-items-center gap-1");
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
 
         var basicInfo = new Container([
             new Optional("f:accessionIdentifier", new NameValuePair(
@@ -68,7 +68,7 @@ public class Specimen(XmlDocumentNavigator navigator) : Widget
         }
 
 
-        var collectionBadge = new Badge(new ConstantText("Informace o odběru"));
+        var collectionBadge = new PlainBadge(new ConstantText("Informace o odběru"));
         var collectionInfo = new Container([
             new Optional("f:collector", new NameValuePair(
                 new ConstantText("Sbíral"),
@@ -116,7 +116,7 @@ public class Specimen(XmlDocumentNavigator navigator) : Widget
             )
         ]);
 
-        var processingBadge = new Badge(new ConstantText("Detaily zpracování"));
+        var processingBadge = new PlainBadge(new ConstantText("Detaily zpracování"));
         var processingInfo = new ListBuilder("f:processing", FlexDirection.Row, (_, nav) =>
         {
             var infrequentProperties =
@@ -149,7 +149,7 @@ public class Specimen(XmlDocumentNavigator navigator) : Widget
             return [card];
         }, flexContainerClasses: "gap-2");
 
-        var containerBadge = new Badge(new ConstantText("Informace o nádobách"));
+        var containerBadge = new PlainBadge(new ConstantText("Informace o nádobách"));
         var containerInfo = new ListBuilder("f:container", FlexDirection.Row, (_, nav) =>
         {
             var infrequentProperties =
@@ -196,31 +196,39 @@ public class Specimen(XmlDocumentNavigator navigator) : Widget
 
         var complete =
             new Collapser([headerInfo], [], [
-                    new Condition(
-                        "f:accessionIdentifier or f:status or f:type or f:subject or f:receivedTime or f:parent or f:request",
-                        badge,
-                        basicInfo
-                    ),
-                    new Optional("f:collection",
-                        new ThematicBreak(),
-                        collectionBadge,
-                        collectionInfo
-                    ),
-                    new Condition("f:processing",
-                        new ThematicBreak(),
-                        processingBadge,
-                        processingInfo
-                    ),
-                    new Condition("f:container",
-                        new ThematicBreak(),
-                        containerBadge,
-                        containerInfo
-                    ),
-                    new Condition("f:note",
-                        new ThematicBreak(),
-                        new Badge(new ConstantText("Anotace")),
-                        new ListBuilder("f:note", FlexDirection.Column, _ => [new ShowAnnotationCompact()])
-                    )
+                    new Row([
+                        new Condition(
+                            "f:accessionIdentifier or f:status or f:type or f:subject or f:receivedTime or f:parent or f:request",
+                            new Container([
+                                badge,
+                                basicInfo
+                            ])
+                        ),
+                        new Optional("f:collection",
+                            new Container([
+                                collectionBadge,
+                                collectionInfo
+                            ])
+                        ),
+                        new Condition("f:processing",
+                            new Container([
+                                processingBadge,
+                                processingInfo
+                            ])
+                        ),
+                        new Condition("f:container",
+                            new Container([
+                                containerBadge,
+                                containerInfo
+                            ])
+                        ),
+                        new Condition("f:note",
+                            new Container([
+                                new PlainBadge(new ConstantText("Anotace")),
+                                new ListBuilder("f:note", FlexDirection.Column, _ => [new ShowAnnotationCompact()])
+                            ])
+                        )
+                    ]),
                 ], footer: navigator.EvaluateCondition("f:text")
                     ?
                     [

@@ -14,15 +14,15 @@ public class CdaExternalValidator : IDocumentValidator
     private readonly ModelBasedValidationWSClient m_client;
     private readonly ILogger<CdaExternalValidator> m_logger;
     private readonly string m_defaultValidator = "eHDSI - FRIENDLY CDA (L3) validation - Wave 7 (V7.2.0)";
-    
-    public CdaExternalValidator(ILogger<CdaExternalValidator> logger)
+
+    public CdaExternalValidator(ILogger<CdaExternalValidator> logger, ModelBasedValidationWSClient client)
     {
-        m_client = new ModelBasedValidationWSClient();
         m_logger = logger;
+        m_client = client;
     }
-    
+
     public InputFormat InputFormat => InputFormat.Cda;
-    
+
     public async Task<ValidationResultModel> ValidateDocumentAsync(byte[] document, string? validator)
     {
         try
@@ -65,13 +65,13 @@ public class CdaExternalValidator : IDocumentValidator
             };
         }
     }
-    
+
     private detailedResult Deserialize(string response)
     {
         var serializer = new XmlSerializer(typeof(detailedResult));
         using (var responseReader = new StringReader(response))
         {
-            var result = (detailedResult) serializer.Deserialize(responseReader)!;
+            var result = (detailedResult)serializer.Deserialize(responseReader)!;
 
             return result;
         }
@@ -101,7 +101,8 @@ public class CdaExternalValidator : IDocumentValidator
                     Message = error.Description,
                 };
                 validations.Add(validation);
-            } else if (item is Warning warning)
+            }
+            else if (item is Warning warning)
             {
                 var validation = new ValidationModel()
                 {
@@ -110,7 +111,8 @@ public class CdaExternalValidator : IDocumentValidator
                     Message = warning.Description,
                 };
                 validations.Add(validation);
-            } else if (item is Note note)
+            }
+            else if (item is Note note)
             {
                 var validation = new ValidationModel()
                 {
@@ -119,7 +121,8 @@ public class CdaExternalValidator : IDocumentValidator
                     Message = note.Description,
                 };
                 validations.Add(validation);
-            } else if (item is Info info)
+            }
+            else if (item is Info info)
             {
                 var validation = new ValidationModel()
                 {
@@ -130,8 +133,9 @@ public class CdaExternalValidator : IDocumentValidator
                 validations.Add(validation);
             }
         }
+
         validationResult.Validations = validations;
-        
+
         return validationResult;
     }
 }

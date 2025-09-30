@@ -1,5 +1,6 @@
-@import "../../HtmlResources/src/theme-variables";
+@use "../../HtmlResources/src/theme-variables" as *;
 
 hr {
     margin: $spacing02 0;
+    border-color: var(--#{$prefix}blue-400);
 }

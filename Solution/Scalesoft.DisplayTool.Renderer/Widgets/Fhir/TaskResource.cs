@@ -32,7 +32,7 @@ public class TaskResource : Widget
         ], ContainerType.Div, "d-flex align-items-center gap-1");
 
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
         var basicInfo = new Container([
             new NameValuePair(
                 new ConstantText("Záměr"),
@@ -60,7 +60,7 @@ public class TaskResource : Widget
             ),
         ]);
 
-        var timeInfoBadge = new Badge(new ConstantText("Časové údaje"));
+        var timeInfoBadge = new PlainBadge(new ConstantText("Časové údaje"));
         var timeInfo = new Container([
             new If(_ => infrequentProperties.Contains(TaskResourceInfrequentProperties.ExecutionPeriod),
                 new NameValuePair(
@@ -82,7 +82,7 @@ public class TaskResource : Widget
             ),
         ]);
 
-        var taskBadge = new Badge(new ConstantText("Detail úkolu"));
+        var taskBadge = new PlainBadge(new ConstantText("Detail úkolu"));
         var taskDetail = new Container([
             new If(_ => infrequentProperties.Contains(TaskResourceInfrequentProperties.Code),
                 new NameValuePair(
@@ -110,7 +110,7 @@ public class TaskResource : Widget
             ),
         ]);
 
-        var participantsBadge = new Badge(new ConstantText("Zainteresované strany"));
+        var participantsBadge = new PlainBadge(new ConstantText("Zainteresované strany"));
         var participants = new Container([
             new If(_ => infrequentProperties.Contains(TaskResourceInfrequentProperties.BasedOn),
                 new NameValuePair(

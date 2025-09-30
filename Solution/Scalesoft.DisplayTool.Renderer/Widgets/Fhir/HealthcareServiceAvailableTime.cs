@@ -107,7 +107,8 @@ public class HealthcareServiceAvailableTime : Widget
             {
                 outputWidgets.Add(
                     new Container([
-                        new Badge(new CodedValue(dayName, "http://hl7.org/fhir/days-of-week", fallbackValue: dayName),
+                        new PlainBadge(
+                            new CodedValue(dayName, "http://hl7.org/fhir/days-of-week", fallbackValue: dayName),
                             optionalClass: "available-time-badge"),
                         new LineBreak(),
                         new Concat(dayWidget.Value, new LineBreak())

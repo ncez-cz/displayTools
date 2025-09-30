@@ -19,72 +19,51 @@ public class MedicationDispenseAdditionalInfoCell(XmlDocumentNavigator item) : W
         [
             new HideableDetails(
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Identifier)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Identifikátor podáni")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new CommaSeparatedBuilder("f:identifier", _ => [new ShowIdentifier()])]),
-                        new LineBreak(),
+                    ? new NameValuePair([new ConstantText("Identifikátor podáni")],
+                    [
+                        new CommaSeparatedBuilder("f:identifier", _ => [new ShowIdentifier()])
                     ])
                     : infrequentOptions.Contains(InfrequentPropertiesPaths.Id)
-                        ? new TextContainer(TextStyle.Regular, [
-                            new TextContainer(TextStyle.Bold, [new ConstantText("Technický identifikátor podani")]),
-                            new ConstantText(": "),
-                            new TextContainer(TextStyle.Regular, [new Optional("f:id", new Text("@value"))]),
-                            new LineBreak(),
+                        ? new NameValuePair([new ConstantText("Technický identifikátor podani")],
+                        [
+                            new Optional("f:id", new Text("@value"))
                         ])
                         : new ConstantText("Identifikátor podání není specifikován")
             ),
             infrequentOptions.Contains(InfrequentPropertiesPaths.StatusReasonCodeableConcept)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Důvod stavu")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular,
-                        [new CommaSeparatedBuilder("f:statusReasonCodeableConcept", _ => [new CodeableConcept()])]),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Důvod stavu")],
+                [
+                    new CommaSeparatedBuilder("f:statusReasonCodeableConcept", _ => [new CodeableConcept()])
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.StatusReasonReference)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Důvod stavu dle reference")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular,
-                        [new CommaSeparatedBuilder("f:statusReasonReference", _ => [new AnyReferenceNamingWidget()])]),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Důvod stavu dle reference")],
+                [
+                    new CommaSeparatedBuilder("f:statusReasonReference", _ => [new AnyReferenceNamingWidget()])
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Category)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Kategorie")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [new Optional("f:category", new CodeableConcept())]),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Kategorie")],
+                [
+                    new Optional("f:category", new CodeableConcept())
                 ])
                 : new ConstantText(""),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Type)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Typ")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [new Optional("f:type", new CodeableConcept())]),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Typ")],
+                [
+                    new Optional("f:type", new CodeableConcept())
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.PartOf)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Související úkony")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular,
-                        [new CommaSeparatedBuilder("f:partOf", _ => [new AnyReferenceNamingWidget()])]),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Související úkony")],
+                [
+                    new CommaSeparatedBuilder("f:partOf", _ => [new AnyReferenceNamingWidget()])
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Note)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Poznámka")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular,
-                        [new CommaSeparatedBuilder("f:note", _ => [new Optional("f:text", new Text("@value"))])]),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Poznámka")],
+                [
+                    new CommaSeparatedBuilder("f:note", _ => [new Optional("f:text", new Text("@value"))])
                 ])
                 : new NullWidget()
         ]);

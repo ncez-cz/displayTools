@@ -19,7 +19,7 @@ public class HealthcareService(XmlDocumentNavigator navigator) : Widget
             ),
         ], ContainerType.Span);
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
 
         var basicInfo = new Container([
             new Optional("f:active", new TextContainer(TextStyle.Bold,
@@ -57,7 +57,7 @@ public class HealthcareService(XmlDocumentNavigator navigator) : Widget
             )),
         ]);
 
-        var detailBadge = new Badge(new ConstantText("Detailní informace"));
+        var detailBadge = new PlainBadge(new ConstantText("Detailní informace"));
         var detailInfo = new Container([
             new Optional("f:extraDetails",
                 new NameValuePair(
@@ -118,7 +118,7 @@ public class HealthcareService(XmlDocumentNavigator navigator) : Widget
             //ignore endpoint
         ]);
 
-        var operationBadge = new Badge(new ConstantText("Provozní informace"));
+        var operationBadge = new PlainBadge(new ConstantText("Provozní informace"));
         var operationInfo = new Container([
             new Optional("f:appointmentRequired",
                 new TextContainer(TextStyle.Bold, [

@@ -1,4 +1,5 @@
-﻿using Scalesoft.DisplayTool.Renderer.Models;
+﻿using System.Globalization;
+using Scalesoft.DisplayTool.Renderer.Models;
 using Scalesoft.DisplayTool.Renderer.Models.Enums;
 using Scalesoft.DisplayTool.Renderer.Renderers;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;
@@ -51,7 +52,8 @@ public class ShowSampledData(
                 $"{path}/f:data/@value")
             .Node?.Value;
 
-        if (double.TryParse(origin, out var parsedOrigin) && double.TryParse(period, out var parsedPeriod) &&
+        if (double.TryParse(origin, CultureInfo.InvariantCulture, out var parsedOrigin) &&
+            double.TryParse(period, CultureInfo.InvariantCulture, out var parsedPeriod) &&
             data != null &&
             dimensions != null)
         {

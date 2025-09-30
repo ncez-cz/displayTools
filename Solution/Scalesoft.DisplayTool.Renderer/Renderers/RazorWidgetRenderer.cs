@@ -25,6 +25,11 @@ public class RazorWidgetRenderer : IWidgetRenderer
         return await RenderComponent<AlertView>(viewModel);
     }
 
+    public async Task<string> RenderPlainBadge(PlainBadge.ViewModel viewModel)
+    {
+        return await RenderComponent<PlainBadgeView>(viewModel);
+    }
+
     public async Task<string> RenderBadge(Badge.ViewModel viewModel)
     {
         return await RenderComponent<BadgeView>(viewModel);
@@ -151,9 +156,9 @@ public class RazorWidgetRenderer : IWidgetRenderer
     }
 
 
-    public async Task<string> RenderThematicBreak()
+    public async Task<string> RenderThematicBreak(ThematicBreak.ViewModel viewModel)
     {
-        return await RenderComponent<ThematicBreakView>(null);
+        return await RenderComponent<ThematicBreakView>(viewModel);
     }
 
     public async Task<string> RenderImage(Image.ViewModel viewModel)

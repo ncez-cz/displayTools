@@ -1,3 +1,4 @@
+@using Scalesoft.DisplayTool.Renderer.Models.Enums
 @switch (Model.Variant)
 {
     case ButtonVariant.CollapseSection:
@@ -15,10 +16,19 @@
         </label>
         break;
     case ButtonVariant.ToggleDetails:
-        <div class="toggle-details-container">
-            <input type="checkbox" id="detail-toggle" checked class="d-none"/>
-            <label for="detail-toggle" class="checked-label @GetButtonClasses() btn">Zjednodušený režim</label>
-            <label for="detail-toggle" class="unchecked-label @GetButtonClasses() btn">Detailní režim</label>
+        <div class="toggle-details-container" >
+            <input
+                type="checkbox"
+                id="detail-toggle"
+                class="d-none"
+                checked="@GetCheckedAttributeValue()"
+                disabled="@GetDisabledAttributeValue()"
+            />
+            @if (Model.LevelOfDocumentDetail == LevelOfDetail.UserDefined)
+            {
+                <label for="detail-toggle" class="checked-label @GetButtonClasses() btn">Zjednodušený režim</label>
+                <label for="detail-toggle" class="unchecked-label @GetButtonClasses() btn">Detailní režim</label>
+            }
         </div>
         break;
     case ButtonVariant.Default:
@@ -39,7 +49,7 @@
     [Parameter] public Button.ViewModel Model { get; set; } = default!;
 
     private Dictionary<string, object> AdditionalAttributes { get; set; } = new();
-
+    
     protected override void OnParametersSet()
     {
         AdditionalAttributes.Clear();
@@ -87,6 +97,16 @@
         };
 
         return $"{baseClass} {styleClass} {variantClass} {Model.CustomClass}".Trim();
+    }
+
+    private bool GetCheckedAttributeValue()
+    {
+        return Model.LevelOfDocumentDetail == LevelOfDetail.Detailed;
+    }
+
+    private bool GetDisabledAttributeValue()
+    {
+        return Model.LevelOfDocumentDetail != LevelOfDetail.UserDefined;
     }
 
 }

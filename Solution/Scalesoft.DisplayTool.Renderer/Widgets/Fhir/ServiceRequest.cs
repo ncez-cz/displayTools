@@ -32,7 +32,7 @@ public class ServiceRequest : Widget
                 new DisplayLabel(LabelCodes.Status))
         ], ContainerType.Div, "d-flex align-items-center gap-1");
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
         var basicInfo = new Container([
             new NameValuePair(
                 new ConstantText("Záměr"),
@@ -82,7 +82,7 @@ public class ServiceRequest : Widget
             ),
         ]);
 
-        var additionalBadge = new Badge(new ConstantText("Další informace"));
+        var additionalBadge = new PlainBadge(new ConstantText("Další informace"));
         var additionalInfo = new Container([
             new If(_ => infrequentProperties.Contains(ServiceRequestInfrequentProperties.Replaces),
                 new NameValuePair(
@@ -153,7 +153,7 @@ public class ServiceRequest : Widget
         ]);
 
 
-        var serviceBadge = new Badge(new ConstantText("Požadavek"));
+        var serviceBadge = new PlainBadge(new ConstantText("Požadavek"));
         var serviceInfo = new Container([
             new If(_ => infrequentProperties.Contains(ServiceRequestInfrequentProperties.Code),
                 new NameValuePair(
@@ -245,7 +245,7 @@ public class ServiceRequest : Widget
                     ),
                     new If(_ => infrequentProperties.Contains(ServiceRequestInfrequentProperties.Note),
                         new ThematicBreak(),
-                        new Badge(new ConstantText("Poznámky")),
+                        new PlainBadge(new ConstantText("Poznámky")),
                         new ListBuilder("f:note", FlexDirection.Column, _ => [new ShowAnnotationCompact()],
                             flexContainerClasses: "gap-0")
                     )

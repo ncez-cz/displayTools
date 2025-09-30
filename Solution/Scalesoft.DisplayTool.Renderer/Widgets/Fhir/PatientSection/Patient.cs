@@ -21,13 +21,17 @@ public class Patient(XmlDocumentNavigator navigator) : Widget
         var selectionRulesParseResult = configManager.ProcessConfigurations(navigator);
         errors.AddRange(selectionRulesParseResult.Errors);
 
+        var narrativeModal = new NarrativeModal();
+        var sectionContent = new List<Widget>();
+        sectionContent.AddRange([
+            new PatientDetails(),
+            new CoreActors(),
+            new NarrativeCollapser(),
+        ]);
+
         List<Widget> tree =
         [
-            new Section(".", null, [new DisplayLabel(LabelCodes.Patient)], [
-                    new PatientDetails(),
-                    new CoreActors(),
-                    new NarrativeCollapser()
-                ],
+            new Section(".", null, [new DisplayLabel(LabelCodes.Patient)], sectionContent,
                 [
                     new Concat([
                         new HumanName("f:name", unformattedName: true),
@@ -35,7 +39,7 @@ public class Patient(XmlDocumentNavigator navigator) : Widget
                         new ShowDateTime("f:birthDate"),
                     ])
                 ], idSource: navigator, titleAbbreviations: ("P", "P"),
-                narrativeTextPath: "f:text"
+                narrativeModal: narrativeModal
             ),
         ];
 

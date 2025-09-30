@@ -15,7 +15,8 @@
 
 }
 
-<span id="@Model.Id" data-id="@Model.VisualId" class="badge @GetSeverityClass() @Model.CustomClass">@((MarkupString)Model.Text) </span>
+<span id="@Model.Id" data-id="@Model.VisualId"
+      class="badge @GetSeverityClass() @Model.CustomClass">@((MarkupString)Model.Text) </span>
 
 @code {
     [Parameter] public required Badge.ViewModel Model { get; set; }

@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Microsoft.Extensions.Logging;
 using Scalesoft.DisplayTool.Renderer.Clients.FhirValidator;
 using Scalesoft.DisplayTool.Renderer.Clients.FhirValidator.Contracts;
 using Scalesoft.DisplayTool.Renderer.Models;
@@ -14,10 +13,10 @@ public class FhirExternalValidatorBase : IDocumentValidator
     private readonly List<string> m_defaultIgs = ["hl7.fhir.uv.ips#current"];
     private readonly string m_defaultLocale = "en";
 
-    protected FhirExternalValidatorBase(ILogger<FhirValidatorClient> logger, InputFormat inputFormat)
+    protected FhirExternalValidatorBase(InputFormat inputFormat, FhirValidatorClient fhirValidatorClient)
     {
         InputFormat = inputFormat;
-        m_fhirValidatorClient = new FhirValidatorClient(logger);
+        m_fhirValidatorClient = fhirValidatorClient;
     }
 
     public InputFormat InputFormat { get; }

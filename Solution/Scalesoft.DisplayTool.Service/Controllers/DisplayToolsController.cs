@@ -19,7 +19,10 @@ public class DisplayToolsController : ControllerBase
     }
 
     [HttpPost("patient-summary")]
-    public async Task<ActionResult<DisplayToolResponse>> PatientSummary([FromBody] DisplayToolRequest request)
+    public async Task<ActionResult<DisplayToolResponse>> PatientSummary(
+        [FromBody] DisplayToolRequest request,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
+    )
     {
         if (request.InputFormat == null || request.OutputFormat == null)
         {
@@ -32,7 +35,8 @@ public class DisplayToolsController : ControllerBase
             (InputFormat)request.InputFormat,
             (OutputFormat)request.OutputFormat,
             options,
-            DocumentType.PatientSummary
+            DocumentType.PatientSummary,
+            levelOfDetail
         );
         var response = MapResponseAsJson(result);
 
@@ -72,7 +76,8 @@ public class DisplayToolsController : ControllerBase
         [FromForm] bool validateCodeValues = false,
         [FromForm] bool validateDigitalSignature = false,
         [FromForm] bool generateDocumentationInstead = false,
-        [FromForm] bool preferTranslationsFromDocument = false
+        [FromForm] bool preferTranslationsFromDocument = false,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
     )
     {
         if (inputFormat == null || outputFormat == null)
@@ -101,7 +106,8 @@ public class DisplayToolsController : ControllerBase
                 (InputFormat)inputFormat,
                 (OutputFormat)outputFormat,
                 options,
-                DocumentType.PatientSummary
+                DocumentType.PatientSummary,
+                levelOfDetail
             );
 
         if (!result.IsRenderedSuccessfully)
@@ -115,7 +121,10 @@ public class DisplayToolsController : ControllerBase
     }
 
     [HttpPost("hospital-discharge-report")]
-    public async Task<ActionResult<DisplayToolResponse>> HospitalDischargeReport([FromBody] DisplayToolRequest request)
+    public async Task<ActionResult<DisplayToolResponse>> HospitalDischargeReport(
+        [FromBody] DisplayToolRequest request,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
+    )
     {
         if (request.InputFormat == null || request.OutputFormat == null)
         {
@@ -128,7 +137,8 @@ public class DisplayToolsController : ControllerBase
             (InputFormat)request.InputFormat,
             (OutputFormat)request.OutputFormat,
             options,
-            DocumentType.DischargeReport
+            DocumentType.DischargeReport,
+            levelOfDetail
         );
         var response = MapResponseAsJson(result);
 
@@ -146,7 +156,8 @@ public class DisplayToolsController : ControllerBase
         [FromForm] bool validateCodeValues = false,
         [FromForm] bool validateDigitalSignature = false,
         [FromForm] bool generateDocumentationInstead = false,
-        [FromForm] bool preferTranslationsFromDocument = false
+        [FromForm] bool preferTranslationsFromDocument = false,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
     )
     {
         if (inputFormat == null || outputFormat == null)
@@ -175,7 +186,8 @@ public class DisplayToolsController : ControllerBase
                 (InputFormat)inputFormat,
                 (OutputFormat)outputFormat,
                 options,
-                DocumentType.DischargeReport
+                DocumentType.DischargeReport,
+                levelOfDetail
             );
 
         if (!result.IsRenderedSuccessfully)
@@ -189,7 +201,10 @@ public class DisplayToolsController : ControllerBase
     }
 
     [HttpPost("laboratory-report")]
-    public async Task<ActionResult<DisplayToolResponse>> LaboratoryReport([FromBody] DisplayToolRequest request)
+    public async Task<ActionResult<DisplayToolResponse>> LaboratoryReport(
+        [FromBody] DisplayToolRequest request,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
+    )
     {
         if (request.InputFormat == null || request.OutputFormat == null)
         {
@@ -202,7 +217,8 @@ public class DisplayToolsController : ControllerBase
             (InputFormat)request.InputFormat,
             (OutputFormat)request.OutputFormat,
             options,
-            DocumentType.Laboratory
+            DocumentType.Laboratory,
+            levelOfDetail
         );
         var response = MapResponseAsJson(result);
 
@@ -220,7 +236,8 @@ public class DisplayToolsController : ControllerBase
         [FromForm] bool validateCodeValues = false,
         [FromForm] bool validateDigitalSignature = false,
         [FromForm] bool generateDocumentationInstead = false,
-        [FromForm] bool preferTranslationsFromDocument = false
+        [FromForm] bool preferTranslationsFromDocument = false,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
     )
     {
         if (inputFormat == null || outputFormat == null)
@@ -249,7 +266,8 @@ public class DisplayToolsController : ControllerBase
                 (InputFormat)inputFormat,
                 (OutputFormat)outputFormat,
                 options,
-                DocumentType.Laboratory
+                DocumentType.Laboratory,
+                levelOfDetail
             );
 
         if (!result.IsRenderedSuccessfully)
@@ -263,7 +281,10 @@ public class DisplayToolsController : ControllerBase
     }
 
     [HttpPost("laboratory-order")]
-    public async Task<ActionResult<DisplayToolResponse>> LaboratoryOrder([FromBody] DisplayToolRequest request)
+    public async Task<ActionResult<DisplayToolResponse>> LaboratoryOrder(
+        [FromBody] DisplayToolRequest request,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
+    )
     {
         if (request.InputFormat == null || request.OutputFormat == null)
         {
@@ -276,7 +297,8 @@ public class DisplayToolsController : ControllerBase
             (InputFormat)request.InputFormat,
             (OutputFormat)request.OutputFormat,
             options,
-            DocumentType.LaboratoryOrder
+            DocumentType.LaboratoryOrder,
+            levelOfDetail
         );
         var response = MapResponseAsJson(result);
 
@@ -294,7 +316,8 @@ public class DisplayToolsController : ControllerBase
         [FromForm] bool validateCodeValues = false,
         [FromForm] bool validateDigitalSignature = false,
         [FromForm] bool generateDocumentationInstead = false,
-        [FromForm] bool preferTranslationsFromDocument = false
+        [FromForm] bool preferTranslationsFromDocument = false,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
     )
     {
         if (inputFormat == null || outputFormat == null)
@@ -323,7 +346,8 @@ public class DisplayToolsController : ControllerBase
                 (InputFormat)inputFormat,
                 (OutputFormat)outputFormat,
                 options,
-                DocumentType.LaboratoryOrder
+                DocumentType.LaboratoryOrder,
+                levelOfDetail
             );
 
         if (!result.IsRenderedSuccessfully)
@@ -337,7 +361,10 @@ public class DisplayToolsController : ControllerBase
     }
 
     [HttpPost("imaging-report")]
-    public async Task<ActionResult<DisplayToolResponse>> ImagingReport([FromBody] DisplayToolRequest request)
+    public async Task<ActionResult<DisplayToolResponse>> ImagingReport(
+        [FromBody] DisplayToolRequest request,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
+    )
     {
         if (request.InputFormat == null || request.OutputFormat == null)
         {
@@ -350,7 +377,8 @@ public class DisplayToolsController : ControllerBase
             (InputFormat)request.InputFormat,
             (OutputFormat)request.OutputFormat,
             options,
-            DocumentType.ImagingReport
+            DocumentType.ImagingReport,
+            levelOfDetail
         );
         var response = MapResponseAsJson(result);
 
@@ -368,7 +396,8 @@ public class DisplayToolsController : ControllerBase
         [FromForm] bool validateCodeValues = false,
         [FromForm] bool validateDigitalSignature = false,
         [FromForm] bool generateDocumentationInstead = false,
-        [FromForm] bool preferTranslationsFromDocument = false
+        [FromForm] bool preferTranslationsFromDocument = false,
+        [FromQuery] LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
     )
     {
         if (inputFormat == null || outputFormat == null)
@@ -397,7 +426,8 @@ public class DisplayToolsController : ControllerBase
                 (InputFormat)inputFormat,
                 (OutputFormat)outputFormat,
                 options,
-                DocumentType.ImagingReport
+                DocumentType.ImagingReport,
+                levelOfDetail
             );
 
         if (!result.IsRenderedSuccessfully)

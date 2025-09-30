@@ -7,14 +7,13 @@ using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir;
 public class SingleReference(
     Func<XmlDocumentNavigator, IList<Widget>> contentBuilder,
-    string elementName = "f:entry/f:reference",
-    string? referencePrefix = null)
+    string elementName = "f:entry/f:reference")
     : Reference(elementName)
 {
     public override async Task<RenderResult> Render(XmlDocumentNavigator navigator, IWidgetRenderer renderer,
         RenderContext context)
     {
-        var referenceResult = GetReferences(navigator, referencePrefix);
+        var referenceResult = GetReferences(navigator);
         var errors = referenceResult.Errors;
         var itemNavigators = referenceResult.Navigators;
         

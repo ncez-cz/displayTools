@@ -1,6 +1,8 @@
-﻿<dl id="@Model.Id" data-id="@Model.VisualId" class="@Model.CustomClass d-flex flex-wrap column-gap-1">
-    <dt class="m-0">@((MarkupString)Model.NameContent)@(string.IsNullOrEmpty(Model.ValueContent) ? string.Empty : ":")</dt>
-    <dd class="m-0">@((MarkupString)Model.ValueContent)</dd>
+﻿@using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils
+<dl id="@Model.Id" data-id="@Model.VisualId"
+    class="@Model.CustomClass d-flex @(Model.Direction == FlexDirection.Row ? "flex-row" : string.Empty) @(Model.Direction == FlexDirection.Column ? "flex-column" : string.Empty) @(Model.Size == NameValuePair.NameValuePairSize.Small ? "small" : string.Empty) @(Model.Style == NameValuePair.NameValuePairStyle.Primary ? "primary" : string.Empty) @(Model.Style == NameValuePair.NameValuePairStyle.Secondary ? "secondary" : string.Empty) flex-wrap column-gap-1 name-value-pair">
+    <dt class="name m-0">@((MarkupString)Model.NameContent)</dt>
+    <dd class="value m-0">@((MarkupString)Model.ValueContent)</dd>
 </dl>
 
 @code {

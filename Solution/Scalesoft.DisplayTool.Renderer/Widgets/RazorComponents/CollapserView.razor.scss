@@ -1,4 +1,4 @@
-@import "../../HtmlResources/src/theme-variables";
+@use "../../HtmlResources/src/theme-variables" as *;
 
 .collapse {
     .collapse-header {
@@ -32,16 +32,13 @@ div:has(~ .collapse):not(.resource-container) > .collapse, div:has(> .collapse):
     border-color: var(--#{$prefix}severity-card-border-color);
 }
 
-.card-header {
-    --#{$prefix}card-cap-padding-x: #{$spacing03};
-    color: var(--#{$prefix}severity-card-header-color);
-    background-color: var(--#{$prefix}severity-card-header-bg);
-    border-bottom: none;
-    height: calc(var(--#{$prefix}card-cap-padding-y) + var(--#{$prefix}h6-font-size) + 0.4rem);
+.card-body {
+    --#{$prefix}card-spacer-y: #{$spacing02};
+    --#{$prefix}card-spacer-x: #{$spacing02};
 }
 
-.card-body {
-    --#{$prefix}card-spacer-y: 0.5rem;
+.card .card .card-body {
+    background-color: var(--#{$prefix}severity-card-bg);
 }
 
 .card-footer {

@@ -35,6 +35,8 @@ public class RenderContext
     public bool PreferTranslationsFromDocument { get; }
 
     public HashSet<SupportedIcons> RenderedIcons { get; } = [];
+    
+    public LevelOfDetail LevelOfDetail { get; set; }
 
     public RenderContext(
         ICodeTranslator translator,
@@ -42,7 +44,8 @@ public class RenderContext
         ILoggerFactory loggerFactory,
         DocumentType documentType,
         RenderMode renderMode,
-        bool preferTranslationsFromDocument
+        bool preferTranslationsFromDocument,
+        LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
     )
     {
         Translator = translator;
@@ -51,6 +54,7 @@ public class RenderContext
         DocumentType = documentType;
         RenderMode = renderMode;
         PreferTranslationsFromDocument = preferTranslationsFromDocument;
+        LevelOfDetail = levelOfDetail;
     }
 
     /// <summary>

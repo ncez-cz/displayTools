@@ -7,6 +7,8 @@ public interface IWidgetRenderer
 {
     public Task<string> RenderAlert(Alert.ViewModel viewModel);
 
+    public Task<string> RenderPlainBadge(PlainBadge.ViewModel viewModel);
+
     public Task<string> RenderBadge(Badge.ViewModel viewModel);
 
     public Task<string> RenderCard(Card.ViewModel viewModel);
@@ -63,7 +65,7 @@ public interface IWidgetRenderer
 
     public Task<string> RenderTimelineCard(TimelineCard.ViewModel viewModel);
 
-    public Task<string> RenderThematicBreak();
+    public Task<string> RenderThematicBreak(ThematicBreak.ViewModel viewModel);
 
     public Task<string> RenderImage(Image.ViewModel viewModel);
 

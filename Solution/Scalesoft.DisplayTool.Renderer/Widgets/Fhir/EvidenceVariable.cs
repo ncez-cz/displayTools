@@ -11,7 +11,7 @@ public class EvidenceVariable(XmlDocumentNavigator navigator) : Widget
 {
     public override Task<RenderResult> Render(XmlDocumentNavigator _, IWidgetRenderer renderer, RenderContext context)
     {
-        var variableBadge = new Badge(new ConstantText("Detaily proměnné"));
+        var variableBadge = new PlainBadge(new ConstantText("Detaily proměnné"));
         var variableInfo = new Container([
             new Optional("f:type",
                 new NameValuePair(

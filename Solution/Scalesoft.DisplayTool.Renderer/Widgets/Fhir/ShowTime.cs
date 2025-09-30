@@ -1,4 +1,5 @@
-﻿using Scalesoft.DisplayTool.Renderer.Models;
+﻿using System.Globalization;
+using Scalesoft.DisplayTool.Renderer.Models;
 using Scalesoft.DisplayTool.Renderer.Models.Enums;
 using Scalesoft.DisplayTool.Renderer.Renderers;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;
@@ -31,7 +32,7 @@ public class ShowTime(string path = ".") : Widget
         }
 
 
-        if (TimeOnly.TryParse(value, out var time))
+        if (TimeOnly.TryParse(value, CultureInfo.InvariantCulture, out var time))
         {
             if (context.RenderMode == RenderMode.Documentation)
             {

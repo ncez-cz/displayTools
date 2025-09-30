@@ -69,7 +69,7 @@ public class Appointment : Widget
             new EnumIconTooltip("f:status", "http://hl7.org/fhir/request-status", new DisplayLabel(LabelCodes.Status))
         ], ContainerType.Div, "d-flex align-items-center gap-1");
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
         var basicInfo = new Container([
             new If(_ => infrequentProperties.Contains(AppointmentInfrequentProperties.CancelationReason),
                 new NameValuePair(
@@ -103,7 +103,7 @@ public class Appointment : Widget
             ),
         ]);
 
-        var timingBadge = new Badge(new ConstantText("Časové údaje"));
+        var timingBadge = new PlainBadge(new ConstantText("Časové údaje"));
         var timingInfo = new Container([
             new If(
                 _ => infrequentProperties.ContainsAnyOf(AppointmentInfrequentProperties.Start,
@@ -141,7 +141,7 @@ public class Appointment : Widget
             ),
         ]);
 
-        var additionalDetailsBadge = new Badge(new ConstantText("Další detaily"));
+        var additionalDetailsBadge = new PlainBadge(new ConstantText("Další detaily"));
         var additionalDetails = new Container([
             new If(
                 _ => infrequentProperties.ContainsAnyOf(AppointmentInfrequentProperties.ReasonCode,
@@ -189,7 +189,7 @@ public class Appointment : Widget
             ),
         ]);
 
-        var participantsBadge = new Badge(new ConstantText("Činitelé"));
+        var participantsBadge = new PlainBadge(new ConstantText("Činitelé"));
 
         var complete =
             new Collapser([headerInfo], [], [

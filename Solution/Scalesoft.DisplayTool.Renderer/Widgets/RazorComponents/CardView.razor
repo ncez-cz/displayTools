@@ -18,7 +18,7 @@
 <div class="card @Model.CustomClass @(GetSeverityClass())" id="@Model.Id" data-id="@Model.VisualId">
     @if (!Model.HideTitle)
     {
-        <div class="card-header">
+        <div class="card-header card-header d-flex align-items-center justify-content-between py-0">
             @((MarkupString)(Model.Title ?? string.Empty))
         </div>
     }

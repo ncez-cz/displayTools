@@ -71,8 +71,9 @@ public class SvgGraph : Widget
         var aboveUpperLimit = m_upperLimit * m_factor + m_origin + 1;
 
         var values = m_data.Split(' ')
-            .Where(s => double.TryParse(s, out _) || s == "U" || s == "L" || s == "E")
-            .Select(s => double.TryParse(s, out var num) ? (object)(num * m_factor + m_origin) : s)
+            .Where(s => double.TryParse(s, CultureInfo.InvariantCulture, out _) || s == "U" || s == "L" || s == "E")
+            .Select(s =>
+                double.TryParse(s, CultureInfo.InvariantCulture, out var num) ? (object)(num * m_factor + m_origin) : s)
             .ToList();
 
         var dimensionsData = Enumerable.Range(0, m_dimensions)

@@ -17,36 +17,23 @@ public class DetectedIssuesProblemDetailCell(XmlDocumentNavigator item) : Widget
 
         var tree = new TableCell([
             infrequentOptions.Contains(InfrequentPropertiesPaths.Code)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Kategorie")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [new Optional("f:code", new CodeableConcept())]),
-                    new LineBreak()
+                ? new NameValuePair([new ConstantText("Kategorie")],
+                [
+                    new Optional("f:code", new CodeableConcept())
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Detail)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Detail")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [new Optional("f:detail", new Text("@value"))]),
-                    new LineBreak()
+                ? new NameValuePair([new ConstantText("Detail")],
+                [
+                    new Optional("f:detail", new Text("@value"))
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Implicated)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold,
-                    [
-                        new ConstantText("Související zdroje")
-                    ]), //Indicates the resource representing the current activity or proposed activity that is potentially problematic.
-                    new ConstantText(": "),
-                    new LineBreak(),
-                    new TextContainer(TextStyle.Regular,
-                    [
-                        new ConcatBuilder("f:implicated", _ => [new ConstantText("- "), new AnyReferenceNamingWidget()],
-                            new LineBreak())
-                    ]),
-                    new LineBreak()
-                ])
+                ? new NameValuePair([new ConstantText("Související zdroje")],
+                [
+                    new ConcatBuilder("f:implicated", _ => [new ConstantText("- "), new AnyReferenceNamingWidget()],
+                        new LineBreak())
+                ], direction: FlexDirection.Column)
                 : new NullWidget()
         ]);
 

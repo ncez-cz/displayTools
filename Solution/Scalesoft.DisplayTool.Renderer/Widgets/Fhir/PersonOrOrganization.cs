@@ -100,7 +100,7 @@ public class PersonOrOrganization(
                                 new Choose([
                                     new When("f:name/@value",
                                         new Container([
-                                            new Badge(new DisplayLabel(LabelCodes.Name)),
+                                            new PlainBadge(new DisplayLabel(LabelCodes.Name)),
                                             new Heading([new Text("f:name/@value")], HeadingSize.H5)
                                         ])
                                     ),
@@ -108,7 +108,7 @@ public class PersonOrOrganization(
                                 ]),
                                 new Optional("f:gender",
                                     new Container([
-                                        new Badge(new DisplayLabel(LabelCodes.AdministrativeGender)),
+                                        new PlainBadge(new DisplayLabel(LabelCodes.AdministrativeGender)),
                                         new LineBreak(),
                                         new EnumLabel(".", "http://hl7.org/fhir/ValueSet/administrative-gender")
                                     ])
@@ -151,14 +151,14 @@ public class PersonOrOrganization(
                                 ),
                                 new Optional("f:birthDate",
                                     new Container([
-                                        new Badge(new DisplayLabel(LabelCodes.DateOfBirth)),
+                                        new PlainBadge(new DisplayLabel(LabelCodes.DateOfBirth)),
                                         new LineBreak(),
                                         new ShowDateTime()
                                     ], optionalClass: "")
                                 ),
                                 new Condition("f:qualification",
                                     new Container([
-                                        new Badge(new ConstantText("Kvalifikace")),
+                                        new PlainBadge(new ConstantText("Kvalifikace")),
                                         new ItemListBuilder(
                                             "f:qualification",
                                             ItemListType.Unordered, (_, x) =>
@@ -190,7 +190,7 @@ public class PersonOrOrganization(
                                 ),
                                 new Condition("f:communication",
                                     new Container([
-                                        new Badge(new ConstantText("Jazyky komunikace")),
+                                        new PlainBadge(new ConstantText("Jazyky komunikace")),
                                         new ItemListBuilder(
                                             "f:communication",
                                             ItemListType.Unordered, _ =>
@@ -214,7 +214,7 @@ public class PersonOrOrganization(
                                 ], optionalClass: ""),
                                 new Condition("f:type",
                                     new Container([
-                                        new Badge(new ConstantText("Druhy zařízení")),
+                                        new PlainBadge(new ConstantText("Druhy zařízení")),
                                         new ItemListBuilder(
                                             "f:type",
                                             ItemListType.Unordered, _ => [new CodeableConcept()]
@@ -223,7 +223,7 @@ public class PersonOrOrganization(
                                 ),
                                 new Optional("f:partOf",
                                     new Container([
-                                        new Badge(new ConstantText("Součástí")),
+                                        new PlainBadge(new ConstantText("Součástí")),
                                         new AnyReferenceNamingWidget()
                                     ], optionalClass: "")
                                 ),
@@ -236,16 +236,12 @@ public class PersonOrOrganization(
                         ]),
                         new Condition("f:identifier", new Container([
                                 new Container([
-                                    new Badge(new ConstantText("Identifikátory")),
+                                    new PlainBadge(new ConstantText("Identifikátory")),
                                     new ListBuilder(
                                         "f:identifier",
                                         FlexDirection.Column, _ =>
                                         [
-                                            new Container([
-                                                new IdentifierSystemLabel(),
-                                                new ConstantText(" "),
-                                                new ShowIdentifier()
-                                            ], ContainerType.Span)
+                                            new NameValuePair([new IdentifierSystemLabel(),], [new ShowIdentifier()]),
                                         ], flexContainerClasses: "gap-0"
                                     ),
                                 ])
@@ -282,7 +278,8 @@ public class PersonOrOrganization(
                             new NarrativeCollapser()
                         ]
                         : null,
-                    iconPrefix: showNarrative ? [new NarrativeModal()] : null
+                    iconPrefix: showNarrative ? [new NarrativeModal()] : null,
+                    isCollapsed: true
                 )
             ]
             : tree;

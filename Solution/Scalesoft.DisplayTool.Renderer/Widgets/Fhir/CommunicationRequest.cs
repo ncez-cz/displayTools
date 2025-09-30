@@ -32,7 +32,7 @@ public class CommunicationRequest : Widget
                 new DisplayLabel(LabelCodes.Status))
         ], ContainerType.Div, "d-flex align-items-center gap-1");
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
         var basicInfo = new Container([
             new If(_ => infrequentProperties.Contains(CommunicationRequestInfrequentProperties.Priority),
                 new NameValuePair(
@@ -66,7 +66,7 @@ public class CommunicationRequest : Widget
             ),
         ]);
 
-        var messageBadge = new Badge(new ConstantText("Zpráva"));
+        var messageBadge = new PlainBadge(new ConstantText("Zpráva"));
         var messageInfo = new Container([
             new If(_ => infrequentProperties.Contains(CommunicationRequestInfrequentProperties.Payload),
                 new ConcatBuilder("f:payload", _ =>

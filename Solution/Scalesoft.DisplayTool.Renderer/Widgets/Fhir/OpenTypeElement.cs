@@ -159,7 +159,7 @@ public class OpenTypeElement(
                     new ConstantText($"Viz přiložený graf č. {idTitle} s hodnotami měření v detailu"),
                     $"#{id}"
                 );
-                collapsibleContent.AddCollapser(header, chartWidget);
+                collapsibleContent.Add(new CollapsibleDetail(header, chartWidget, IsHideable: false));
                 result = new TextContainer(TextStyle.Muted, [link]);
                 break;
             case DataTypes.Duration:

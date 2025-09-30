@@ -1,3 +1,4 @@
+using System.Globalization;
 using Scalesoft.DisplayTool.Renderer.Constants;
 using Scalesoft.DisplayTool.Renderer.Extensions;
 using Scalesoft.DisplayTool.Renderer.Models;
@@ -155,7 +156,7 @@ public class Activities(XmlDocumentNavigator item) : Widget
         }
     }
 
-    private DateTime? GetActivityScheduledTime(XmlDocumentNavigator activityNavigator, List<ParseError> errors)
+    private DateTimeOffset? GetActivityScheduledTime(XmlDocumentNavigator activityNavigator, List<ParseError> errors)
     {
         // Attempts to get the scheduled time from primary path or a single reference
         var scheduledDateString = GetDateValueFromPaths(activityNavigator);
@@ -183,10 +184,12 @@ public class Activities(XmlDocumentNavigator item) : Widget
             }
         }
 
-        return DateTime.TryParse(scheduledDateString, out var parsedDate) ? parsedDate : null;
+        return DateTimeOffset.TryParse(scheduledDateString, CultureInfo.InvariantCulture, out var parsedDate)
+            ? parsedDate
+            : null;
     }
 
-    private (bool IsRequestGroup, DateTime? AuthoredOnDate) CheckIfRepresentsRequestGroup(
+    private (bool IsRequestGroup, DateTimeOffset? AuthoredOnDate) CheckIfRepresentsRequestGroup(
         XmlDocumentNavigator activityNavigator,
         IWidgetRenderer renderer,
         RenderContext context
@@ -207,7 +210,7 @@ public class Activities(XmlDocumentNavigator item) : Widget
             return (false, null); // Not a RequestGroup reference or reference node doesn't exist
         }
 
-        DateTime? authoredOnDate = null;
+        DateTimeOffset? authoredOnDate = null;
         var authoredOnPath =
             ReferenceHandler.GetSingleNodeNavigatorFromReference(activityNavigator, "f:reference",
                 "f:authoredOn/@value");
@@ -217,7 +220,7 @@ public class Activities(XmlDocumentNavigator item) : Widget
         }
 
         var authoredOnDateString = authoredOnPath.Node?.Value;
-        if (DateTime.TryParse(authoredOnDateString, out var parsedDate))
+        if (DateTimeOffset.TryParse(authoredOnDateString, CultureInfo.InvariantCulture, out var parsedDate))
         {
             authoredOnDate = parsedDate;
         }
@@ -244,7 +247,7 @@ public class Activities(XmlDocumentNavigator item) : Widget
                 groupDate,
                 "request-group-container",
                 group
-                    .OrderBy(x => x.SortDate ?? DateTime.MaxValue)
+                    .OrderBy(x => x.SortDate ?? DateTimeOffset.MaxValue)
                     .ToList()
             ));
         }

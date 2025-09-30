@@ -38,7 +38,7 @@ public abstract class FhirDocumentRendererBase : SpecificDocumentRendererBase
     {
         InputFormat = inputFormat;
         m_translator = translator;
-        this.m_language = language;
+        m_language = language;
         m_loggerFactory = loggerFactory;
         m_widgetRenderer = widgetRenderer;
         m_logger = logger;
@@ -52,20 +52,14 @@ public abstract class FhirDocumentRendererBase : SpecificDocumentRendererBase
         byte[] fileContent,
         OutputFormat outputFormat,
         DocumentOptions options,
+        DocumentType documentType,
         RenderMode renderMode = RenderMode.Standard,
-        DocumentType? documentType = null
+        LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
     )
     {
         if (outputFormat != OutputFormat.Html && outputFormat != OutputFormat.Pdf)
         {
             throw new NotSupportedException();
-        }
-
-        if (documentType == null)
-        {
-            throw new NotImplementedException(
-                $"Unknown document type (e.g. {DocumentType.PatientSummary}, {DocumentType.DischargeReport}...)"
-            );
         }
 
         var validationResult = new ValidationResultModel();
@@ -110,9 +104,10 @@ public abstract class FhirDocumentRendererBase : SpecificDocumentRendererBase
             m_translator,
             m_language,
             m_loggerFactory,
-            documentType.Value,
+            documentType,
             renderMode,
-            options.PreferTranslationsFromDocument
+            options.PreferTranslationsFromDocument,
+            levelOfDetail
         );
 
         var nodesWithIds = root.SelectAllNodes("f:Bundle/f:entry/f:resource//*[f:id[@value]]");
@@ -132,30 +127,41 @@ public abstract class FhirDocumentRendererBase : SpecificDocumentRendererBase
         var composition = root.SelectSingleNode("f:Bundle/f:entry/f:resource/f:Composition");
         if (ResourceIdentifier.TryFromNavigator(composition, out var compositionId))
         {
-            renderContext.AddRenderedResource(composition, compositionId, out var _);
+            renderContext.AddRenderedResource(composition, compositionId, out _);
         }
-        
-        Widget widget = documentType switch
+
+        if (composition.Node == null)
+        {
+            return new DocumentResult
             {
-                DocumentType.PatientSummary => new ChangeContext(composition,
-                    new CompositionIps()),
-                DocumentType.DischargeReport => new ChangeContext(composition,
-                    new CompositionHdr()),
-                DocumentType.ImagingOrder => new ChangeContext(composition,
-                    new CompositionImagingOrder()),
-                DocumentType.Laboratory => new ChangeContext(
-                    composition,
-                    new CompositionLab()
-                ),
-                DocumentType.LaboratoryOrder => new ChangeContext(
-                    composition,
-                    new CompositionLabOrder()
-                ),
-                DocumentType.ImagingReport => new ChangeContext(
-                    composition,
-                    new CompositionImg()
-                ),
-                _ => throw new NotImplementedException($"Unknown document type: {documentType}")
+                Content = [],
+                Errors = ["Missing required Composition resource"],
+                Warnings = [],
+                IsRenderedSuccessfully = false,
+            };
+        }
+
+        Widget widget = documentType switch
+        {
+            DocumentType.PatientSummary => new ChangeContext(composition,
+                new CompositionIps()),
+            DocumentType.DischargeReport => new ChangeContext(composition,
+                new CompositionHdr()),
+            DocumentType.ImagingOrder => new ChangeContext(composition,
+                new CompositionImagingOrder()),
+            DocumentType.Laboratory => new ChangeContext(
+                composition,
+                new CompositionLab()
+            ),
+            DocumentType.LaboratoryOrder => new ChangeContext(
+                composition,
+                new CompositionLabOrder()
+            ),
+            DocumentType.ImagingReport => new ChangeContext(
+                composition,
+                new CompositionImg()
+            ),
+            _ => throw new NotSupportedException($"Unknown document type: {documentType}"),
         };
 
         List<Widget> widgets =

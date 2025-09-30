@@ -1,10 +1,10 @@
 ﻿@use "sass:math";
-@import "theme-variables";
+@use "theme-variables" as *;
 
 body {
 
     // Font default
-    --#{$prefix}font-size: 0.45em;
+    --#{$prefix}font-size: 0.45rem;
     @include media-breakpoint-up(sm) {
         --#{$prefix}font-size: 0.55rem;
     }

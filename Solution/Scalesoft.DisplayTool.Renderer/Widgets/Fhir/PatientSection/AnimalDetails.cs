@@ -18,13 +18,13 @@ public class AnimalDetails : Widget
         [
             new ChangeContext("f:extension[@url='species']/f:valueCodeableConcept",
                 new Container([
-                    new Badge(new ConstantText("Druh zvířete")),
+                    new PlainBadge(new ConstantText("Druh zvířete")),
                     new Heading([new CodeableConcept()], HeadingSize.H3)
                 ])
             ),
             new Optional("f:extension[@url='breed']/f:valueCodeableConcept",
                 new Container([
-                    new Badge(new ConstantText("Plemeno")),
+                    new PlainBadge(new ConstantText("Plemeno")),
                     new Heading([new CodeableConcept()], HeadingSize.H3)
                 ])
             ),

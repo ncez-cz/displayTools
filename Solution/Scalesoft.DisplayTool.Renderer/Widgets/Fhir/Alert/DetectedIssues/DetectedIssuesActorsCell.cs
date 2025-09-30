@@ -17,40 +17,27 @@ public class DetectedIssuesActorsCell(XmlDocumentNavigator item) : Widget
 
         var tree = new TableCell([
             infrequentOptions.Contains(InfrequentPropertiesPaths.Author)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Autor")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [new AnyReferenceNamingWidget("f:author")]),
-                    new LineBreak()
-                ])
+                ? new NameValuePair([new ConstantText("Autor")], [new AnyReferenceNamingWidget("f:author")])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Patient)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Pacient")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [new AnyReferenceNamingWidget("f:patient")]),
-                    new LineBreak()
-                ])
+                ? new NameValuePair([new ConstantText("Pacient")], [new AnyReferenceNamingWidget("f:patient")])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Reference)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Odborný zdroj")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [
-                        new Link(
-                            new ConstantText("odkaz"),
-                            new Text("f:reference/@value")
-                        )
-                    ]),
-                    new LineBreak()
+                ? new NameValuePair([new ConstantText("Odborný zdroj")], [
+                    new Link(
+                        new ConstantText("odkaz"),
+                        new Text("f:reference/@value")
+                    )
                 ])
                 : new NullWidget()
         ]);
-        
-        
+
+
         if (infrequentOptions.Count == 0)
         {
-            tree = new TableCell([ new TextContainer(TextStyle.Muted, [new ConstantText("Informace nejsou k dispozici")])]);
+            tree = new TableCell([
+                new TextContainer(TextStyle.Muted, [new ConstantText("Informace nejsou k dispozici")])
+            ]);
         }
 
         return tree.Render(item, renderer, context);

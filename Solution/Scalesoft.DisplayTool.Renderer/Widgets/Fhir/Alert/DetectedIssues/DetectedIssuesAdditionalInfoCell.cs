@@ -19,45 +19,30 @@ public class DetectedIssuesAdditionalInfoCell(XmlDocumentNavigator item) : Widge
         var tree = new TableCell([
             new HideableDetails(
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Identifier)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Identifikátor podáni")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new CommaSeparatedBuilder("f:identifier", _ => [new ShowIdentifier()])]),
-                        new LineBreak(),
-                    ])
+                    ? new NameValuePair([new ConstantText("Identifikátor podání")],
+                        [new CommaSeparatedBuilder("f:identifier", _ => [new ShowIdentifier()])])
                     : infrequentOptions.Contains(InfrequentPropertiesPaths.Id)
-                        ? new TextContainer(TextStyle.Regular, [
-                            new TextContainer(TextStyle.Bold, [new ConstantText("Technický identifikátor podani")]),
-                            new ConstantText(": "),
-                            new TextContainer(TextStyle.Regular, [new Optional("f:id", new Text("@value"))]),
-                            new LineBreak(),
-                        ])
+                        ? new NameValuePair([new ConstantText("Technický identifikátor podání")],
+                            [new Optional("f:id", new Text("@value"))])
                         : new ConstantText("Identifikátor podání není specifikován")
             ),
             infrequentOptions.Contains(InfrequentPropertiesPaths.IdentifiedDateTime)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new DisplayLabel(LabelCodes.Date)]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [new Optional("f:identifiedDateTime", new ShowDateTime())]),
-                    new LineBreak()
+                ? new NameValuePair([new DisplayLabel(LabelCodes.Date)],
+                [
+                    new CommaSeparatedBuilder("f:identifier",
+                        _ => [new Optional("f:identifiedDateTime", new ShowDateTime())])
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.IdentifiedPeriod)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new DisplayLabel(LabelCodes.Date)]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [new Optional("f:identifiedPeriod", new ShowPeriod())]),
-                    new LineBreak()
+                ? new NameValuePair([new DisplayLabel(LabelCodes.Date)],
+                [
+                    new Optional("f:identifiedPeriod", new ShowPeriod())
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Evidence)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Podpůrný důkaz")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular,
-                        [new CommaSeparatedBuilder("f:evidence", _ => [new CodeableConcept()])]),
-                    new LineBreak()
+                ? new NameValuePair([new ConstantText("Podpůrný důkaz")],
+                [
+                    new CommaSeparatedBuilder("f:evidence", _ => [new CodeableConcept()])
                 ])
                 : new NullWidget()
         ]);

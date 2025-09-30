@@ -8,8 +8,14 @@
        contains only "optional-detail" elements (i.e., all children are hideable).
        If there is at least one non-optional child, the toggler remains visible.
     */
-    tbody:has(.collapsible-row-wrapper):not(:has(.collapsible-row-wrapper > td > :not(.optional-detail))) > tr > td:first-child .collapse-toggler-wrapper {
-        display: none !important;
+    tbody:has(.collapsible-row-wrapper):not(:has(.collapsible-row-wrapper > td > :not(.optional-detail))) {
+        > tr > td:first-child .collapse-toggler-wrapper {
+            display: none !important;
+        }
+        
+        > .collapsible-row-wrapper {
+            display: none !important;
+        }
     }
 
     /* 

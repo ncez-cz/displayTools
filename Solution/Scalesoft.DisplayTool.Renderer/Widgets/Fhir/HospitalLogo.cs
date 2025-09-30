@@ -12,18 +12,16 @@ public class HospitalLogo : Widget
         RenderContext context
     )
     {
-        var brandLogo = new Optional(
-            "f:extension[@url='https://hl7.cz/fhir/core/StructureDefinition/cz-organization-logo']",
+        var brandLogo =
             ShowSingleReference.WithDefaultDisplayHandler(
-                nav =>
+                documentReferenceNav =>
                 [
                     new Container(
                         new ChangeContext("f:content[1]/f:attachment",
                             new Binary()), // why does logo DocumentReference contain multiple content?
-                        optionalClass: "header-image"),
+                        optionalClass: "header-image", idSource: documentReferenceNav),
                 ],
-                "f:valueReference")
-        );
+                "f:valueReference");
 
         return brandLogo.Render(navigator, renderer, context);
     }

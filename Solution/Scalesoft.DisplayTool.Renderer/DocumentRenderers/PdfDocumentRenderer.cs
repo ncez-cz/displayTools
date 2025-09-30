@@ -30,8 +30,14 @@ public class PdfDocumentRenderer : ISpecificDocumentRenderer
         m_loggerFactory = loggerFactory;
     }
 
-    public async Task<DocumentResult> RenderAsync(byte[] fileContent, OutputFormat outputFormat,
-        DocumentOptions options, RenderMode renderMode = RenderMode.Standard, DocumentType? documentType = null)
+    public async Task<DocumentResult> RenderAsync(
+        byte[] fileContent,
+        OutputFormat outputFormat,
+        DocumentOptions options,
+        DocumentType documentType,
+        RenderMode renderMode = RenderMode.Standard,
+        LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
+    )
     {
         if (PdfValidator.IsValidPdf(fileContent))
         {
@@ -60,9 +66,10 @@ public class PdfDocumentRenderer : ISpecificDocumentRenderer
             m_translator,
             m_language,
             m_loggerFactory,
-            documentType ?? DocumentType.PatientSummary,
+            documentType,
             renderMode,
-            options.PreferTranslationsFromDocument);
+            options.PreferTranslationsFromDocument,
+            levelOfDetail);
 
         // Render HTML
         var root = new XmlDocumentNavigator(null);

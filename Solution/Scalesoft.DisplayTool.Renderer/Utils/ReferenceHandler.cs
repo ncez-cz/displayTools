@@ -6,7 +6,6 @@ using Scalesoft.DisplayTool.Renderer.Models.Enums;
 using Scalesoft.DisplayTool.Renderer.Renderers;
 using Scalesoft.DisplayTool.Renderer.Widgets;
 using Scalesoft.DisplayTool.Renderer.Widgets.Fhir;
-using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.Observation;
 using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
@@ -323,12 +322,16 @@ public static partial class ReferenceHandler
 
 
     /// <summary>
-    /// Mostly based on https://build.fhir.org/bundle.html#references, but differs in handling relative references.
-    /// The described algorithm did not work in most example documents we have available, because fullUrl is either not present or is an oid.
-    /// For this reason, we try to find the resources based on only resource type and id instead.
+    ///     Mostly based on https://build.fhir.org/bundle.html#references, but differs in handling relative references.
+    ///     The described algorithm did not work in most example documents we have available, because fullUrl is either not
+    ///     present or is an oid.
+    ///     For this reason, we try to find the resources based on only resource type and id instead.
     /// </summary>
     /// <param name="referenceUri">urn, absolute, relative, or local uri identifying the required entry/resource</param>
-    /// <param name="xpath">Outputs the xpath leading to the required resource if the referenceUri is valid, empty string otherwise</param>
+    /// <param name="xpath">
+    ///     Outputs the xpath leading to the required resource if the referenceUri is valid, empty string
+    ///     otherwise
+    /// </param>
     /// <returns>true when referenceUri is valid (but not necessarily present), false otherwise</returns>
     public static bool TryBuildReferenceXpath(string referenceUri, out string xpath)
     {
@@ -379,10 +382,12 @@ public static partial class ReferenceHandler
         {
             path.Append($"/f:Bundle/f:entry[f:fullUrl/@value='{versionlessUrl}']");
         }
-        // For relative references, look for a resource with a matching resource type and id.
+        // For relative references, look for a resource with a matching resource type and id, or a matching fullUrl
         else
         {
-            path.Append($"/f:Bundle/f:entry[f:resource/f:{resourceType}/f:id/@value='{resourceId}']");
+            path.Append(
+                $"/f:Bundle/f:entry[f:resource/f:{resourceType}/f:id/@value='{resourceId}'or f:fullUrl/@value='{versionlessUrl}']"
+            );
         }
 
         // Go inside the actual resource
@@ -534,6 +539,7 @@ public static partial class ReferenceHandler
     ///     The resulting list groups widgets semantically—each index contains one or more widgets wrapped
     ///     in a container to represent a distinct reference block.
     /// </summary>
+    /// <param name="customFallbackName">Fallback name widget to use if regular fallback fails, before identifier  fallback</param>
     /// <returns>
     ///     A list of <see cref="Widget" /> elements, each wrapped in a <see cref="Container" /> to represent
     ///     a semantically separated reference group suitable for rendering.
@@ -543,7 +549,8 @@ public static partial class ReferenceHandler
         string path,
         RenderContext context,
         IWidgetRenderer renderer,
-        bool showOptionalDetails = false
+        bool showOptionalDetails = false,
+        Widget? customFallbackName = null
     )
     {
         if (context.RenderMode == RenderMode.Documentation)
@@ -641,7 +648,8 @@ public static partial class ReferenceHandler
             }
             else
             {
-                var fallbackName = GetFallbackDisplayName(reference, reference.Node?.Name, showOptionalDetails).Widget;
+                var fallbackName = GetFallbackDisplayName(reference, reference.Node?.Name, showOptionalDetails,
+                    customFallbackName: customFallbackName).Widget;
 
                 if (fallbackName != null)
                 {
@@ -682,7 +690,8 @@ public static partial class ReferenceHandler
                 ? displayVal != null ? new ConstantText($"{displayVal} ") : null
                 : null;
 
-            var naming = GetFallbackDisplayName(reference, showKind: showOptionalDetails);
+            var naming = GetFallbackDisplayName(reference, showKind: showOptionalDetails,
+                customFallbackName: customFallbackName);
             var contentToDisplay = display ?? naming.Widget;
 
             if (contentToDisplay != null)
@@ -708,7 +717,8 @@ public static partial class ReferenceHandler
                 resultAltogether.Add(fallbackName);
             }
 
-            resultSeparatedSemantically.Add(new Container(resultAltogether, ContainerType.Span));
+            resultSeparatedSemantically.Add(new Container(resultAltogether,
+                optionalClass: "d-flex align-items-center"));
         }
 
         return new Concat(resultSeparatedSemantically, ", ");
@@ -726,7 +736,8 @@ public static partial class ReferenceHandler
     public static (XmlDocumentNavigator? Navigator, Widget? Widget) GetFallbackDisplayName(
         XmlDocumentNavigator reference,
         string? typeName = null,
-        bool showKind = false
+        bool showKind = false,
+        Widget? customFallbackName = null
     )
     {
         //HumanName 
@@ -747,98 +758,11 @@ public static partial class ReferenceHandler
             return (name, new ConstantText(name.Node?.Value ?? ""));
         }
 
-        // Observation
-        //// Observation - Anthropometric Data
-        if (reference.EvaluateCondition(
-                "f:code/f:coding[f:system/@value='http://loinc.org' and (f:code/@value='39156-5' or f:code/@value='56086-2' or f:code/@value='8280-0' or f:code/@value='9843-4' or f:code/@value='8302-2' or f:code/@value='29463-7')]"))
+        var resourceFallback = ResourceSummaryProvider.GetSummary(reference, showKind);
+        if (resourceFallback != null)
         {
-            var valueQuantityNav = reference.SelectSingleNode("f:valueQuantity");
-            if (!IsNavigatorNullOrEmpty(valueQuantityNav))
-            {
-                return (valueQuantityNav,
-                    new NameValuePair(
-                        new ChangeContext(
-                            reference.SelectSingleNode("f:code[f:coding/f:system/@value='http://loinc.org']"),
-                            new CodeableConcept()),
-                        new ChangeContext(valueQuantityNav, new ShowQuantity())));
-            }
+            return (resourceFallback.Navigator, resourceFallback.Widget);
         }
-
-        //// Observation - Infectious contact
-        if (reference.EvaluateCondition(
-                "f:code/f:coding[f:system/@value='http://terminology.hl7.org/CodeSystem/v3-ParticipationType' and f:code/@value='EXPAGNT']"))
-        {
-            var valueNav = reference.SelectSingleNode("*[starts-with(local-name(), 'value')]");
-            if (!IsNavigatorNullOrEmpty(valueNav) &&
-                valueNav.Node?.Name !=
-                "valueSampledData") // ignore if value is missing or is SampleData - cannot create link text out of a chart
-            {
-                return (valueNav,
-                    new NameValuePair(new ChangeContext(reference.SelectSingleNode("f:code"), new CodeableConcept()),
-                        new ChangeContext(reference, new OpenTypeElement(null))));
-            }
-        }
-
-        //// Observation - SDOH
-        if (reference.EvaluateCondition(
-                "f:category/f:coding[f:system/@value='http://terminology.hl7.org/CodeSystem/observation-category' and f:code/@value='social-history']"))
-        {
-            var valueNav = reference.SelectSingleNode("*[starts-with(local-name(), 'value')]");
-            if (!IsNavigatorNullOrEmpty(valueNav) &&
-                valueNav.Node?.Name !=
-                "valueSampledData") // ignore if value is missing or is SampleData - cannot create link text out of a chart
-            {
-                return (valueNav,
-                    new NameValuePair(new ChangeContext(reference.SelectSingleNode("f:code"), new CodeableConcept()),
-                        new ChangeContext(reference, new OpenTypeElement(null))));
-            }
-        }
-
-        //// Observation - travel history
-        if (reference.EvaluateCondition(
-                "f:code/f:coding[f:system/@value='http://loinc.org' and f:code/@value='94651-7']"))
-        {
-            var valueNav = reference.SelectSingleNode("f:valueCodeableConcept");
-            if (!IsNavigatorNullOrEmpty(valueNav))
-            {
-                return (valueNav,
-                    new NameValuePair(new ChangeContext(reference.SelectSingleNode("f:code"), new CodeableConcept()),
-                        new ChangeContext(valueNav, new CodeableConcept())));
-            }
-        }
-
-        //// Observation - Laboratory
-        if (reference.EvaluateCondition(CzLaboratoryObservation.XPathCondition))
-        {
-            var valueNav = reference.SelectSingleNode("*[starts-with(local-name(), 'value')]");
-            if (!IsNavigatorNullOrEmpty(valueNav) &&
-                valueNav.Node?.Name !=
-                "valueSampledData") // ignore if value is missing or is SampleData - cannot create link text out of a chart
-            {
-                return (valueNav,
-                    new NameValuePair(new ChangeContext(reference.SelectSingleNode("f:code"), new CodeableConcept()),
-                        new ChangeContext(reference, new OpenTypeElement(null))));
-            }
-        }
-
-        //// Observation - Imaging Order is skipped - no obvious way to detect it
-
-        //// Observation - Imaging Report
-        if (reference.EvaluateCondition(
-                "f:identifier/f:type/f:coding[f:system/@value='https://hl7.cz/fhir/img/CodeSystem/codesystem-missing-dicom-terminology' and f:code/@value='00080018']"))
-        {
-            var valueNav = reference.SelectSingleNode("*[starts-with(local-name(), 'value')]");
-            if (!IsNavigatorNullOrEmpty(valueNav) &&
-                valueNav.Node?.Name !=
-                "valueSampledData") // ignore if value is missing or is SampleData - cannot create link text out of a chart
-            {
-                return (valueNav,
-                    new NameValuePair(new ChangeContext(reference.SelectSingleNode("f:code"), new CodeableConcept()),
-                        new ChangeContext(reference, new OpenTypeElement(null))));
-            }
-        }
-
-        //// Observation - Laboratory Order is skipped - no obvious way to detect it
 
         //Codeable 
         if (reference.EvaluateCondition("f:code/f:coding/f:display/@value"))
@@ -862,6 +786,12 @@ public static partial class ReferenceHandler
                     new TextContainer(TextStyle.Regular, [new ConstantText(url)]),
                 ])
                 : null);
+        }
+
+        // if a custom name is present, prefer it to an identifier 
+        if (customFallbackName != null)
+        {
+            return (null, customFallbackName);
         }
 
         //Identifier
@@ -939,37 +869,13 @@ public static partial class ReferenceHandler
         return node;
     }
 
-    private static bool IsNavigatorNullOrEmpty(XmlDocumentNavigator nav)
-    {
-        if (nav.Node == null)
-        {
-            return true;
-        }
-
-        if (nav.EvaluateCondition("@value"))
-        {
-            if (string.IsNullOrEmpty(nav.Evaluate("@value")))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        if (string.IsNullOrWhiteSpace(nav.Node.InnerXml))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     /// <summary>
-    /// Taken from https://build.fhir.org/references.html, added capture groups baseUrl, versionlessUrl, resourceType, versionId, localId, id
+    ///     Taken from https://build.fhir.org/references.html, added capture groups baseUrl, versionlessUrl, resourceType,
+    ///     versionId, localId, id
     /// </summary>
     /// <returns></returns>
     [GeneratedRegex(
-        """(?<versionlessUrl>(?<baseUrl>(http|https):\/\/([A-Za-z0-9\-\\\.\:\%\$]*\/)+)?(?<resourceType>Account|ActivityDefinition|ActorDefinition|AdministrableProductDefinition|AdverseEvent|AllergyIntolerance|Appointment|AppointmentResponse|ArtifactAssessment|AuditEvent|Basic|Binary|BiologicallyDerivedProduct|BiologicallyDerivedProductDispense|BodyStructure|Bundle|CapabilityStatement|CarePlan|CareTeam|ChargeItem|ChargeItemDefinition|Citation|Claim|ClaimResponse|ClinicalAssessment|ClinicalUseDefinition|CodeSystem|Communication|CommunicationRequest|CompartmentDefinition|Composition|ConceptMap|Condition|ConditionDefinition|Consent|Contract|Coverage|CoverageEligibilityRequest|CoverageEligibilityResponse|DetectedIssue|Device|DeviceAlert|DeviceAssociation|DeviceDefinition|DeviceDispense|DeviceMetric|DeviceRequest|DeviceUsage|DiagnosticReport|DocumentReference|Encounter|EncounterHistory|Endpoint|EnrollmentRequest|EnrollmentResponse|EpisodeOfCare|EventDefinition|Evidence|EvidenceVariable|ExampleScenario|ExplanationOfBenefit|FamilyMemberHistory|Flag|FormularyItem|GenomicStudy|Goal|GraphDefinition|Group|GuidanceResponse|HealthcareService|ImagingSelection|ImagingStudy|Immunization|ImmunizationEvaluation|ImmunizationRecommendation|ImplementationGuide|Ingredient|InsurancePlan|InsuranceProduct|InventoryItem|InventoryReport|Invoice|Library|Linkage|List|Location|ManufacturedItemDefinition|Measure|MeasureReport|Medication|MedicationAdministration|MedicationDispense|MedicationKnowledge|MedicationRequest|MedicationStatement|MedicinalProductDefinition|MessageDefinition|MessageHeader|MolecularDefinition|NamingSystem|NutritionIntake|NutritionOrder|NutritionProduct|Observation|ObservationDefinition|OperationDefinition|OperationOutcome|Organization|OrganizationAffiliation|PackagedProductDefinition|Patient|PaymentNotice|PaymentReconciliation|Permission|Person|PersonalRelationship|PlanDefinition|Practitioner|PractitionerRole|Procedure|Provenance|Questionnaire|QuestionnaireResponse|RegulatedAuthorization|RelatedPerson|RequestOrchestration|Requirements|ResearchStudy|ResearchSubject|RiskAssessment|Schedule|SearchParameter|ServiceRequest|Slot|Specimen|SpecimenDefinition|StructureDefinition|StructureMap|Subscription|SubscriptionStatus|SubscriptionTopic|Substance|SubstanceDefinition|SubstanceNucleicAcid|SubstancePolymer|SubstanceProtein|SubstanceReferenceInformation|SubstanceSourceMaterial|SupplyDelivery|SupplyRequest|Task|TerminologyCapabilities|TestPlan|TestReport|TestScript|Transport|ValueSet|VerificationResult|VisionPrescription)\/(?<id>[A-Za-z0-9\-\.]{1,64}))(\/_history\/(?<versionId>[A-Za-z0-9\-\.]{1,64}))?(#(?<localId>[A-Za-z0-9\-\.]{1,64}))?""",
+        """(?<versionlessUrl>(?<baseUrl>(http|https):\/\/([A-Za-z0-9\-\\\.\:\%\$]*\/)+)?(?<resourceType>Account|ActivityDefinition|AdverseEvent|AllergyIntolerance|Appointment|AppointmentResponse|AuditEvent|Basic|Binary|BiologicallyDerivedProduct|BodyStructure|Bundle|CapabilityStatement|CarePlan|CareTeam|CatalogEntry|ChargeItem|ChargeItemDefinition|Claim|ClaimResponse|ClinicalImpression|CodeSystem|Communication|CommunicationRequest|CompartmentDefinition|Composition|ConceptMap|Condition|Consent|Contract|Coverage|CoverageEligibilityRequest|CoverageEligibilityResponse|DetectedIssue|Device|DeviceDefinition|DeviceMetric|DeviceRequest|DeviceUseStatement|DiagnosticReport|DocumentManifest|DocumentReference|EffectEvidenceSynthesis|Encounter|Endpoint|EnrollmentRequest|EnrollmentResponse|EpisodeOfCare|EventDefinition|Evidence|EvidenceVariable|ExampleScenario|ExplanationOfBenefit|FamilyMemberHistory|Flag|Goal|GraphDefinition|Group|GuidanceResponse|HealthcareService|ImagingStudy|Immunization|ImmunizationEvaluation|ImmunizationRecommendation|ImplementationGuide|InsurancePlan|Invoice|Library|Linkage|List|Location|Measure|MeasureReport|Media|Medication|MedicationAdministration|MedicationDispense|MedicationKnowledge|MedicationRequest|MedicationStatement|MedicinalProduct|MedicinalProductAuthorization|MedicinalProductContraindication|MedicinalProductIndication|MedicinalProductIngredient|MedicinalProductInteraction|MedicinalProductManufactured|MedicinalProductPackaged|MedicinalProductPharmaceutical|MedicinalProductUndesirableEffect|MessageDefinition|MessageHeader|MolecularSequence|NamingSystem|NutritionOrder|Observation|ObservationDefinition|OperationDefinition|OperationOutcome|Organization|OrganizationAffiliation|Patient|PaymentNotice|PaymentReconciliation|Person|PlanDefinition|Practitioner|PractitionerRole|Procedure|Provenance|Questionnaire|QuestionnaireResponse|RelatedPerson|RequestGroup|ResearchDefinition|ResearchElementDefinition|ResearchStudy|ResearchSubject|RiskAssessment|RiskEvidenceSynthesis|Schedule|SearchParameter|ServiceRequest|Slot|Specimen|SpecimenDefinition|StructureDefinition|StructureMap|Subscription|Substance|SubstanceNucleicAcid|SubstancePolymer|SubstanceProtein|SubstanceReferenceInformation|SubstanceSourceMaterial|SubstanceSpecification|SupplyDelivery|SupplyRequest|Task|TerminologyCapabilities|TestReport|TestScript|ValueSet|VerificationResult|VisionPrescription)\/(?<id>[A-Za-z0-9\-\.]{1,64}))(\/_history\/(?<versionId>[A-Za-z0-9\-\.]{1,64}))?(#(?<localId>[A-Za-z0-9\-\.]{1,64}))?""",
         RegexOptions.Compiled
     )]
     private static partial Regex ReferenceRegex();

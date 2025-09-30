@@ -162,7 +162,8 @@ public class FhirFooter : Widget
                     title: [new ConstantText("Další informace o dokumentu")],
                     severity: Severity.Gray
                 ),
-            ]
+            ],
+            optionalClass: "document-footer"
         );
 
         return widget.Render(navigator, renderer, context);

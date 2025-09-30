@@ -6,5 +6,12 @@ public interface ISpecificDocumentRenderer
 {
     public InputFormat InputFormat { get; }
 
-    public Task<DocumentResult> RenderAsync(byte[] fileContent, OutputFormat outputFormat, DocumentOptions options, RenderMode renderMode = RenderMode.Standard, DocumentType? documentType = null);
+    public Task<DocumentResult> RenderAsync(
+        byte[] fileContent,
+        OutputFormat outputFormat,
+        DocumentOptions options,
+        DocumentType documentType,
+        RenderMode renderMode = RenderMode.Standard,
+        LevelOfDetail levelOfDetail = LevelOfDetail.Simplified
+    );
 }

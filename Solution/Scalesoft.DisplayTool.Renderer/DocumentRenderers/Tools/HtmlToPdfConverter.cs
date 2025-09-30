@@ -50,14 +50,7 @@ public class HtmlToPdfConverter
         var pdfOptions = new PdfOptions
         {
             Format = PaperFormat.A4,
-            PrintBackground = true, 
-            MarginOptions = new MarginOptions
-            {
-                Top = "50px",
-                Bottom = "50px",
-                Left = "40px",
-                Right = "40px"
-            }
+            PrintBackground = true,
         };
         
         var pdfBytes = await page.PdfDataAsync(pdfOptions);

@@ -23,7 +23,7 @@ public class Evidence(
             )
         ], ContainerType.Span);
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
 
         var basicInfo = new Container([
             new Optional("f:title|f:shortTitle|f:name", new NameValuePair(
@@ -75,7 +75,7 @@ public class Evidence(
         var actorInfo = new Container([
             new Condition("f:contact|f:publisher",
                 new Container([
-                    new Badge(new ConstantText("Vydavatel")),
+                    new PlainBadge(new ConstantText("Vydavatel")),
                     new Optional("f:publisher",
                         new NameValuePair(
                             new DisplayLabel(LabelCodes.Name),
@@ -91,31 +91,31 @@ public class Evidence(
             ),
             new Condition("f:author",
                 new Container([
-                    new Badge(new ConstantText("Autor")),
+                    new PlainBadge(new ConstantText("Autor")),
                     new Row([new ShowContactDetail("f:author")])
                 ], optionalClass: "mt-2")
             ),
             new Condition("f:editor",
                 new Container([
-                    new Badge(new ConstantText("Editor")),
+                    new PlainBadge(new ConstantText("Editor")),
                     new Row([new ShowContactDetail("f:editor")])
                 ], optionalClass: "mt-2")
             ),
             new Condition("f:reviewer",
                 new Container([
-                    new Badge(new ConstantText("Recenzent")),
+                    new PlainBadge(new ConstantText("Recenzent")),
                     new Row([new ShowContactDetail("f:reviewer")])
                 ], optionalClass: "mt-2")
             ),
             new Condition("f:endorser",
                 new Container([
-                    new Badge(new ConstantText("Podpora")),
+                    new PlainBadge(new ConstantText("Podpora")),
                     new Row([new ShowContactDetail("f:endorser")])
                 ], optionalClass: "mt-2")
             ),
         ]);
 
-        var componentBadge = new Badge(new ConstantText("Komponenty důkazu"));
+        var componentBadge = new PlainBadge(new ConstantText("Komponenty důkazu"));
         var componentInfo = new Container([
             new Condition("f:exposureBackground",
                 new NameValuePair(
@@ -161,7 +161,7 @@ public class Evidence(
                         : new NullWidget(),
                     new Condition("f:note",
                         new ThematicBreak(),
-                        new Badge(new ConstantText("Poznámky")),
+                        new PlainBadge(new ConstantText("Poznámky")),
                         new ListBuilder("f:note", FlexDirection.Column, _ =>
                             [new ShowAnnotationCompact()]
                         )

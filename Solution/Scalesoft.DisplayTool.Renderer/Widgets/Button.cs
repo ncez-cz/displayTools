@@ -1,4 +1,5 @@
 using Scalesoft.DisplayTool.Renderer.Models;
+using Scalesoft.DisplayTool.Renderer.Models.Enums;
 using Scalesoft.DisplayTool.Renderer.Renderers;
 using Scalesoft.DisplayTool.Renderer.Utils;
 using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils;
@@ -38,7 +39,8 @@ public class Button(
             Icon = variant == ButtonVariant.CollapseSection
                 ? IconHelper.GetInstance(SupportedIcons.ChevronUp, context)
                 : renderedIcon,
-            AdditionalAttributes = additionalAttributes ?? new Dictionary<string, object>()
+            AdditionalAttributes = additionalAttributes ?? new Dictionary<string, object>(),
+            LevelOfDocumentDetail = context.LevelOfDetail,
         };
 
         var view = await renderer.RenderButton(viewModel);
@@ -65,6 +67,8 @@ public class Button(
         public required string Icon { get; init; }
 
         public Dictionary<string, object> AdditionalAttributes { get; set; } = new();
+        
+        public LevelOfDetail LevelOfDocumentDetail { get; set; }
     }
 }
 

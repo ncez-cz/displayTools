@@ -152,7 +152,7 @@ public static class InfrequentProperties
             var lowerCamelCasePropertyName = char.ToLowerInvariant(propertyName[0]) + propertyName[1..];
 
             var field = typeof(T).GetField(property.ToString());
-            var attributes = field?.GetCustomAttributes<InfrequentPropertyAttribute>() ?? [];
+            var attributes = field?.GetCustomAttributes<InfrequentPropertyAttribute>() .ToList() ?? [];
             var negativeAttributes = field?.GetCustomAttributes<InfrequentPropertyNegativeAttribute>().ToList() ?? [];
 
             List<string> infrequentPaths = [];
@@ -166,10 +166,14 @@ public static class InfrequentProperties
                 }
             }
 
-            var propertyPath = $"f:{lowerCamelCasePropertyName}";
-            if (items.Any(x => x.EvaluateCondition(propertyPath)))
+            // Only try matching by name if no attributes were found to avoid accidental matches
+            if (attributes.Count == 0)
             {
-                infrequentPaths.Add(propertyPath);
+                var propertyPath = $"f:{lowerCamelCasePropertyName}";
+                if (items.Any(x => x.EvaluateCondition(propertyPath)))
+                {
+                    infrequentPaths.Add(propertyPath);
+                }
             }
 
             foreach (var path in infrequentPaths.ToList())

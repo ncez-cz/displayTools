@@ -20,36 +20,28 @@ public class CareTeamsBasicInfoCell(XmlDocumentNavigator item) : Widget
         var participantTableCell = new TableCell(
         [
             infrequentOptions.Contains(InfrequentPropertiesPaths.Category)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Kategorie")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Kategorie")],
+                [
                     new Optional("f:category", new CommaSeparatedBuilder(".", _ => new CodeableConcept())),
-                    new LineBreak()
-                ], string.Empty)
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Name)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new DisplayLabel(LabelCodes.Name)]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new DisplayLabel(LabelCodes.Name)],
+                [
                     new Optional("f:name", new Text("@value")),
-                    new LineBreak()
-                ], string.Empty)
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Period)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new DisplayLabel(LabelCodes.Duration)]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new DisplayLabel(LabelCodes.Duration)],
+                [
                     new ShowPeriod("f:period"),
-                    new LineBreak()
-                ], string.Empty)
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Telecom)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Kontakt")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Kontakt")],
+                [
                     new ItemListBuilder(".", ItemListType.Unordered, _ => [new ShowContactPoint()]),
-                    new LineBreak(),
-                ], string.Empty)
+                ])
                 : new NullWidget()
         ]);
 

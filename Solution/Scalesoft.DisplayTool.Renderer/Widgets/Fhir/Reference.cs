@@ -17,13 +17,12 @@ public abstract class Reference : Widget
         ElementName = elementName;
     }
 
-    protected ReferenceResult GetReferences(XmlDocumentNavigator navigator, string? referencePrefix = null)
+    protected ReferenceResult GetReferences(XmlDocumentNavigator navigator)
     {
         var itemIds = navigator
             .SelectAllNodes($"{ElementName}/@value")
             .Select(x => x.Node?.Value)
-            .Where(value => value != null && ((referencePrefix == null || value.Split("/").First() == referencePrefix) || value.StartsWith("urn:")))
-            .OfType<string>()
+            .WhereNotNull()
             .ToList();
 
         var result = new ReferenceResult();
@@ -40,7 +39,7 @@ public abstract class Reference : Widget
                     Severity = ErrorSeverity.Warning,
                 });
 
-                return result;
+                continue;
             }
             
             var itemNavigator =

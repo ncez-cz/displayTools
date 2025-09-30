@@ -1,3 +1,4 @@
+using System.Globalization;
 using Scalesoft.DisplayTool.Renderer.Constants;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
@@ -6,7 +7,7 @@ namespace Scalesoft.DisplayTool.Renderer.Utils;
 public static class ResourceValidation
 {
     /// <summary>
-    /// Evaluates if a node has expired or is marked as obsolete based on date and use type
+    ///     Evaluates if a node has expired or is marked as obsolete based on date and use type
     /// </summary>
     /// <param name="navigator">The XML document navigator</param>
     /// <param name="endPath">The path to the end date node</param>
@@ -19,7 +20,8 @@ public static class ResourceValidation
         XmlDocumentNavigator navigator,
         string? endPath = "f:period/f:end/@value",
         string? usePath = "f:use/@value",
-        string obsoleteUseValue = UseTypes.Old)
+        string obsoleteUseValue = UseTypes.Old
+    )
     {
         // Check if marked as obsolete via use type
         if (usePath != null)
@@ -36,21 +38,21 @@ public static class ResourceValidation
         {
             throw new InvalidOperationException("At least one of endPath or usePath must be provided.");
         }
-        
+
         var endDateNode = navigator.SelectSingleNode(endPath).Node;
-        
+
         // No end date means not expired
         if (endDateNode == null)
         {
             return true;
         }
-        
+
         // Parse and validate end date
-        if (DateTime.TryParse(endDateNode.Value, out var endDate))
+        if (DateTime.TryParse(endDateNode.Value, CultureInfo.InvariantCulture, out var endDate))
         {
             return endDate >= DateTime.Today;
         }
-        
+
         // Invalid date format
         throw new FormatException($"Invalid end date: {endDateNode.Value}.");
     }

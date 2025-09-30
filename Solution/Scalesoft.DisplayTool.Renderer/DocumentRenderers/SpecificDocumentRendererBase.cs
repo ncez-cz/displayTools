@@ -12,8 +12,14 @@ public abstract class SpecificDocumentRendererBase : ISpecificDocumentRenderer
 
     public abstract InputFormat InputFormat { get; }
 
-    public abstract Task<DocumentResult> RenderAsync(byte[] fileContent, OutputFormat outputFormat,
-        DocumentOptions options, RenderMode renderMode = RenderMode.Standard, DocumentType? documentType = null);
+    public abstract Task<DocumentResult> RenderAsync(
+        byte[] fileContent,
+        OutputFormat outputFormat,
+        DocumentOptions options,
+        DocumentType documentType,
+        RenderMode renderMode = RenderMode.Standard,
+        LevelOfDetail levelOdDetail = LevelOfDetail.Simplified
+    );
 
     protected SpecificDocumentRendererBase(DocumentValidatorProvider documentValidatorProvider, HtmlToPdfConverter htmlToPdfConverter)
     {

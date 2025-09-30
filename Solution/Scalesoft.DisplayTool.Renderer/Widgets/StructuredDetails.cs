@@ -37,11 +37,17 @@ public record RawDetail(
 
 public class StructuredDetails
 {
-    public List<DetailItem> Content { get; private set; }
+    /// <summary>
+    ///     Mark Content modifier as private to prevent premature access since the result is a lazy widget
+    /// </summary>
+    private List<DetailItem> Content { get; set; }
 
-    public StructuredDetails()
+    public string? OptionalCss { get; private set; }
+
+    public StructuredDetails(string? optionalCss = null)
     {
         Content = [];
+        OptionalCss = optionalCss;
     }
 
     public StructuredDetails(IEnumerable<DetailItem> content)
@@ -52,6 +58,11 @@ public class StructuredDetails
     public void Add(DetailItem item)
     {
         Content.Add(item);
+    }
+
+    public void AddRange(IList<DetailItem> items)
+    {
+        Content.AddRange(items);
     }
 
     public void AddCollapser(
@@ -72,11 +83,16 @@ public class StructuredDetails
     public List<Widget> Build() => [new LazyWidget(() => Build(this))];
 
     [return: NotNullIfNotNull(nameof(structuredDetails))]
-    public static List<Widget>? Build(StructuredDetails? structuredDetails, bool hideNarrative = true)
+    private static List<Widget>? Build(StructuredDetails? structuredDetails, bool hideNarrative = true)
     {
         if (structuredDetails == null)
         {
             return null;
+        }
+
+        if (structuredDetails.Content.Count == 0)
+        {
+            return [new NullWidget()];
         }
 
         var sortedDetailItems = structuredDetails.Content
@@ -90,15 +106,6 @@ public class StructuredDetails
         List<Widget> detailsWithWrapper = [];
         foreach (var detailItem in sortedDetailItems)
         {
-            if (detailItem is DetailItemWithHeader detailWithHeader)
-            {
-                if (detailWithHeader.Header is not (DisplayLabel or ConstantText))
-                {
-                    throw new InvalidOperationException(
-                        $"Unsupported key type: {detailWithHeader.Header.GetType().Name}. Only DisplayLabel and ConstantText are supported.");
-                }
-            }
-
             Widget fullCollapser = detailItem switch
             {
                 CollapsibleDetail c => new Collapser(

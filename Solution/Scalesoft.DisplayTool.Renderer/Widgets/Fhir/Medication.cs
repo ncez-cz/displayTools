@@ -76,7 +76,9 @@ public class Medication(bool displayAsCard = true) : Widget
                         new Optional("f:itemCodeableConcept", new CodeableConcept()),
                         new Optional("f:itemReference",
                             ShowSingleReference.WithDefaultDisplayHandler(x =>
-                                [new AnyResource([x], x.Node?.Name, displayResourceType: false)])), // Substance | Medication
+                            [
+                                new AnyResource([x], x.Node?.Name, displayResourceType: false)
+                            ])), // Substance | Medication
                     ], ContainerType.Span, idSource: nav)
                 ])
             ]));
@@ -92,7 +94,7 @@ public class Medication(bool displayAsCard = true) : Widget
                     new Condition("f:batch/f:expirationDate",
                         new NameValuePair([new ConstantText("Datum expirace")],
                             [new ChangeContext("f:batch/f:expirationDate", new ShowDateTime())])),
-                ], idSource: navigator.SelectSingleNode("f:batch"))
+                ])
             ]));
         }
 

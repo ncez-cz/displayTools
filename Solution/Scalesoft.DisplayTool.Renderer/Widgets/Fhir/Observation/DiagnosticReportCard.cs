@@ -28,7 +28,7 @@ public class DiagnosticReportCard(bool skipIdPopulation = false) : Widget
                 new DisplayLabel(LabelCodes.Status))
         ]);
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
         var basicInfo = new Container([
             new If(_ => infrequentProperties.Contains(DiagnosticInfrequentProperties.Category),
                 new NameValuePair(
@@ -63,7 +63,7 @@ public class DiagnosticReportCard(bool skipIdPopulation = false) : Widget
             ),
         ]);
 
-        var resultBadge = new Badge(new ConstantText("Výsledek"));
+        var resultBadge = new PlainBadge(new ConstantText("Výsledek"));
         var resultInfo = new Container([
             new If(_ => infrequentProperties.Contains(DiagnosticInfrequentProperties.Result),
                 new NameValuePair(

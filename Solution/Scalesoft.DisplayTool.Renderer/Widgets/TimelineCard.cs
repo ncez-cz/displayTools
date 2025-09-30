@@ -12,7 +12,7 @@ namespace Scalesoft.DisplayTool.Renderer.Widgets;
 public class TimelineCard : DateSortableWidget
 {
     private readonly IList<Widget> m_content;
-    public sealed override DateTime? SortDate { get; set; }
+    public sealed override DateTimeOffset? SortDate { get; set; }
     private readonly Widget? m_title;
     public string? CssClass { get; set; }
     private readonly List<TimelineCard> m_groupItems;
@@ -22,7 +22,7 @@ public class TimelineCard : DateSortableWidget
     public TimelineCard(
         IList<Widget> content,
         Widget? title = null,
-        DateTime? sortDate = null,
+        DateTimeOffset? sortDate = null,
         string? cssClass = null,
         List<TimelineCard>? groupItems = null,
         bool isNested = false

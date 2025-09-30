@@ -1,6 +1,7 @@
 using Scalesoft.DisplayTool.Renderer.Constants;
 using Scalesoft.DisplayTool.Renderer.Models;
 using Scalesoft.DisplayTool.Renderer.Renderers;
+using Scalesoft.DisplayTool.Renderer.Utils;
 using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.Alert;
 using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.Alert.DetectedIssues;
 using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.Alert.RiskAssessment;
@@ -16,7 +17,6 @@ using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.MedicationResources;
 using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.MedicationResources.MedicationAdministrationSection;
 using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.MedicationResources.MedicationDispenseSection;
 using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.MedicationResources.MedicationRequestSection;
-using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.MedicationResources.MedicationStatementSection;
 using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.Observation;
 using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.PlanOfCare;
 using Scalesoft.DisplayTool.Renderer.Widgets.Questionnaire;
@@ -250,7 +250,12 @@ public class AnyResource(
             case "MedicationAdministration":
                 tree =
                 [
-                    new MedicationAdministration(items),
+                    new AlternatingBackgroundColumn(
+                        items.Select(Widget (x) =>
+                                new ChangeContext(x,
+                                    new Container([new MedicationAdministrationCard()], idSource: x)))
+                            .ToList()
+                    ),
                 ];
                 break;
             case "MedicationDispense":
@@ -268,7 +273,12 @@ public class AnyResource(
             case "MedicationStatement":
                 tree =
                 [
-                    new MedicationStatement(items),
+                    new AlternatingBackgroundColumn(
+                        items.Select(Widget (x) =>
+                                new ChangeContext(x,
+                                    new Container([new MedicationStatementCard()], idSource: x)))
+                            .ToList()
+                    ),
                 ];
                 break;
             case "NutritionOrder":
@@ -358,9 +368,17 @@ public class AnyResource(
                 tree =
                 [
                     // Title is rendered as collapserTitle in PersonOrOrganization
-                    ..items.Select(nav => new Container(
-                        [new ChangeContext(nav, new PersonOrOrganization(nav, showCollapser: true)),],
-                        idSource: nav))
+                    ..items.Select(nav =>
+                    {
+                        var resourceSummary = ResourceSummaryProvider.GetSummary(nav);
+                        return new Container(
+                            [
+                                new ChangeContext(nav,
+                                    new PersonOrOrganization(nav, showCollapser: true,
+                                        collapserTitle: resourceSummary?.Widget)),
+                            ],
+                            idSource: nav);
+                    })
                 ];
                 break;
             case "Procedure":
@@ -390,7 +408,9 @@ public class AnyResource(
                         [
                             new PersonOrOrganization(item,
                                 collapserTitle: new Optional("f:name", new HumanNameCompact(".")),
-                                collapserSubtitle: displayResourceType ? [new ConstantText("Související osoba")] : null),
+                                collapserSubtitle: displayResourceType
+                                    ? [new ConstantText("Související osoba")]
+                                    : null),
                         ], idSource: item)),
                 ];
                 break;
@@ -457,7 +477,7 @@ public class AnyResource(
                         [
                             new ChangeContext(x, new ConstantText($"{resourceType}/"), new Text("f:id/@value"),
                                 new NarrativeModal()),
-                        ], flexContainerClasses: "align-items-center justify-content-between")),
+                        ], flexContainerClasses: "align-items-center justify-content-between", idSource: x)),
                 ];
                 break;
         }

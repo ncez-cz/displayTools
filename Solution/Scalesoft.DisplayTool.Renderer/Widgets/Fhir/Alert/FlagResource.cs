@@ -137,11 +137,9 @@ public class FlagResource(List<XmlDocumentNavigator> items) : Widget
             {
                 tableRowContent.Add(
                     new TableCell([
-                        new TextContainer(TextStyle.Regular, [
-                            new TextContainer(TextStyle.Regular, [new ConstantText("Technický identifikátor podani")]),
-                            new ConstantText(": "),
-                            new TextContainer(TextStyle.Regular, [new Optional("f:id", new Text("@value"))]),
-                            new LineBreak(),
+                        new NameValuePair([new ConstantText("Technický identifikátor podani")],
+                        [
+                            new Optional("f:id", new Text("@value"))
                         ])
                     ]));
             }

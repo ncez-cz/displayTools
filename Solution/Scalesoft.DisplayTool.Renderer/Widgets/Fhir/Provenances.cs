@@ -31,7 +31,7 @@ public class Provenances(List<XmlDocumentNavigator> items) : Widget
                     new Row([new ConstantText("Provenance"), new NarrativeModal()],
                         flexContainerClasses: "align-items-center"), new ChangeContext(
                         item, new Container([
-                            new ChangeContext(agentNav, new Badge(new DisplayLabel(LabelCodes.Author)), new If(
+                            new ChangeContext(agentNav, new PlainBadge(new DisplayLabel(LabelCodes.Author)), new If(
                                 _ => agentsInfrequentOptions.Contains(AgentInfrequentPropertiesPaths.Who), new Heading(
                                     [new AnyReferenceNamingWidget("f:who", showOptionalDetails: false)],
                                     HeadingSize.H5)), new If(
@@ -49,7 +49,7 @@ public class Provenances(List<XmlDocumentNavigator> items) : Widget
                                     [new AnyReferenceNamingWidget("f:onBehalfOf")]))),
                             new ThematicBreak(),
                             //Basic Info
-                            new Badge(new DisplayLabel(LabelCodes.Description)),
+                            new PlainBadge(new DisplayLabel(LabelCodes.Description)),
                             new If(_ => infrequentOptions.Contains(InfrequentPropertiesPaths.Target), new NameValuePair(
                                 [new ConstantText("Ověřovaný záznam")],
                                 [new AnyReferenceNamingWidget("f:target", showOptionalDetails: false)])),
@@ -74,7 +74,7 @@ public class Provenances(List<XmlDocumentNavigator> items) : Widget
                             //Signature
                             new If(_ => infrequentOptions.Contains(InfrequentPropertiesPaths.Signature),
                                 new ThematicBreak(),
-                                new Badge(new ConstantText("Podpis")), new ShowSignature("f:signature")),
+                                new PlainBadge(new ConstantText("Podpis")), new ShowSignature("f:signature")),
                         ])), footer: item.EvaluateCondition("f:text")
                         ? new NarrativeCollapser()
                         : null,

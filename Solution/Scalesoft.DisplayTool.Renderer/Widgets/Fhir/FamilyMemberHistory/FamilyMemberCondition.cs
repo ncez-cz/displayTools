@@ -63,11 +63,10 @@ public class FamilyMemberCondition(List<XmlDocumentNavigator> items) : Widget
                     new Optional("f:outcome", new CodeableConcept()),
                     new Optional("self::*[f:contributedToDeath and f:outcome]", new LineBreak()),
                     new Optional("f:contributedToDeath",
-                        new Concat([
-                            new TextContainer(TextStyle.Bold, [new ConstantText("Přispělo k úmrtí")]),
-                            new ConstantText(": "),
+                        new NameValuePair([new ConstantText("Přispělo k úmrtí")],
+                        [
                             new ShowBoolean(new DisplayLabel(LabelCodes.No), new DisplayLabel(LabelCodes.Yes)),
-                        ], string.Empty)
+                        ])
                     ),
                 ]),
                 //When condition first manifested

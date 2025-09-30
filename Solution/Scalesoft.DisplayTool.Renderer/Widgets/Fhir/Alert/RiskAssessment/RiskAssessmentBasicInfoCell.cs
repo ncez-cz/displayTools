@@ -17,53 +17,34 @@ public class RiskAssessmentBasicInfoCell(XmlDocumentNavigator item) : Widget
 
         var actorsTableCell = new TableCell([
             infrequentOptions.Contains(InfrequentPropertiesPaths.Condition)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Posuzovaný zdravotní stav")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular,
-                        [new Optional("f:condition", new AnyReferenceNamingWidget())]),
-                    new LineBreak()
+                ? new NameValuePair([new ConstantText("Posuzovaný zdravotní stav")],
+                [
+                    new Optional("f:condition", new AnyReferenceNamingWidget())
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Code)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Popis")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular,
-                        [new Optional("f:code", new CodeableConcept())]),
-                    new LineBreak()
+                ? new NameValuePair([new ConstantText("Popis")],
+                [
+                    new Optional("f:code", new CodeableConcept())
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Method)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Metoda posouzení")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular,
-                        [new Optional("f:method", new CodeableConcept())]),
-                    new LineBreak()
+                ? new NameValuePair([new ConstantText("Metoda posouzení")],
+                [
+                    new Optional("f:method", new CodeableConcept())
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.ReasonCode)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Důvody")]),
-                    new ConstantText(": "),
-                    new LineBreak(),
-                    new TextContainer(TextStyle.Regular,
-                        [new ItemListBuilder("f:reasonCode", ItemListType.Unordered, _ => [new CodeableConcept()])]),
-                    new LineBreak()
+                ? new NameValuePair([new ConstantText("Důvody")],
+                [
+                    new ItemListBuilder("f:reasonCode", ItemListType.Unordered, _ => [new CodeableConcept()])
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.ReasonReference)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Odkazy na důvod")]),
-                    new ConstantText(": "),
-                    new LineBreak(),
-                    new TextContainer(TextStyle.Regular,
-                    [
-                        new ItemListBuilder("f:reasonReference", ItemListType.Unordered,
-                            _ => [new AnyReferenceNamingWidget()])
-                    ]),
-                    new LineBreak()
+                ? new NameValuePair([new ConstantText("Odkazy na důvod")],
+                [
+                    new ItemListBuilder("f:reasonReference", ItemListType.Unordered,
+                        _ => [new AnyReferenceNamingWidget()])
                 ])
                 : new NullWidget(),
         ]);

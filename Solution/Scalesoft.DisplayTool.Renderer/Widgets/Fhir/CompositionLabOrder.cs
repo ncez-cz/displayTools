@@ -26,6 +26,13 @@ public class CompositionLabOrder : Widget
                 new Button(variant: ButtonVariant.ToggleDetails, style: ButtonStyle.Outline),
                 new NarrativeModal(),
             ], flexContainerClasses: ""),
+            new Condition("f:extension[@url='http://hl7.eu/fhir/StructureDefinition/presentedForm']",
+                new Collapser([new ConstantText("Jiné formy dokumentu")], [], [
+                    new CommaSeparatedBuilder(
+                        "f:extension[@url='http://hl7.eu/fhir/StructureDefinition/presentedForm']",
+                        _ => [new OpenTypeElement(null)])
+                ], customClass: "no-print")
+            ),
             new Optional("f:encounter",
                 // multireference widget is used only for customising broken references builder, semantically the reference is x..1 
                 new ShowMultiReference(".",

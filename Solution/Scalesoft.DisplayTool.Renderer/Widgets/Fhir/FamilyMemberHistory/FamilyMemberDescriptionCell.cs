@@ -35,44 +35,34 @@ public class FamilyMemberDescriptionCell(XmlDocumentNavigator item) : Widget
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Relationship) &&
             !infrequentOptions.Contains(InfrequentPropertiesPaths.Name)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Vztah")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Vztah")],
+                [
                     new Optional("f:relationship", new CodeableConcept()),
-                    new LineBreak()
-                ], string.Empty)
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Born)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Datum narození")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Datum narození")],
+                [
                     new Chronometry("born"),
-                    new LineBreak()
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Age)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Věk")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Věk")],
+                [
                     new OpenTypeElement(null, "age"), // Age | Range | string
-                    new LineBreak()
-                ], string.Empty)
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Deceased)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Zesnulý")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Zesnulý")],
+                [
                     new OpenTypeElement(null, "deceased"), // boolean | Age | Range | date | string
-                    new LineBreak()
-                ], string.Empty)
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Sex)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Pohlaví")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Pohlaví")],
+                [
                     new Optional("f:sex", new CodeableConcept()),
-                    new LineBreak()
-                ], string.Empty)
+                ])
                 : new NullWidget(),
         ]);
 

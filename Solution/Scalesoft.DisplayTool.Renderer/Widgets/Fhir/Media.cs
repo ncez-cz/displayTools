@@ -27,7 +27,7 @@ public class Media : Widget
                 new DisplayLabel(LabelCodes.Status))
         ]);
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
 
         var basicInfo = new Container([
             new Condition("f:basedOn",
@@ -67,7 +67,7 @@ public class Media : Widget
         var infrequentProperties =
             Widgets.InfrequentProperties.Evaluate<InfrequentProperties>([navigator]);
 
-        var detailBadge = new Badge(new ConstantText("Detailní informace"));
+        var detailBadge = new PlainBadge(new ConstantText("Detailní informace"));
         var detailInfo = new Container([
             new If(_ => infrequentProperties.Contains(InfrequentProperties.Created), new NameValuePair(
                 new ConstantText("Vytvořeno"),
@@ -99,7 +99,7 @@ public class Media : Widget
             )),
         ]);
 
-        var contentBadge = new Badge(new ConstantText("Obsah"));
+        var contentBadge = new PlainBadge(new ConstantText("Obsah"));
         var contentInfo = new Container([
             new Container([
                 new ChangeContext("f:content",
@@ -128,7 +128,7 @@ public class Media : Widget
                     contentInfo,
                     new Condition("f:note",
                         new ThematicBreak(),
-                        new Badge(new ConstantText("Poznámky")),
+                        new PlainBadge(new ConstantText("Poznámky")),
                         new ListBuilder("f:note", FlexDirection.Column, _ =>
                             [new ShowAnnotationCompact()]
                         )

@@ -54,7 +54,7 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
                 new DisplayLabel(LabelCodes.Status))
         ], ContainerType.Div, "d-flex align-items-center gap-1");
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
         var basicInfo = new Container([
             new If(_ => infrequentProperties.Contains(ObservationInfrequentProperties.Category) && !hideObservationType,
                 new NameValuePair(
@@ -107,7 +107,7 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
             ),
         ]);
 
-        var additionalBadge = new Badge(new ConstantText("Další informace"));
+        var additionalBadge = new PlainBadge(new ConstantText("Další informace"));
         var additionalInfo = new Container([
             new If(_ => infrequentProperties.Contains(ObservationInfrequentProperties.SupportingInfo),
                 new NameValuePair(
@@ -134,7 +134,7 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
             ),
         ]);
 
-        var resultBadge = new Badge(new ConstantText("Výsledek"));
+        var resultBadge = new PlainBadge(new ConstantText("Výsledek"));
         var resultInfo = new Container([
             new If(_ => infrequentProperties.Contains(ObservationInfrequentProperties.Value),
                 new NameValuePair(
@@ -207,7 +207,7 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
             ),
         ]);
 
-        var deviceBadge = new Badge(new ConstantText("Zařízení"));
+        var deviceBadge = new PlainBadge(new ConstantText("Zařízení"));
         var deviceInfo =
             new If(_ =>
                     infrequentProperties.Contains(ObservationInfrequentProperties.LabTestKitExtension) ||
@@ -249,7 +249,7 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
                 )
             );
 
-        var componentResultBadge = new Badge(new ConstantText("Složky výsledku"));
+        var componentResultBadge = new PlainBadge(new ConstantText("Složky výsledku"));
         var componentResultInfo = new Container([
             new ListBuilder("f:component", FlexDirection.Row, (i, nav) =>
             {
@@ -283,9 +283,7 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
                             _ => componentInfrequentProperties.Contains(ObservationInfrequentProperties.ReferenceRange),
                             new ReferenceRanges()
                         )
-                    ]), footer: collapsibleContentComponent.Content.Count > 0
-                        ? new Concat(collapsibleContentComponent.Build())
-                        : null
+                    ]), footer: new Concat(collapsibleContentComponent.Build())
                 );
 
                 return [card];
@@ -309,7 +307,9 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
                     "f:encounter"
                 ),
                 footer: encounterNarrative != null ? [new NarrativeCollapser(encounterNarrative.GetFullPath())] : null,
-                narrativeContent: encounterNarrative != null ? new NarrativeModal(encounterNarrative.GetFullPath()) : null
+                narrativeContent: encounterNarrative != null
+                    ? new NarrativeModal(encounterNarrative.GetFullPath())
+                    : null
             );
         }
 
@@ -354,7 +354,7 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
                         new LineBreak(),
                         infrequentProperties,
                         ObservationInfrequentProperties.TriggeredByExtension,
-                        new Badge(new ConstantText("Vyvoláno na základě")),
+                        new PlainBadge(new ConstantText("Vyvoláno na základě")),
                         new Condition(
                             "f:extension[@url='observation']",
                             new NameValuePair(
@@ -388,23 +388,22 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
                     ),
                     new If(_ => infrequentProperties.Contains(ObservationInfrequentProperties.HasMember),
                         new ThematicBreak(),
-                        new Badge(new ConstantText("Podzáznamy")),
+                        new PlainBadge(new ConstantText("Podzáznamy")),
                         new Container([
                             new ShowMultiReference("f:hasMember", displayResourceType: false)
                         ])
                     ),
                     new If(_ => infrequentProperties.Contains(ObservationInfrequentProperties.Note),
                         new ThematicBreak(),
-                        new Badge(new ConstantText("Poznámky")),
+                        new PlainBadge(new ConstantText("Poznámky")),
                         new LineBreak(),
                         new ConcatBuilder("f:note", _ => [new ShowAnnotationCompact()], new LineBreak())
                     ),
                 ],
-                footer: collapsibleContent.Content.Count > 0
-                    ? collapsibleContent.Build()
-                    : null,
+                footer: collapsibleContent.Build(),
                 iconPrefix: [new NarrativeModal()],
                 idSource: skipIdPopulation ? null : new IdentifierSource(navigator));
+
         return await complete.Render(navigator, renderer, context);
     }
 
@@ -416,7 +415,7 @@ public class ObservationCard(bool skipIdPopulation = false, bool hideObservation
             RenderContext context
         )
         {
-            var referenceRangeBadge = new Badge(new ConstantText("Referenční rozsahy"));
+            var referenceRangeBadge = new PlainBadge(new ConstantText("Referenční rozsahy"));
             var referenceRangeInfo = new Container([
                 new ListBuilder("f:referenceRange", FlexDirection.Row, _ =>
                     [

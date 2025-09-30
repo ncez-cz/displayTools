@@ -7,7 +7,7 @@ public static class WidgetSorter
     public static List<DateSortableWidget> Sort(List<DateSortableWidget> widgets)
     {
         return widgets
-            .OrderBy(activity => activity.SortDate ?? DateTime.MaxValue)
+            .OrderBy(activity => activity.SortDate ?? DateTimeOffset.MaxValue)
             .ToList();
     }
 }

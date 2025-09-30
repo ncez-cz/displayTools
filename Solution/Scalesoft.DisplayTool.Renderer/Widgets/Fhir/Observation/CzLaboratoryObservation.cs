@@ -3,7 +3,6 @@ using Scalesoft.DisplayTool.Renderer.Extensions;
 using Scalesoft.DisplayTool.Renderer.Models;
 using Scalesoft.DisplayTool.Renderer.Renderers;
 using Scalesoft.DisplayTool.Renderer.Utils;
-using Scalesoft.DisplayTool.Renderer.Widgets.Fhir.Encounter;
 using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
@@ -60,296 +59,284 @@ public class CzLaboratoryObservation(List<XmlDocumentNavigator> items) : Widget
             var infrequentProperties =
                 InfrequentProperties.Evaluate<CzLabObservationInfrequentProperties>([item]);
 
-
+            // first sub-row
+            var rowDetailsChildren = new List<Widget>();
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.CertifiedRefMaterialCodeableExtension,
                     out var certRefMatCodedPath))
             {
-                rowDetails.Add(
-                    new NameValuePairDetail(
-                        new ConstantText("Certifikováná referenční látka"),
-                        new ListBuilder(
-                            certRefMatCodedPath,
-                            FlexDirection.Column,
-                            _ =>
-                            [
-                                new Container(
-                                    new ChangeContext("f:valueCodeableConcept", new CodeableConcept()),
-                                    ContainerType.Span
-                                )
-                            ])
-                    )
-                );
+                rowDetailsChildren.Add(new Container([
+                    new PlainBadge(new ConstantText("Certifikováná referenční látka")), new LineBreak(),
+                    new ListBuilder(
+                        certRefMatCodedPath,
+                        FlexDirection.Column,
+                        _ =>
+                        [
+                            new Container(
+                                new ChangeContext("f:valueCodeableConcept", new CodeableConcept()),
+                                ContainerType.Span
+                            )
+                        ])
+                ]));
             }
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.CertifiedRefMaterialIdentiferExtension,
                     out var certRefMatIdPath))
             {
-                rowDetails.Add(
-                    new NameValuePairDetail(
-                        new ConstantText("Identifikátor certifikováné referenční látky"),
-                        new ListBuilder(
-                            certRefMatIdPath,
-                            FlexDirection.Column,
-                            _ =>
-                            [
-                                new ShowIdentifier(),
-                            ])
-                    )
-                );
+                rowDetailsChildren.Add(new Container([
+                    new PlainBadge(new ConstantText("Identifikátor certifikováné referenční látky")), new LineBreak(),
+                    new ListBuilder(
+                        certRefMatIdPath,
+                        FlexDirection.Column,
+                        _ =>
+                        [
+                            new ShowIdentifier(),
+                        ])
+                ]));
             }
 
             if (item.EvaluateCondition("f:category"))
             {
-                rowDetails.Add(
-                    new NameValuePairDetail(
-                        new ConstantText("Klasifikace"),
-                        new CommaSeparatedBuilder("f:category",
-                            _ =>
-                            [
-                                new CodeableConcept(),
-                            ])
-                    )
-                );
+                rowDetailsChildren.Add(new Container([
+                    new PlainBadge(new ConstantText("Klasifikace")), new LineBreak(),
+                    new CommaSeparatedBuilder("f:category",
+                        _ =>
+                        [
+                            new CodeableConcept(),
+                        ])
+                ]));
             }
 
             // ignore subject
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.Focus, out var focusPath))
             {
-                rowDetails.Add(
-                    new NameValuePairDetail(
-                        new ConstantText("Zaměřeno na"),
-                        new CommaSeparatedBuilder(focusPath,
-                            _ => [new AnyReferenceNamingWidget()])
-                    )
-                );
+                rowDetailsChildren.Add(new Container([
+                    new PlainBadge(new ConstantText("Zaměřeno na")), new LineBreak(),
+                    new CommaSeparatedBuilder(focusPath,
+                        _ => [new AnyReferenceNamingWidget()])
+                ]));
             }
 
-            rowDetails.Add(
-                new NameValuePairDetail(
-                    new ConstantText("Čas"),
-                    new Chronometry("effective")
-                )
-            );
+            rowDetailsChildren.Add(new Container([
+                new PlainBadge(new ConstantText("Čas")), new LineBreak(),
+                new Chronometry("effective")
+            ]));
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.Issued, out var issuedPath))
             {
-                rowDetails.Add(
-                    new NameValuePairDetail(
-                        new ConstantText("Zpřístupněno"),
-                        new ShowInstant(issuedPath)
-                    )
-                );
+                rowDetailsChildren.Add(new Container([
+                    new PlainBadge(new ConstantText("Zpřístupněno")), new LineBreak(),
+                    new ShowInstant(issuedPath)
+                ]));
             }
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.BodySite, out var bodySiteXpath))
             {
-                rowDetails.Add(
-                    new NameValuePairDetail(
-                        new DisplayLabel(LabelCodes.BodySite),
-                        new ChangeContext(bodySiteXpath, new CodeableConcept())
-                    )
-                );
+                rowDetailsChildren.Add(new Container([
+                    new PlainBadge(new DisplayLabel(LabelCodes.BodySite)), new LineBreak(),
+                    new ChangeContext(bodySiteXpath, new CodeableConcept())
+                ]));
             }
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.Method, out var methodXpath))
             {
-                rowDetails.Add(
-                    new NameValuePairDetail(
-                        new ConstantText("Způsob"),
-                        new ChangeContext(methodXpath, new CodeableConcept())
-                    )
-                );
+                rowDetailsChildren.Add(new Container([
+                    new PlainBadge(new ConstantText("Způsob")), new LineBreak(),
+                    new ChangeContext(methodXpath, new CodeableConcept())
+                ]));
             }
 
-            if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.SupportingInfoExtension,
-                    out var supportInfoXpath))
-            {
-                rowDetails.AddCollapser(new ConstantText("Podpůrné údaje"), new ListBuilder(supportInfoXpath,
-                    FlexDirection.Column, _ =>
-                    [
-                        ShowSingleReference.WithDefaultDisplayHandler(nav => [new AnyResource(nav, displayResourceType: false)],
-                            "f:valueReference"),
-                    ], separator: new LineBreak(), flexContainerClasses: string.Empty)
-                );
-            }
+            // second sub-row
+
+            var cardsRow = new List<Widget>();
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.TriggeredByR5Extension,
                     out var triggeredByXpath))
             {
-                rowDetails.AddCollapser(new ConstantText("Vyvoláno"), new ListBuilder(triggeredByXpath,
-                    FlexDirection.Column,
-                    (_, supportInfoNav) =>
-                    {
-                        var supportedSubExtensions = new List<Widget>();
-                        if (supportInfoNav.EvaluateCondition("f:extension[@url='type']"))
+                cardsRow.Add(new Container([
+                    new PlainBadge(new ConstantText("Vyvoláno")),
+                    new ListBuilder(triggeredByXpath,
+                        FlexDirection.Column,
+                        (_, supportInfoNav) =>
                         {
-                            supportedSubExtensions.Add(
-                                new NameValuePair(
-                                    new ConstantText("Typ"),
-                                    new CommaSeparatedBuilder("f:extension[@url='type']", _ =>
+                            var supportedSubExtensions = new List<Widget>();
+                            if (supportInfoNav.EvaluateCondition("f:extension[@url='type']"))
+                            {
+                                supportedSubExtensions.Add(
+                                    new NameValuePair(
+                                        new ConstantText("Typ"),
+                                        new CommaSeparatedBuilder("f:extension[@url='type']", _ =>
+                                        [
+                                            new EnumLabel("f:valueCode",
+                                                "http://hl7.org/fhir/ValueSet/observation-triggeredbytype"),
+                                        ])
+                                    )
+                                );
+                            }
+
+                            if (supportInfoNav.EvaluateCondition("f:extension[@url='reason']"))
+                            {
+                                supportedSubExtensions.Add(
+                                    new NameValuePair(
+                                        new ConstantText("Důvod"),
+                                        new CommaSeparatedBuilder("f:extension[@url='reason']", _ =>
+                                        [
+                                            new Text("f:valueString/@value"),
+                                        ])
+                                    )
+                                );
+                            }
+
+                            if (supportInfoNav.EvaluateCondition("f:extension[@url='observation']"))
+                            {
+                                supportedSubExtensions.Add(new ListBuilder("f:extension[@url='observation']",
+                                    FlexDirection.Column, _ =>
                                     [
-                                        new EnumLabel("f:valueCode",
-                                            "http://hl7.org/fhir/ValueSet/observation-triggeredbytype"),
-                                    ])
-                                )
-                            );
-                        }
+                                        new AnyReferenceNamingWidget("f:valueReference"),
+                                    ]));
+                            }
 
-                        if (supportInfoNav.EvaluateCondition("f:extension[@url='reason']"))
-                        {
-                            supportedSubExtensions.Add(
-                                new NameValuePair(
-                                    new ConstantText("Důvod"),
-                                    new CommaSeparatedBuilder("f:extension[@url='reason']", _ =>
-                                    [
-                                        new Text("f:valueString/@value"),
-                                    ])
-                                )
-                            );
-                        }
-
-                        if (supportInfoNav.EvaluateCondition("f:extension[@url='observation']"))
-                        {
-                            supportedSubExtensions.Add(new ListBuilder("f:extension[@url='observation']",
-                                FlexDirection.Column, _ =>
-                                [
-                                    ShowSingleReference.WithDefaultDisplayHandler(
-                                        nav => [new CzLaboratoryObservation([nav])],
-                                        "f:valueReference"),
-                                ]));
-                        }
-
-                        return supportedSubExtensions;
-                    }, separator: new LineBreak(), flexContainerClasses: string.Empty));
+                            return supportedSubExtensions;
+                        }, separator: new LineBreak(), flexContainerClasses: string.Empty)
+                ]));
             }
 
+            // third sub-row
+
+            var referenceLinksRow = new List<DetailItem>();
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.LabTestKitExtension,
                     out var labTestKitPath))
             {
-                rowDetails.AddCollapser(new ConstantText("Laboratorní testovací sada"), new ConcatBuilder(
-                    labTestKitPath, _ =>
-                    [
-                        ShowSingleReference.WithDefaultDisplayHandler(
-                            _ =>
-                            [
-                                new Collapser([
-                                    new Choose([
-                                        new When("f:deviceName/f:name", new Text("f:deviceName/f:name/@value"))
-                                    ], new ConstantText("Zařízení")),
-                                ], [], [new DeviceTextInfo()], iconPrefix: [new NarrativeModal()])
-                            ],
-                            "f:valueReference"),
-                    ], separator: new LineBreak())
+                referenceLinksRow.Add(new NameValuePairDetail(new ConstantText("Laboratorní testovací sada"),
+                    new CommaSeparatedBuilder(
+                        labTestKitPath,
+                        _ =>
+                        [
+                            new AnyReferenceNamingWidget("f:valueReference"),
+                        ]))
                 );
             }
 
-            if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.BasedOn, out var basedOnPath))
+            if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.Specimen, out var specimenXpath))
             {
-                rowDetails.AddCollapser(new ConstantText("Na základě"), new ListBuilder(basedOnPath,
-                    FlexDirection.Column, _ =>
-                    [
-                        ShowSingleReference.WithDefaultDisplayHandler(nav => [new AnyResource(nav, displayResourceType: false)]),
-                    ], separator: new LineBreak())
+                referenceLinksRow.Add(new NameValuePairDetail(new ConstantText("Vzorek"),
+                    new AnyReferenceNamingWidget(specimenXpath))
                 );
             }
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.PartOf, out var partOfPath))
             {
-                rowDetails.AddCollapser(new ConstantText("Součástí"), new ListBuilder(partOfPath, FlexDirection.Column,
+                referenceLinksRow.Add(new NameValuePairDetail(new ConstantText("Součástí"), new CommaSeparatedBuilder(
+                    partOfPath,
                     _ =>
                     [
-                        ShowSingleReference.WithDefaultDisplayHandler(nav => [new AnyResource(nav, displayResourceType: false)]),
-                    ], separator: new LineBreak())
-                );
-            }
-
-
-            rowDetails.AddCollapser(new ConstantText("Provedl"), new ListBuilder("f:performer", FlexDirection.Column,
-                _ =>
-                [
-                    new HideableDetails(
-                        new Optional(
-                            "f:extension[@url='http://hl7.org/fhir/StructureDefinition/event-performerFunction']",
-                            new NameValuePair(
-                                new ConstantText("Funkce"),
-                                new ChangeContext("f:valueCodeableConcept", new CodeableConcept())
-                            )
-                        )
-                    ),
-                    ShowSingleReference.WithDefaultDisplayHandler(nav => [new AnyResource(nav, displayResourceType: false)]),
-                ], flexContainerClasses: "gap-0"));
-
-            // ignore note
-
-
-            if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.Specimen, out var specimenXpath))
-            {
-                rowDetails.Add(
-                    new RawDetail(
-                        ShowSingleReference.WithDefaultDisplayHandler(
-                            nav => [new AnyResource(nav, displayResourceType: false)], specimenXpath)
-                    )
+                        new AnyReferenceNamingWidget(),
+                    ]))
                 );
             }
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.Device, out var deviceXpath))
             {
-                rowDetails.Add(
-                    new TextDetail(
-                        new ConstantText(""),
-                        ShowSingleReference.WithDefaultDisplayHandler(
-                            nav =>
-                            [
-                                new Collapser([
-                                    new Choose([
-                                        new When("f:deviceName/f:name", new Text("f:deviceName/f:name/@value"))
-                                    ], new ConstantText("Zařízení")),
-                                ], [], [new DeviceTextInfo()], iconPrefix: [new NarrativeModal()])
-                            ], deviceXpath)
-                    )
+                referenceLinksRow.Add(new NameValuePairDetail(new ConstantText("Zařízení"),
+                    new AnyReferenceNamingWidget(deviceXpath))
                 );
+            }
+
+            if (item.EvaluateCondition("f:encounter"))
+            {
+                referenceLinksRow.Add(new NameValuePairDetail(new ConstantText(Labels.Encounter),
+                    new AnyReferenceNamingWidget("f:encounter"))
+                );
+            }
+
+            if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.BasedOn, out var basedOnPath))
+            {
+                referenceLinksRow.Add(new NameValuePairDetail(new ConstantText("Na základě"), new CommaSeparatedBuilder(
+                    basedOnPath,
+                    _ =>
+                    [
+                        new AnyReferenceNamingWidget(),
+                    ]))
+                );
+            }
+
+
+            referenceLinksRow.Add(new NameValuePairDetail(new ConstantText("Provedl"), new CommaSeparatedBuilder(
+                "f:performer",
+                _ =>
+                [
+                    new AnyReferenceNamingWidget(),
+                    new Optional(
+                        "f:extension[@url='http://hl7.org/fhir/StructureDefinition/event-performerFunction']",
+                        new HideableDetails(new ConstantText(" (Funkce "),
+                            new ChangeContext("f:valueCodeableConcept", new CodeableConcept()),
+                            new ConstantText(")"))
+                    ),
+                ])));
+
+            // ignore note
+
+            if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.SupportingInfoExtension,
+                    out var supportInfoXpath))
+            {
+                referenceLinksRow.Add(new NameValuePairDetail(new ConstantText("Podpůrné údaje"),
+                    new CommaSeparatedBuilder(
+                        supportInfoXpath,
+                        _ =>
+                        [
+                            new AnyReferenceNamingWidget("f:valueReference"),
+                        ])));
             }
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.HasMember, out var hasMemberXpath))
             {
-                rowDetails.Add(
-                    new TextDetail(
+                referenceLinksRow.Add(
+                    new NameValuePairDetail(
                         new ConstantText("Podzáznamy"),
-                        new ShowMultiReference(hasMemberXpath, displayResourceType: false),
-                        "resource-container"
+                        new CommaSeparatedBuilder(hasMemberXpath, _ =>
+                            [new AnyReferenceNamingWidget()])
                     )
                 );
             }
 
             if (infrequentProperties.TryGet(CzLabObservationInfrequentProperties.DerivedFrom, out var derivedFromXpath))
             {
-                rowDetails.Add(
-                    new TextDetail(
+                referenceLinksRow.Add(
+                    new NameValuePairDetail(
                         new ConstantText("Odvozeno z"),
-                        new ShowMultiReference(derivedFromXpath, displayResourceType: false),
-                        "resource-container"
+                        new CommaSeparatedBuilder(derivedFromXpath, _ =>
+                            [new AnyReferenceNamingWidget()])
                     )
                 );
             }
 
-            if (item.EvaluateCondition("f:encounter"))
-            {
-                var encounterNarrative = ReferenceHandler.GetSingleNodeNavigatorFromReference(item,
-                    "f:encounter", "f:text");
-
-                rowDetails.AddCollapser(new ConstantText(Labels.Encounter),
-                    body: ShowSingleReference.WithDefaultDisplayHandler(nav => [new EncounterCard(nav, false, false)],
-                        "f:encounter"),
-                    footer: encounterNarrative != null ? [new NarrativeCollapser(encounterNarrative.GetFullPath())] : null,
-                    narrativeContent: encounterNarrative != null ? new NarrativeModal(encounterNarrative.GetFullPath()) : null
-                );
-            }
 
             if (item.EvaluateCondition("f:text"))
             {
                 rowDetails.AddCollapser(new DisplayLabel(LabelCodes.OriginalNarrative), new Narrative("f:text"));
             }
+
+            if (rowDetailsChildren.Count != 0)
+            {
+                rowDetails.Add(
+                    new RawDetail(new Row(rowDetailsChildren, flexContainerClasses: "gap-5", wrapChildren: true)));
+                if (cardsRow.Count != 0 || referenceLinksRow.Count != 0)
+                {
+                    rowDetails.Add(new RawDetail(new ThematicBreak()));
+                }
+            }
+
+            if (cardsRow.Count != 0)
+            {
+                rowDetails.Add(
+                    new RawDetail(new Row(cardsRow, flexContainerClasses: "gap-5", wrapChildren: true)));
+                if (referenceLinksRow.Count != 0)
+                {
+                    rowDetails.Add(new RawDetail(new ThematicBreak()));
+                }
+            }
+
+            rowDetails.AddRange(referenceLinksRow);
 
             List<Widget> rowWidgets =
             [
@@ -412,9 +399,23 @@ public class CzLaboratoryObservation(List<XmlDocumentNavigator> items) : Widget
                 new TableCell([
                     new ConcatBuilder("f:referenceRange", _ => [new ShowReferenceRange()], new LineBreak())
                 ]),
-                new TableCell([new ConcatBuilder("f:interpretation", _ => [new CodeableConcept()], new LineBreak())],
+                new TableCell([
+                        new ConcatBuilder("f:interpretation", _ =>
+                        [
+                            new Choose([
+                                new When(
+                                    "f:coding[f:system/@value='http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' and (f:code/@value='LL' or f:code/@value='LU' or f:code/@value='L' or f:code/@value='N' or f:code/@value='H' or f:code/@value='HU' or f:code/@value='HH')]",
+                                    new Container([new ShowInterpretationScale()],
+                                        optionalClass: "fixed-aligned-content justify-content-center")),
+                                new When(
+                                    "f:coding[f:system/@value='http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' and (f:code/@value='B' or f:code/@value='D' or f:code/@value='U' or f:code/@value='W')]", // trends are being displayed in a neighboring cell
+                                    new NullWidget()),
+                            ], new CodeableConcept())
+                        ], new LineBreak())
+                    ],
                     containerClass: "border-end-0"),
-                new TableCell([statusIcon], containerClass: "border-start-0"),
+                new TableCell([new Container([statusIcon], optionalClass: "fixed-aligned-content")],
+                    containerClass: "border-start-0"),
             ];
 
             return widgetTree.RenderConcatenatedResult(navigator, renderer, context);
@@ -532,6 +533,72 @@ public class CzLaboratoryObservation(List<XmlDocumentNavigator> items) : Widget
             ];
 
             return widgetTree.RenderConcatenatedResult(navigator, renderer, context);
+        }
+    }
+
+    private class ShowInterpretationScale : Widget
+    {
+        public override Task<RenderResult> Render(
+            XmlDocumentNavigator navigator,
+            IWidgetRenderer renderer,
+            RenderContext context
+        )
+        {
+            var value = navigator.SelectSingleNode("f:coding/f:code/@value").Node?.Value;
+
+            const string template = "•|••|•|••|•";
+            var targetIndex = -1;
+            var targetClass = string.Empty;
+            switch (value)
+            {
+                case "LL":
+                    targetIndex = 0;
+                    targetClass = "critical-bullet";
+                    break;
+                case "LU":
+                    targetIndex = 2;
+                    targetClass = "abnormal-bullet";
+                    break;
+                case "L":
+                    targetIndex = 3;
+                    targetClass = "abnormal-bullet";
+                    break;
+                case "N":
+                    targetIndex = 5;
+                    targetClass = "normal-bullet";
+                    break;
+                case "H":
+                    targetIndex = 7;
+                    targetClass = "abnormal-bullet";
+                    break;
+                case "HU":
+                    targetIndex = 8;
+                    targetClass = "abnormal-bullet";
+                    break;
+                case "HH":
+                    targetIndex = 10;
+                    targetClass = "critical-bullet";
+                    break;
+            }
+
+            if (targetIndex >= template.Length || targetIndex < 0)
+            {
+                // invalid value, fall back to generic codeable concept handling 
+                return new CodeableConcept().Render(navigator, renderer, context);
+            }
+
+            var preBulletText = template.Substring(0, targetIndex);
+            var postBulletText = template.Substring(targetIndex + 1);
+            var preBulletWidget = new Container(new ConstantText(preBulletText), ContainerType.Span);
+            var postBulletWidget = new Container(new ConstantText(postBulletText), ContainerType.Span);
+            var bulletWidget = new Container([
+                    new ConstantText("⬤"),
+                ], ContainerType.Span,
+                optionalClass: "interpretation-bullet " + targetClass);
+
+            return new Container([preBulletWidget, bulletWidget, postBulletWidget], ContainerType.Span,
+                optionalClass: "interpretation-scale h-100").Render(navigator,
+                renderer, context);
         }
     }
 }

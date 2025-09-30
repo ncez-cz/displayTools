@@ -11,11 +11,11 @@ public class FhirValidatorClient
 {
     private readonly HttpClient m_httpClient;
     private readonly ILogger<FhirValidatorClient> m_logger;
-    private readonly string m_validatorUrl = "https://validator.fhir.org/validate";
-    public FhirValidatorClient(ILogger<FhirValidatorClient> logger)
+
+    public FhirValidatorClient(ILogger<FhirValidatorClient> logger, HttpClient httpClient)
     {
-        m_httpClient = new HttpClient();
         m_logger = logger;
+        m_httpClient = httpClient;
     }
 
     public async Task<FhirValidatorResponse> ValidateDocumentAsync(FhirValidatorRequest contentToValidate)
@@ -27,10 +27,13 @@ public class FhirValidatorClient
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
             };
-            var content = new StringContent(JsonSerializer.Serialize(contentToValidate, options), Encoding.UTF8,
-                MediaTypeNames.Application.Json);
+            var content = new StringContent(
+                JsonSerializer.Serialize(contentToValidate, options),
+                Encoding.UTF8,
+                MediaTypeNames.Application.Json
+            );
 
-            var response = await m_httpClient.PostAsync(m_validatorUrl, content);
+            var response = await m_httpClient.PostAsync("validate", content);
             response.EnsureSuccessStatusCode();
 
             var responseContent = await response.Content.ReadAsStringAsync();

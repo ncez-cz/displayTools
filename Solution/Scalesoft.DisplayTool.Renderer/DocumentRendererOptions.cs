@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
+using Scalesoft.DisplayTool.Shared.Configuration;
 
 namespace Scalesoft.DisplayTool.Renderer;
 
 public class DocumentRendererOptions
 {
-    public ILoggerFactory? LoggerFactory { get; set; }
-    public bool UseExternalValidators { get; set; }
-    public PdfRendererOptions? PdfRenderer { get; set; }
+    public ILoggerFactory? LoggerFactory { get; init; }
+    public PdfRendererOptions? PdfRenderer { get; init; }
+    public required ExternalServicesConfiguration ExternalServicesConfiguration { get; init; }
 }
 
 public class PdfRendererOptions

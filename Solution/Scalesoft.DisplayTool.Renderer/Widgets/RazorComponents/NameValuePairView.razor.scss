@@ -1,3 +1,25 @@
-﻿dl {
+﻿@use "../../HtmlResources/src/theme-variables" as th_var;
+
+.name-value-pair {
     margin-bottom: 0;
+
+    .name {
+        font-weight: 400;
+    }
+
+    &.primary {
+        .name {
+            color: var(--#{th_var.$prefix}blue);
+        }
+    }
+
+    &.secondary {
+        .name {
+            color: var(--#{th_var.$prefix}gray);
+        }
+    }
+
+    .value {
+        font-weight: 600;
+    }
 }

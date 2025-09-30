@@ -73,6 +73,7 @@ public class TableRow : Widget
             Content = cellsResult,
             CollapsibleRowContent = collapsibleContentResult,
             CustomClass = m_optionalClass,
+            CollapsibleRowCustomCss = m_collapsibleRowContents?.OptionalCss,
         };
         HandleIds(context, navigator, viewModel, m_idSource, m_visualIdSource);
 
@@ -86,5 +87,7 @@ public class TableRow : Widget
         public required string Content { get; set; }
 
         public string? CollapsibleRowContent { get; set; }
+
+        public string? CollapsibleRowCustomCss { get; set; }
     }
 }

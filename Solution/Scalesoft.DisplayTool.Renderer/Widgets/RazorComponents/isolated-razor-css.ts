@@ -11,6 +11,7 @@ import "./TooltipView.razor.scss";
 import "./ItemListView.razor.scss";
 import "./LineBreakView.razor.scss";
 import "./LinkView.razor.scss";
+import "./PlainBadgeView.razor.scss";
 import "./ResultHtmlDocument.razor.scss";
 import "./SectionView.razor.scss";
 import "./TableCaptionView.razor.scss";

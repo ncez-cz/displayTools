@@ -1,7 +1,6 @@
 ﻿using Scalesoft.DisplayTool.Renderer.Extensions;
 using Scalesoft.DisplayTool.Renderer.Models;
 using Scalesoft.DisplayTool.Renderer.Renderers;
-using Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils;
 using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
 namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir.Devices;
@@ -23,16 +22,11 @@ public class AdditionalDeviceInfo(
         List<Widget> tree =
         [
             new TableCell([
-                    new Optional("f:note", new TextContainer(TextStyle.Bold, [new ConstantText("Poznámky: ")])),
-                    new CommaSeparatedBuilder("f:note",
-                        _ => [new ShowAnnotationCompact()]),
-                    new Optional("f:note",
-                        new OptionalLineBreak(
-                            [
-                                "../f:version"
-                            ]
-                        )
-                    ),
+                    new Condition("f:note", new NameValuePair([new ConstantText("Poznámky")],
+                    [
+                        new CommaSeparatedBuilder("f:note",
+                            _ => [new ShowAnnotationCompact()])
+                    ])),
                     new CommaSeparatedBuilder("f:version", _ =>
                     [
                         new Optional("f:type", new CodeableConcept(), new ConstantText(" - ")),

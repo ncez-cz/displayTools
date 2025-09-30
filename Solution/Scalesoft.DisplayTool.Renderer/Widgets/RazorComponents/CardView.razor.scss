@@ -1,4 +1,4 @@
-@import "../../HtmlResources/src/theme-variables";
+@use "../../HtmlResources/src/theme-variables" as *;
 
 .card-footer {
     background-color: var(--#{$prefix}gray-100);
@@ -9,15 +9,13 @@
     margin-top: $spacing02;
 }
 
-.card-header {
-    color: var(--#{$prefix}severity-card-header-color);
-    background-color: var(--#{$prefix}severity-card-header-bg);
-    border-bottom: none;
-}
-
 .card-footer {
     background-color: var(--#{$prefix}severity-card-footer-bg);
     border-top: none;
+}
+
+.card .card .card-body {
+    background-color: var(--#{$prefix}severity-card-bg);
 }
 
 .card-footer > .card:first-child, .badge + .card, .badge + * > .card, .card:first-child {

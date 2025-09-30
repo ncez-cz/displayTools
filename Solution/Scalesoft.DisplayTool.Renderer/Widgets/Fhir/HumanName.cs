@@ -50,21 +50,21 @@ public class HumanName(
                     new If(_ => !unformattedName, new Row([
                         new If(_ => !hideNominalLetters && navigator.EvaluateCondition("f:prefix"),
                             new Container([
-                                new Badge(new ConstantText("Titul")),
+                                new PlainBadge(new ConstantText("Titul")),
                                 CreateNamePartWidgetWithWrapper("f:prefix/@value", true)
                             ])
                         ),
                         new Container([
-                            new Badge(new DisplayLabel(LabelCodes.FamilyName)),
+                            new PlainBadge(new DisplayLabel(LabelCodes.FamilyName)),
                             CreateNamePartWidgetWithWrapper("f:family/@value", false)
                         ]),
                         new Container([
-                            new Badge(new DisplayLabel(LabelCodes.GivenName)),
+                            new PlainBadge(new DisplayLabel(LabelCodes.GivenName)),
                             CreateNamePartWidgetWithWrapper("f:given/@value", true)
                         ]),
                         new If(_ => !hideNominalLetters && navigator.EvaluateCondition("f:suffix"),
                             new Container([
-                                new Badge(new ConstantText("Titul")),
+                                new PlainBadge(new ConstantText("Titul")),
                                 CreateNamePartWidgetWithWrapper("f:suffix/@value", true)
                             ])
                         ),
@@ -95,7 +95,7 @@ public class HumanName(
                     new Text("f:text/@value"))
                 .Else(
                     new Container([
-                        new Badge(new ConstantText("Celé jméno")),
+                        new PlainBadge(new ConstantText("Celé jméno")),
                         CreateNamePartWidgetWithWrapper("f:text/@value", false)
                     ])
                 ))

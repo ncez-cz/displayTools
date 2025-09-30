@@ -16,7 +16,7 @@
 
 <div id="@Model.Id" data-id="@Model.VisualId"
      class="section @(GetSeverityClass()) @Model.CustomClass" onclick="@Model.OnClick">
-    <input class="collapse-checkbox" type="checkbox" id="@Model.InputId" checked>
+    <input class="collapse-checkbox" type="checkbox" id="@Model.InputId" checked=@(!Model.IsCollapsed)>
     <label class="collapse-label" for="@Model.InputId">
         <Divider
             DividerLabel="@Model.Title"
@@ -36,4 +36,14 @@
 
 @code {
     [Parameter] public required Section.ViewModel Model { get; set; }
+
+    private bool CollapserInputChecked { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CollapserInputChecked = !Model.IsCollapsed;
+
+        base.OnInitialized();
+    }
+
 }

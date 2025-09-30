@@ -26,7 +26,7 @@ public class ContractTerm : Widget
         var globalInfrequentProperties =
             Widgets.InfrequentProperties.Evaluate<InfrequentProperties>([navigator]);
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
 
         var basicInfo = new Container([
             // ignore identifier
@@ -82,7 +82,7 @@ public class ContractTerm : Widget
                 )),
         ]);
 
-        var offerBadge = new Badge(new ConstantText("Nabídka"));
+        var offerBadge = new PlainBadge(new ConstantText("Nabídka"));
         var offerInfo = new Container([
             //ignore identifier
             new Condition("f:party",
@@ -281,7 +281,7 @@ public class ContractTerm : Widget
             ]),
         ]);
 
-        var actionBadge = new Badge(new ConstantText("Akce"));
+        var actionBadge = new PlainBadge(new ConstantText("Akce"));
         var actionInfo = new ListBuilder("f:action", FlexDirection.Row, (_, nav) =>
         {
             var infrequentProperties =
@@ -390,7 +390,7 @@ public class ContractTerm : Widget
                         )
                     ),
                     new Condition("f:asset",
-                        new Badge(new ConstantText("Aktiva")),
+                        new PlainBadge(new ConstantText("Aktiva")),
                         assetInfo,
                         new Condition("f:action or f:group",
                             new ThematicBreak()
@@ -404,7 +404,7 @@ public class ContractTerm : Widget
                         )
                     ),
                     new Condition("f:group",
-                        new Badge(new ConstantText("Smluvní ustanovení")),
+                        new PlainBadge(new ConstantText("Smluvní ustanovení")),
                         new ListBuilder("f:group", FlexDirection.Column, _ => [new ContractTerm()])
                     )
                 ])

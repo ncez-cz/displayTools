@@ -9,22 +9,15 @@ namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir;
 
 public class ActorsNaming : Widget
 {
-    public override Task<RenderResult> Render(
-        XmlDocumentNavigator navigator,
-        IWidgetRenderer renderer,
-        RenderContext context
-    )
+    public override Task<RenderResult> Render(XmlDocumentNavigator navigator, IWidgetRenderer renderer,
+        RenderContext context)
     {
         Task<RenderResult> result;
 
         switch (navigator.Node?.Name)
         {
             case "Device":
-                result = DeviceParsingInfo.CompactRenderingWidgets.RenderConcatenatedResult(
-                    navigator,
-                    renderer,
-                    context
-                );
+                result = DeviceParsingInfo.CompactRenderingWidgets.RenderConcatenatedResult(navigator, renderer, context);
                 break;
             case "Practitioner":
             case "Patient":
@@ -39,23 +32,17 @@ public class ActorsNaming : Widget
                 break;
             case "PractitionerRole":
                 result =
-                    new Optional(
-                        "f:practitioner",
-                        ShowSingleReference.WithDefaultDisplayHandler(
-                            x => [new Container([new HumanNameCompact("f:name")], ContainerType.Span, idSource: x)],
-                            "."
-                        )
+                    new Optional("f:practitioner",
+                        ShowSingleReference.WithDefaultDisplayHandler(x => [new Container([new HumanNameCompact("f:name")], ContainerType.Span, idSource: x)], ".")
                     ).Render(navigator, renderer, context);
                 break;
             default:
-                return Task.FromResult<RenderResult>(
-                    new ParseError
-                    {
-                        Kind = ErrorKind.InvalidValue, Message = "Unknown observation performer type",
-                        Path = navigator.GetFullPath(),
-                        Severity = ErrorSeverity.Warning
-                    }
-                );
+                return Task.FromResult<RenderResult>(new ParseError
+                {
+                    Kind = ErrorKind.InvalidValue, Message = "Unknown observation performer type",
+                    Path = navigator.GetFullPath(),
+                    Severity = ErrorSeverity.Warning
+                });
         }
 
         return result;

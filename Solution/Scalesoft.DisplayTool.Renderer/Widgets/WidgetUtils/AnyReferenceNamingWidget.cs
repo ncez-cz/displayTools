@@ -5,7 +5,11 @@ using Scalesoft.DisplayTool.Shared.DocumentNavigation;
 
 namespace Scalesoft.DisplayTool.Renderer.Widgets.WidgetUtils;
 
-public class AnyReferenceNamingWidget(string path = ".", bool showOptionalDetails = false) : Widget
+public class AnyReferenceNamingWidget(
+    string path = ".",
+    bool showOptionalDetails = false,
+    Widget? customFallbackName = null
+) : Widget
 {
     public override Task<RenderResult> Render(
         XmlDocumentNavigator navigator,
@@ -14,7 +18,8 @@ public class AnyReferenceNamingWidget(string path = ".", bool showOptionalDetail
     )
     {
         return ReferenceHandler
-            .BuildAnyReferencesNaming(navigator, path, context, renderer, showOptionalDetails: showOptionalDetails)
+            .BuildAnyReferencesNaming(navigator, path, context, renderer, showOptionalDetails: showOptionalDetails,
+                customFallbackName: customFallbackName)
             .Render(navigator, renderer, context);
     }
 }

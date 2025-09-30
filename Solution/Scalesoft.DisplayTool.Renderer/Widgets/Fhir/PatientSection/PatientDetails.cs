@@ -46,14 +46,14 @@ public class PatientDetails : Widget
                         ),
                         new Optional("f:birthDate",
                             new Container([
-                                new Badge(new DisplayLabel(LabelCodes.DateOfBirth)),
+                                new PlainBadge(new DisplayLabel(LabelCodes.DateOfBirth)),
                                 new Heading([new ShowDateTime()], HeadingSize.H3),
                             ])
                         ),
                         //Gender
                         new Container([
                             new If(_ => navigator.EvaluateCondition("f:gender"),
-                                    new Badge(new DisplayLabel(LabelCodes.AdministrativeGender)), new LineBreak(),
+                                    new PlainBadge(new DisplayLabel(LabelCodes.AdministrativeGender)), new LineBreak(),
                                     new Heading(
                                         [
                                             new EnumLabel("f:gender",
@@ -62,7 +62,7 @@ public class PatientDetails : Widget
                                         HeadingSize.H3))
                                 .Else(
                                     new Optional($"f:extension[@url='{recordedSexOrGender}']",
-                                        new Badge(new DisplayLabel(LabelCodes.AdministrativeGender)),
+                                        new PlainBadge(new DisplayLabel(LabelCodes.AdministrativeGender)),
                                         new LineBreak(),
                                         new Optional("f:extension[@url='value']/f:valueCodeableConcept",
                                             new Heading([new CodeableConcept()], HeadingSize.H3)
@@ -81,7 +81,7 @@ public class PatientDetails : Widget
                         //Clinical Gender
                         new If(_ => navigator.EvaluateCondition($"f:extension[@url='{clinicalGender}']"),
                             new Container([
-                                new Badge(new ConstantText("Pohlaví pro klinické použití")),
+                                new PlainBadge(new ConstantText("Pohlaví pro klinické použití")),
                                 new LineBreak(),
                                 new ConcatBuilder($"f:extension[@url='{clinicalGender}']", _ =>
                                 [
@@ -115,7 +115,7 @@ public class PatientDetails : Widget
                             $"f:extension[@url='{patientAnimal}']/f:extension[@url='genderStatus']/f:valueCodeableConcept",
                             new Container([
                                 new Concat([
-                                    new Badge(new ConstantText("Stav pohlaví")),
+                                    new PlainBadge(new ConstantText("Stav pohlaví")),
                                     new TextContainer(TextStyle.Bold, new CodeableConcept())
                                 ], new LineBreak())
                             ])
@@ -124,14 +124,14 @@ public class PatientDetails : Widget
                     new Row([
                         //Birth Place
                         new If(_ => navigator.EvaluateCondition($"f:extension[@url='{birthPlace}']"), new Container([
-                            new Badge(new ConstantText("Místo narození")), new LineBreak(), new ChangeContext(
+                            new PlainBadge(new ConstantText("Místo narození")), new LineBreak(), new ChangeContext(
                                 $"f:extension[@url='{birthPlace}']",
                                 new OpenTypeElement(null,
                                     hints: OpenTypeElementRenderingHints.HideAddressLabel)) // CZ_Address
                         ])),
                         // Nationality
                         new If(_ => navigator.EvaluateCondition($"f:extension[@url='{nationality}']"), new Container([
-                                new Badge(new ConstantText("Národnost")), new LineBreak(), new ConcatBuilder(
+                                new PlainBadge(new ConstantText("Národnost")), new LineBreak(), new ConcatBuilder(
                                     $"f:extension[@url='{nationality}']", _ =>
                                     [
                                         new Concat([
@@ -149,7 +149,7 @@ public class PatientDetails : Widget
                     new Row([
                         new If(_ => navigator.EvaluateCondition($"f:extension[@url='{registeringProvider}']"),
                             new Container([
-                                new Badge(new ConstantText("Registrující poskytovatel")),
+                                new PlainBadge(new ConstantText("Registrující poskytovatel")),
                                 new LineBreak(),
                                 new ConcatBuilder($"f:extension[@url='{registeringProvider}']", _ =>
                                     [
@@ -171,7 +171,7 @@ public class PatientDetails : Widget
                 new Container([
                     new If(_ => navigator.EvaluateCondition($"f:identifier[f:system/@value='{ridIdentifier}']"),
                         new ChangeContext($"f:identifier[f:system/@value='{ridIdentifier}']",
-                            new Badge(new ConstantText("Resortní Identifikátor")),
+                            new PlainBadge(new ConstantText("Resortní Identifikátor")),
                             new LineBreak(),
                             new Heading([
                                 new ShowIdentifier(showSystem: false)
@@ -179,14 +179,14 @@ public class PatientDetails : Widget
                         )
                     ).Else(
                         new ChangeContext("f:identifier",
-                            new Badge(new ConstantText("Identifikátor pacienta")),
+                            new PlainBadge(new ConstantText("Identifikátor pacienta")),
                             new LineBreak(),
                             new Heading([new ShowIdentifier(showSystem: false)], HeadingSize.H3)
                         )
                     ),
                     //Identifiers
                     new If(_ => navigator.EvaluateCondition("f:identifier[f:use/@value='official']"),
-                        new Badge(new DisplayLabel(LabelCodes.PrimaryPatientIdentifier))),
+                        new PlainBadge(new DisplayLabel(LabelCodes.PrimaryPatientIdentifier))),
                     new ConcatBuilder(
                         $"f:identifier[f:use/@value='official' and not(f:system/@value='{ridIdentifier}')]",
                         (_, _, nav) =>
@@ -199,7 +199,7 @@ public class PatientDetails : Widget
                     new If(
                         _ => navigator.EvaluateCondition(
                             $"f:identifier[not(f:use/@value='official') and not(f:system/@value='{ridIdentifier}')]"),
-                        new Badge(new DisplayLabel(LabelCodes.SecondaryPatientIdentifier))),
+                        new PlainBadge(new DisplayLabel(LabelCodes.SecondaryPatientIdentifier))),
                     new ConcatBuilder(
                         $"f:identifier[not(f:use/@value='official') and not(f:system/@value='{ridIdentifier}')]",
                         (_, _, nav) => HandleIdentifierDisplay(nav, true, insuranceCompanyCodeIdentifier)),
@@ -221,11 +221,7 @@ public class PatientDetails : Widget
             return
             [
                 new Container([
-                    new Container([
-                        new IdentifierSystemLabel(),
-                        new ConstantText(" "),
-                        new ShowIdentifier(showSystem: false),
-                    ], ContainerType.Span),
+                    new NameValuePair([new IdentifierSystemLabel(),], [new ShowIdentifier(showSystem: false),]),
                     new ShowSingleReference(issuerNav =>
                     {
                         if (!issuerNav.ResourceReferencePresent)
@@ -249,11 +245,8 @@ public class PatientDetails : Widget
                             new ChangeContext(issuerNav.Navigator,
                                 new Optional(
                                     $"f:identifier[f:system/@value='{insuranceCompanyCodeIdentifier}' {indentifierUseCondition}]",
-                                    new Container([
-                                        new IdentifierSystemLabel(),
-                                        new ConstantText(" "),
-                                        new ShowIdentifier(showSystem: false),
-                                    ], ContainerType.Span)
+                                    new NameValuePair([new IdentifierSystemLabel(),],
+                                        [new ShowIdentifier(showSystem: false),])
                                 )
                             )
                         ];
@@ -263,11 +256,13 @@ public class PatientDetails : Widget
 
         return
         [
-            new Container([
-                new IdentifierSystemLabel(),
-                new ConstantText(" "),
-                new ShowIdentifier(showSystem: showSystem),
-            ]),
+            new NameValuePair([
+                    new IdentifierSystemLabel()
+                ],
+                [
+                    new ShowIdentifier(showSystem: showSystem),
+                ]
+            ),
         ];
     }
 }

@@ -26,7 +26,7 @@ public class DetectedIssuesMitigationCell(XmlDocumentNavigator item) : Widget
         return mitigations.Render(item, renderer, context);
     }
 
-    private class MitigationWidget() : Widget
+    private class MitigationWidget : Widget
     {
         public override Task<RenderResult> Render(
             XmlDocumentNavigator navigator,
@@ -40,30 +40,21 @@ public class DetectedIssuesMitigationCell(XmlDocumentNavigator item) : Widget
             Widget[] mitigationWidget =
             [
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Action)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Vykonaná akce")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new Optional("f:action", new CodeableConcept())]),
-                        new LineBreak()
+                    ? new NameValuePair([new ConstantText("Vykonána akce")],
+                    [
+                        new Optional("f:action", new CodeableConcept())
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Date)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new DisplayLabel(LabelCodes.Date)]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new Optional("f:date", new ShowDateTime())]),
-                        new LineBreak()
+                    ? new NameValuePair([new DisplayLabel(LabelCodes.Date)],
+                    [
+                        new Optional("f:date", new ShowDateTime())
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Author)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Author opatření")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new AnyReferenceNamingWidget("f:author")]),
-                        new LineBreak()
+                    ? new NameValuePair([new ConstantText("Author opatření")],
+                    [
+                        new AnyReferenceNamingWidget("f:author")
                     ])
                     : new NullWidget()
             ];

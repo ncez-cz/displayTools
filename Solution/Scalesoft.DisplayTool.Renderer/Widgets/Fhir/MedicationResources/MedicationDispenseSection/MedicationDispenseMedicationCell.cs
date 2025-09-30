@@ -8,8 +8,11 @@ namespace Scalesoft.DisplayTool.Renderer.Widgets.Fhir.MedicationResources.Medica
 
 public class MedicationDispenseMedicationCell(XmlDocumentNavigator item) : Widget
 {
-    public override Task<RenderResult> Render(XmlDocumentNavigator navigator, IWidgetRenderer renderer,
-        RenderContext context)
+    public override Task<RenderResult> Render(
+        XmlDocumentNavigator navigator,
+        IWidgetRenderer renderer,
+        RenderContext context
+    )
     {
         var infrequentOptions = InfrequentProperties.Evaluate<InfrequentPropertiesPaths>([item]);
 
@@ -22,55 +25,42 @@ public class MedicationDispenseMedicationCell(XmlDocumentNavigator item) : Widge
         [
             new TextContainer(TextStyle.Regular, [
                 infrequentOptions.Contains(InfrequentPropertiesPaths.MedicationReference)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new DisplayLabel(LabelCodes.Name)]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,[new CommaSeparatedBuilder("f:medicationReference", _ => [new AnyReferenceNamingWidget(".")])]),
-                        new LineBreak(),
-                    ]) 
+                    ? new NameValuePair([new DisplayLabel(LabelCodes.Name)],
+                    [
+                        new CommaSeparatedBuilder("f:medicationReference", _ => [new AnyReferenceNamingWidget()])
+                    ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.MedicationCodeableConcept)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new DisplayLabel(LabelCodes.Name)]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                        [
-                            new CommaSeparatedBuilder("f:medicationCodeableConcept", _ => [new CodeableConcept()])
-                        ]),
-                        new LineBreak(),
+                    ? new NameValuePair([new DisplayLabel(LabelCodes.Name)],
+                    [
+                        new CommaSeparatedBuilder("f:medicationCodeableConcept", _ => [new CodeableConcept()])
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Quantity)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Množství")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular, [quantityValue, new ConstantText(" "), quantityUnit], idSource: item.SelectSingleNode("f:quantity")),
-                        new LineBreak(),
+                    ? new NameValuePair([new ConstantText("Množství")],
+                    [
+                        new TextContainer(TextStyle.Regular, [quantityValue, new ConstantText(" "), quantityUnit],
+                            idSource: item.SelectSingleNode("f:quantity")),
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.DaysSupply)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Zásoba na")]),
-                        new ConstantText(": "),
+                    ? new NameValuePair([new ConstantText("Zásoba na")],
+                    [
                         new TextContainer(TextStyle.Regular,
-                            [daysSupplyValue, new ConstantText(" ("), daysSupplyUnit, new ConstantText(")")], idSource: item.SelectSingleNode("f:daysSupply")),
-                        new LineBreak(),
+                            [daysSupplyValue, new ConstantText(" ("), daysSupplyUnit, new ConstantText(")")],
+                            idSource: item.SelectSingleNode("f:daysSupply")),
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.WhenPrepared)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Datum přípravy")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular, [new Optional("f:whenPrepared", new ShowDateTime())]),
-                        new LineBreak(),
+                    ? new NameValuePair([new ConstantText("Datum přípravy")],
+                    [
+                        new Optional("f:whenPrepared", new ShowDateTime())
                     ])
                     : new NullWidget(),
                 infrequentOptions.Contains(InfrequentPropertiesPaths.WhenHandedOver)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Datum předáni")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular, [new Optional("f:whenHandedOver", new ShowDateTime())]),
-                        new LineBreak(),
+                    ? new NameValuePair([new ConstantText("Datum předáni")],
+                    [
+                        new Optional("f:whenHandedOver", new ShowDateTime())
                     ])
                     : new NullWidget(),
             ])

@@ -20,45 +20,37 @@ public class FamilyMemberAdditionalInfoCell(XmlDocumentNavigator item) : Widget
         [
             new HideableDetails(
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Identifier)
-                    ? new Concat([
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Identifikátor týmu")]),
-                        new ConstantText(": "),
+                    ? new NameValuePair([new ConstantText("Identifikátor týmu")],
+                    [
                         new CommaSeparatedBuilder("f:identifier", _ => [new ShowIdentifier()]),
-                        new LineBreak(),
-                    ], string.Empty)
+                    ])
                     : infrequentOptions.Contains(InfrequentPropertiesPaths.Id)
-                        ? new Concat([
-                            new TextContainer(TextStyle.Bold, [new ConstantText("Technický identifikátor týmu")]),
-                            new ConstantText(": "),
+                        ? new NameValuePair([new ConstantText("Technický identifikátor týmu")],
+                        [
                             new Optional("f:id", new Text("@value")),
-                            new LineBreak()
-                        ], string.Empty)
+                        ])
                         : new ConstantText("Identifikátor podání není specifikován")
             ),
             infrequentOptions.Contains(InfrequentPropertiesPaths.ReasonCode)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Důvod provedení")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Důvod provedení")],
+                [
                     new ItemListBuilder("f:reasonCode", ItemListType.Unordered, _ => [new CodeableConcept()]),
-                ], string.Empty)
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.ReasonReference)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Související záznam")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Související záznam")],
+                [
                     new ItemListBuilder("f:reasonReference", ItemListType.Unordered, _ =>
                     [
                         new Optional(".", new AnyReferenceNamingWidget()),
                     ])
-                ], string.Empty)
+                ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Date)
-                ? new Concat([
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Datum změny")]),
-                    new ConstantText(": "),
+                ? new NameValuePair([new ConstantText("Datum změny")],
+                [
                     new ShowDateTime("f:date"),
-                    new LineBreak(),
-                ], string.Empty)
+                ])
                 : new NullWidget(),
         ]);
         if (infrequentOptions.Count == 0)

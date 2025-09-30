@@ -1,4 +1,4 @@
-﻿@import "../../HtmlResources/src/theme-variables";
+﻿@use "../../HtmlResources/src/theme-variables" as *;
 
 .tooltip-wrapper {
     cursor: pointer;

@@ -21,7 +21,7 @@ public class EncounterCard(XmlDocumentNavigator navigator, bool displayAsCollaps
                 new DisplayLabel(LabelCodes.Status))
         ], ContainerType.Div, "d-flex align-items-center gap-1");
 
-        var badge = new Badge(new ConstantText("Základní informace"));
+        var badge = new PlainBadge(new ConstantText("Základní informace"));
         var basicInfo = new Container([
             new NameValuePair(
                 new ConstantText("Zařazení"),
@@ -72,7 +72,7 @@ public class EncounterCard(XmlDocumentNavigator navigator, bool displayAsCollaps
             )
         ]);
 
-        var actorsBadge = new Badge(new ConstantText("Zainteresované strany"));
+        var actorsBadge = new PlainBadge(new ConstantText("Zainteresované strany"));
         var actorsInfo = new Container([
             new Optional("f:serviceProvider",
                 new NameValuePair(
@@ -104,7 +104,7 @@ public class EncounterCard(XmlDocumentNavigator navigator, bool displayAsCollaps
             )
         ]);
 
-        var additionalInfoBadge = new Badge(new ConstantText("Dodatečné informace"));
+        var additionalInfoBadge = new PlainBadge(new ConstantText("Dodatečné informace"));
         var additionalInfo = new Container([
             new Condition("f:identifier",
                 new NameValuePair(
@@ -159,7 +159,7 @@ public class EncounterCard(XmlDocumentNavigator navigator, bool displayAsCollaps
                 )
             ),
         ]);
-        var locationBadge = new Badge(new ConstantText("Lokace"));
+        var locationBadge = new PlainBadge(new ConstantText("Lokace"));
         var locationInfo = new Container([
             new ItemListBuilder("f:location", ItemListType.Unordered, _ =>
                 [

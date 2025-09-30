@@ -1,0 +1,54 @@
+﻿@media print {
+    @page {
+        size: A4;
+        margin: 50px;
+
+        @bottom-center {
+            content: counter(page);
+        }
+    }
+
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        break-inside: avoid;
+    }
+
+    .section > label {
+        break-after: avoid;
+        break-inside: avoid;
+        display: block;
+    }
+
+    .resource-container > span {
+        break-after: avoid;
+        break-inside: avoid;
+        display: block;
+    }
+
+    ::-webkit-scrollbar,
+    .collapse-icon,
+    .collapse-toggler-column,
+    .collapse-toggler-empty-column,
+    .collapse-label .divider-label-subtitle,
+    .divider .collapse-icon + hr,
+    .narrative-modal-button,
+    .narrative-cell,
+    .collapse-all-btn,
+    .collapse-toggler-wrapper {
+        display: none !important;
+    }
+
+    a {
+        color: unset;
+        text-decoration: none;
+    }
+
+    .no-print {
+        display: none;
+    }
+}

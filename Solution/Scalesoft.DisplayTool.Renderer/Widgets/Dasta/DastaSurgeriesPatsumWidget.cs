@@ -59,7 +59,7 @@ public class DastaSurgeriesPatsumWidget : Widget
                                             [
                                                 new DastaMknOrphaCodedValue("."),
                                             ]),
-                                            ], "dsip:duvod_kod"),
+                                        ], "dsip:duvod_kod"),
                                     ]),
                                     new TableCell([
                                         new DastaCodedValue("dsip:vysledek", null)

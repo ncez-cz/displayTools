@@ -11,6 +11,7 @@ public class CodedValue(
     string? code,
     string? codeSystem,
     string? fallbackValue = null,
+    string? fileName = null,
     bool displayCodeSystem = false,
     bool displayCodeSystemOnFallbackOnly = false,
     bool isValueSet = false
@@ -30,6 +31,7 @@ public class CodedValue(
         }
 
         var translated = await context.Translator.GetCodedValue(
+            fileName ?? string.Empty,
             code,
             codeSystem,
             language,

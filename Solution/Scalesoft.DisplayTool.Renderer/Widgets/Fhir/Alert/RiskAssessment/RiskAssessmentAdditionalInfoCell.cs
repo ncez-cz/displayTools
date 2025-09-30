@@ -19,59 +19,39 @@ public class RiskAssessmentAdditionalInfoCell(XmlDocumentNavigator item) : Widge
         var actorsTableCell = new TableCell([
             new HideableDetails(
                 infrequentOptions.Contains(InfrequentPropertiesPaths.Identifier)
-                    ? new TextContainer(TextStyle.Regular, [
-                        new TextContainer(TextStyle.Bold, [new ConstantText("Identifikátor podáni")]),
-                        new ConstantText(": "),
-                        new TextContainer(TextStyle.Regular,
-                            [new CommaSeparatedBuilder("f:identifier", _ => [new ShowIdentifier()])]),
-                        new LineBreak(),
+                    ? new NameValuePair([new ConstantText("Identifikátor podáni")],
+                    [
+                        new CommaSeparatedBuilder("f:identifier", _ => [new ShowIdentifier()])
                     ])
                     : infrequentOptions.Contains(InfrequentPropertiesPaths.Id)
-                        ? new TextContainer(TextStyle.Regular, [
-                            new TextContainer(TextStyle.Bold, [new ConstantText("Technický identifikátor podáni")]),
-                            new ConstantText(": "),
-                            new TextContainer(TextStyle.Regular, [new Optional("f:id", new Text("@value"))]),
-                            new LineBreak(),
+                        ? new NameValuePair([new ConstantText("Technický identifikátor podáni")],
+                        [
+                            new Optional("f:id", new Text("@value"))
                         ])
                         : new ConstantText("Identifikátor podání není specifikován")
             ),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Occurrence)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Výskyt")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular,
-                        [new OpenTypeElement(null, "occurrence")]), // dateTime | Period
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Výskyt")],
+                [
+                    new OpenTypeElement(null, "occurrence") // dateTime | Period
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Basis)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Podklad")]),
-                    new ConstantText(": "),
-                    new LineBreak(),
-                    new TextContainer(TextStyle.Regular,
-                    [
-                        new ItemListBuilder("f:basis", ItemListType.Unordered, _ => [new AnyReferenceNamingWidget()])
-                    ]),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Podklad")],
+                [
+                    new ItemListBuilder("f:basis", ItemListType.Unordered, _ => [new AnyReferenceNamingWidget()])
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Mitigation)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Opatření")]),
-                    new ConstantText(": "),
-                    new TextContainer(TextStyle.Regular, [new Optional("f:mitigation", new Text("@value"))]),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Opatření")],
+                [
+                    new Optional("f:mitigation", new Text("@value"))
                 ])
                 : new NullWidget(),
             infrequentOptions.Contains(InfrequentPropertiesPaths.Note)
-                ? new TextContainer(TextStyle.Regular, [
-                    new TextContainer(TextStyle.Bold, [new ConstantText("Komentář")]),
-                    new ConstantText(": "),
-                    new LineBreak(),
-                    new TextContainer(TextStyle.Regular,
-                        [new ItemListBuilder("f:note", ItemListType.Unordered, _ => [new ShowAnnotationCompact()])]),
-                    new LineBreak(),
+                ? new NameValuePair([new ConstantText("Komentář")],
+                [
+                    new ItemListBuilder("f:note", ItemListType.Unordered, _ => [new ShowAnnotationCompact()])
                 ])
                 : new NullWidget(),
         ]);

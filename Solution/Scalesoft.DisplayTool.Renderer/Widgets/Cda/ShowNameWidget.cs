@@ -10,20 +10,21 @@ namespace Scalesoft.DisplayTool.Renderer.Widgets.Cda;
 
 public class ShowNameWidget(bool showInline = false) : Widget
 {
-    public override Task<RenderResult> Render(XmlDocumentNavigator navigator, IWidgetRenderer renderer,
-        RenderContext context)
+    public override Task<RenderResult> Render(
+        XmlDocumentNavigator navigator,
+        IWidgetRenderer renderer,
+        RenderContext context
+    )
     {
         Widget structuredNameWidgets = new Row(CreateNameWidgets(navigator));
         List<Widget> widgetTree =
         [
             new Choose([
                 new When("$name/n1:family", structuredNameWidgets),
-            ], [
-                new Container([
-                    new Badge(new DisplayLabel(LabelCodes.FamilyName), Severity.Primary),
-                    new Heading([new Text("$name")], HeadingSize.H5),
-                ]),
-            ]),
+            ], new Container([
+                new PlainBadge(new DisplayLabel(LabelCodes.FamilyName), Severity.Primary),
+                new Heading([new Text("$name")], HeadingSize.H5),
+            ])),
         ];
         return widgetTree.RenderConcatenatedResult(navigator, renderer, context);
     }
@@ -46,7 +47,7 @@ public class ShowNameWidget(bool showInline = false) : Widget
             nameParts.AddRange(suffixWidget);
         }
 
-        return !showInline ? nameParts : [new Concat(nameParts, " ")];
+        return !showInline ? nameParts : [new Concat(nameParts)];
     }
 
     private List<Widget> NamePartWidget(string path, string labelCode, XmlDocumentNavigator navigator)
@@ -61,7 +62,7 @@ public class ShowNameWidget(bool showInline = false) : Widget
             return
             [
                 new Container([
-                    new Badge(new DisplayLabel(labelCode), Severity.Primary),
+                    new PlainBadge(new DisplayLabel(labelCode), Severity.Primary),
                     new Heading([new Text(path)], HeadingSize.H5)
                 ])
             ];

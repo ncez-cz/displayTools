@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Localization/CdaCodeLists/Epsos-Repository/*.xml"/>
+        <EmbeddedResource Include="Localization/CdaCodeLists/DastaCodeLists/*.xml"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Scalesoft.DisplayTool.Shared\Scalesoft.DisplayTool.Shared.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Localization\CdaCodeLists\DastaCodeLists\" />
+      <Folder Include="Localization\CdaCodeLists\Epsos-Repository\" />
+    </ItemGroup>
+
+</Project>

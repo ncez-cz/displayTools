@@ -36,7 +36,7 @@ public class CdaDocumentRenderer : SpecificDocumentRendererBase
         m_loggerFactor = loggerFactor;
     }
 
-    public override async Task<DocumentResult> RenderAsync(byte[] fileContent, OutputFormat outputFormat, DocumentOptions options, RenderMode renderMode = RenderMode.Standard, DocumentType? documentType = null)
+    public override async Task<DocumentResult> RenderAsync(byte[] fileContent, OutputFormat outputFormat, DocumentOptions options, DocumentType documentType, RenderMode renderMode = RenderMode.Standard, LevelOfDetail levelOfDetail = LevelOfDetail.Simplified)
     {
         if (outputFormat != OutputFormat.Html && outputFormat != OutputFormat.Pdf)
         {
@@ -85,9 +85,10 @@ public class CdaDocumentRenderer : SpecificDocumentRendererBase
             m_translator,
             m_language,
             m_loggerFactor,
-            documentType ?? DocumentType.PatientSummary,
+            documentType,
             renderMode,
-            options.PreferTranslationsFromDocument);
+            options.PreferTranslationsFromDocument,
+            levelOfDetail);
         
         List<Widget> widgets = [new RootWidget(), new Container(new LazyWidget(()=> context.RenderedIcons.Select(x => new RawText(IconHelper.GetOriginal(x))).ToList<Widget>()), optionalClass: "icon-reservoir")];
         var validationWidget = new ValidationResult(validationResult);
