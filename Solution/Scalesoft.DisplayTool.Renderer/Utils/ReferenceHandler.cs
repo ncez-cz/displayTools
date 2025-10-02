@@ -718,7 +718,7 @@ public static partial class ReferenceHandler
             }
 
             resultSeparatedSemantically.Add(new Container(resultAltogether,
-                optionalClass: "d-flex align-items-center"));
+                optionalClass: "d-inline-flex align-items-center"));
         }
 
         return new Concat(resultSeparatedSemantically, ", ");

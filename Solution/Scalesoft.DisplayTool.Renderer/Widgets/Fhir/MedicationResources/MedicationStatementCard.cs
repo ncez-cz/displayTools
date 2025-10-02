@@ -49,24 +49,45 @@ public class MedicationStatementCard : Widget
                             new MedicationBlock(
                                 new TextContainer(TextStyle.Bold,
                                     [new ChangeContext("f:medicationCodeableConcept", new CodeableConcept())]),
-                                medicationStatementDetailsRow,
+                                [medicationStatementDetailsRow],
                                 navigator
                             )
                         ),
                         new When("f:medicationReference",
-                            ShowSingleReference.WithDefaultDisplayHandler(x =>
-                                [
-                                    new MedicationBlock(
-                                        new TextContainer(TextStyle.Bold,
-                                            [new ChangeContext("f:code", new CodeableConcept())]),
-                                        new Concat([
-                                            new MedicationStatementNameValuePairs(),
-                                            medicationStatementDetailsRow,
-                                        ]),
-                                        navigator,
-                                        x
-                                    )
-                                ],
+                            new ShowSingleReference(x =>
+                                {
+                                    if (x.ResourceReferencePresent)
+                                    {
+                                        return
+                                        [
+                                            new MedicationBlock(
+                                                new TextContainer(TextStyle.Bold,
+                                                [
+                                                    new Choose([
+                                                        new When("f:code",
+                                                            new ChangeContext("f:code", new CodeableConcept()))
+                                                    ], new ConstantText("Lék"))
+                                                ]),
+                                                [
+                                                    new MedicationStatementNameValuePairs(),
+                                                    medicationStatementDetailsRow,
+                                                ],
+                                                navigator,
+                                                x.Navigator
+                                            )
+                                        ];
+                                    }
+
+                                    return
+                                    [
+                                        new MedicationBlock(
+                                            new TextContainer(TextStyle.Bold,
+                                                [new ConstantText(x.ReferenceDisplay)]),
+                                            [medicationStatementDetailsRow],
+                                            navigator
+                                        )
+                                    ];
+                                },
                                 "f:medicationReference"
                             )
                         ),
@@ -80,7 +101,7 @@ public class MedicationStatementCard : Widget
 
     private class MedicationBlock(
         Widget heading,
-        Widget medicationContent,
+        Widget[] medicationContent,
         XmlDocumentNavigator item,
         XmlDocumentNavigator? referenceNavigator = null
     ) : Widget
@@ -93,15 +114,18 @@ public class MedicationStatementCard : Widget
         {
             return new Concat([
                 new Row([
-                    new Heading([heading], HeadingSize.H5, customClass: "m-0 blue-color"),
+                    new Heading([
+                        heading,
+                    ], HeadingSize.H5, customClass: "m-0 blue-color"),
                     new ChangeContext(item,
+                        new EnumIconTooltip("f:status",
+                            "http://hl7.org/fhir/CodeSystem/medication-statement-status",
+                            new DisplayLabel(LabelCodes.Status)),
                         new NarrativeModal(alignRight: false)
                     ),
                 ], flexContainerClasses: "gap-1 align-items-center"),
                 new FlexList([
-                    new FlexList([
-                            medicationContent,
-                        ], FlexDirection.Row, flexContainerClasses: "column-gap-6 row-gap-1",
+                    new FlexList(medicationContent, FlexDirection.Row, flexContainerClasses: "column-gap-6 row-gap-1",
                         idSource: referenceNavigator),
                     new ChangeContext(item, new DosageCard(removeCardMargin: true))
                 ], FlexDirection.Column, flexContainerClasses: "px-2 gap-1")
